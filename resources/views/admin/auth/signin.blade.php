@@ -18,11 +18,6 @@
       <h1 class="auth-title">Momentum Admin</h1>
       <p class="auth-subtitle">Secure admin panel access</p>
 
-      <div class="auth-tabs">
-        <button class="tab-btn active" data-tab="signin">Sign In</button>
-        <button class="tab-btn" data-tab="signup">Sign Up</button>
-      </div>
-
       <form id="signinForm" class="auth-form active" action="{{ route('dashboard') }}" method="get">
         <div class="form-group">
           <label for="signinEmail">Email or Username</label>
@@ -52,37 +47,6 @@
         </div>
         <!-- <a href="./dashboard.html" class="auth-btn">Sign In</a> -->
         <button type="submit" class="auth-btn">Sign In</button>
-      </form>
-
-      <form id="signupForm" class="auth-form">
-        <div class="form-group">
-          <label for="signupName">Full Name</label>
-          <div class="input-wrapper">
-            <i class="fas fa-user input-icon"></i>
-            <input type="text" id="signupName" placeholder="Enter your full name" class="auth-input" required />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="signupEmail">Email Address</label>
-          <div class="input-wrapper">
-            <i class="fas fa-envelope input-icon"></i>
-            <input type="email" id="signupEmail" placeholder="Enter your email" class="auth-input" required />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="signupPassword">Password</label>
-          <div class="input-wrapper">
-            <i class="fas fa-lock input-icon"></i>
-            <input type="password" id="signupPassword" placeholder="Create a password" class="auth-input" required />
-            <button type="button" class="password-toggle" id="toggleSignupPassword">
-              <i class="fas fa-eye"></i>
-            </button>
-          </div>
-        </div>
-
-        <button type="submit" class="auth-btn">Sign Up</button>
       </form>
     </div>
   </div>

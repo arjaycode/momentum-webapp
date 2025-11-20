@@ -42,7 +42,7 @@
     </a>
 
     {{-- Logout --}}
-    <a href="#" class="nav-item">
+    <a href="{{ route('admin-signin') }}" class="nav-item">
       <i class="fas fa-sign-out-alt"></i>
       <span>Logout</span>
     </a>

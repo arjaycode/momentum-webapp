@@ -55,9 +55,7 @@
         <option value="active">Active</option>
         <option value="inactive">Inactive</option>
       </select>
-      <button class="btn-primary">
-        <i class="fas fa-plus"></i> Add Category
-      </button>
+      <a class="btn-primary" href="{{ route('habit-management.create') }}"><i class="fas fa-plus"></i> Add Category</a>
     </div>
   </div>
 
@@ -70,12 +68,8 @@
           <i class="fas fa-dumbbell"></i>
         </div>
         <div class="category-actions">
-          <button class="action-icon" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="action-icon" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
+          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
       <h3 class="category-title">Fitness</h3>
@@ -95,12 +89,8 @@
           <i class="fas fa-brain"></i>
         </div>
         <div class="category-actions">
-          <button class="action-icon" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="action-icon" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
+          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
       <h3 class="category-title">Mental Health</h3>
@@ -120,12 +110,8 @@
           <i class="fas fa-graduation-cap"></i>
         </div>
         <div class="category-actions">
-          <button class="action-icon" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="action-icon" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
+          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
       <h3 class="category-title">Learning</h3>
@@ -145,12 +131,8 @@
           <i class="fas fa-briefcase"></i>
         </div>
         <div class="category-actions">
-          <button class="action-icon" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="action-icon" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
+          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
       <h3 class="category-title">Productivity</h3>
@@ -170,12 +152,8 @@
           <i class="fas fa-heart"></i>
         </div>
         <div class="category-actions">
-          <button class="action-icon" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="action-icon" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
+          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
       <h3 class="category-title">Health</h3>
@@ -195,12 +173,8 @@
           <i class="fas fa-users"></i>
         </div>
         <div class="category-actions">
-          <button class="action-icon" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="action-icon" title="Delete">
-            <i class="fas fa-trash"></i>
-          </button>
+          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
       <h3 class="category-title">Social</h3>
@@ -214,4 +188,25 @@
     </div>
   </div>
 </main>
+@endsection
+
+@section('modals')
+<!-- MODAL -->
+<div id="deleteConfirmationModal" class="modal-backdrop">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="icon-container">&#33;</div>
+      <p>Are you sure to **delete this category**?</p>
+    </div>
+
+    <div id="modalCategoryPreview" class="category-preview"></div>
+
+    <div class="modal-actions">
+      <button id="modalCancelButton" class="btn btn-cancel">Cancel</button>
+      <button id="modalConfirmButton" class="btn btn-confirm">
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>
 @endsection

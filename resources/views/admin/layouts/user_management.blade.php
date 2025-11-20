@@ -83,7 +83,7 @@
         </p>
       </div>
       <button class="btn-primary">
-        <i class="fas fa-plus"></i> Add New User
+        <a class="adduser" href="{{ route('user-management.create') }}"><i class="fas fa-plus"></i> Add New User</a>
       </button>
     </div>
 
@@ -119,7 +119,7 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody id="userTableBody">
+        <tbody>
           <tr>
             <td>
               <div class="user-cell">
@@ -131,129 +131,12 @@
               </div>
             </td>
             <td>sarah.johnson@email.com</td>
-            <td><span class="role-badge admin">Admin</span></td>
-            <td><span class="status-badge active">Active</span></td>
-            <td>2 hours ago</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-action btn-edit">
-                  <i class="fas fa-edit"></i> Edit User
-                </button>
-                <button class="btn-action btn-delete">
-                  <i class="fas fa-trash"></i> Delete User
-                </button>
-                <button class="btn-action btn-ban">
-                  <i class="fas fa-ban"></i> Ban User
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="user-cell">
-                <img src="https://i.pravatar.cc/40?img=2" alt="Johnson" class="user-avatar" />
-                <div class="user-details">
-                  <div class="user-name">Johnson</div>
-                  <div class="user-id">ID: #001</div>
-                </div>
-              </div>
-            </td>
-            <td>sarah.johnson@email.com</td>
             <td><span class="role-badge user">User</span></td>
             <td><span class="status-badge active">Active</span></td>
             <td>2 hours ago</td>
             <td>
               <div class="action-buttons">
-                <button class="btn-action btn-edit">
-                  <i class="fas fa-edit"></i> Edit User
-                </button>
-                <button class="btn-action btn-delete">
-                  <i class="fas fa-trash"></i> Delete User
-                </button>
-                <button class="btn-action btn-ban">
-                  <i class="fas fa-ban"></i> Ban User
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-
-            <td>
-              <div class="user-cell">
-                <img src="https://i.pravatar.cc/40?img=3" alt="Sarah Johnson" class="user-avatar" />
-                <div class="user-details">
-                  <div class="user-name">Sarah Johnson</div>
-                  <div class="user-id">ID: #001</div>
-                </div>
-              </div>
-            </td>
-            <td>sarah.johnson@email.com</td>
-            <td><span class="role-badge user">User</span></td>
-            <td><span class="status-badge active">Active</span></td>
-            <td>2 hours ago</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-action btn-edit">
-                  <i class="fas fa-edit"></i> Edit User
-                </button>
-                <button class="btn-action btn-delete">
-                  <i class="fas fa-trash"></i> Delete User
-                </button>
-                <button class="btn-action btn-ban">
-                  <i class="fas fa-ban"></i> Ban User
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-
-            <td>
-              <div class="user-cell">
-                <img src="https://i.pravatar.cc/40?img=4" alt="Sarah Johnson" class="user-avatar" />
-                <div class="user-details">
-                  <div class="user-name">Sarah Johnson</div>
-                  <div class="user-id">ID: #001</div>
-                </div>
-              </div>
-            </td>
-            <td></td>
-            <td><span class="role-badge user">User</span></td>
-            <td><span class="status-badge active">Active</span></td>
-            <td>2 hours ago</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-action btn-edit">
-                  <i class="fas fa-edit"></i> Edit User
-                </button>
-                <button class="btn-action btn-delete">
-                  <i class="fas fa-trash"></i> Delete User
-                </button>
-                <button class="btn-action btn-ban">
-                  <i class="fas fa-ban"></i> Ban User
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-
-            <td>
-              <div class="user-cell">
-                <img src="https://i.pravatar.cc/40?img=5" alt="Sarah Johnson" class="user-avatar" />
-                <div class="user-details">
-                  <div class="user-name">Sarah Johnson</div>
-                  <div class="user-id">ID: #001</div>
-                </div>
-              </div>
-            </td>
-            <td>sarah.johnson@email.com</td>
-            <td><span class="role-badge user">User</span></td>
-            <td><span class="status-badge active">Active</span></td>
-            <td>2 hours ago</td>
-            <td>
-              <div class="action-buttons">
-                <button class="btn-action btn-edit">
-                  <i class="fas fa-edit"></i> Edit User
-                </button>
+                <a class="btn-action btn-edit" href="{{ route('user-management.edit')}}"><i class="fas fa-edit"></i> Edit User</a>
                 <button class="btn-action btn-delete">
                   <i class="fas fa-trash"></i> Delete User
                 </button>

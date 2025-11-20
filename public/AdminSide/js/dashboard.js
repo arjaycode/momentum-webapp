@@ -286,21 +286,3 @@ window.addEventListener('load', function () {
       });
   }, 100);
 });
-
-// Wait for the document to be fully loaded
-document.addEventListener('DOMContentLoaded', function () {
-  // Find the logout button by its ID
-  const logoutBtn = document.getElementById('logoutButton');
-
-  // Add a click event listener
-  logoutBtn.addEventListener('click', function (e) {
-    // Prevent the default link behavior (jumping to the top)
-    e.preventDefault();
-
-    // Show the alert message
-    window.location.href = 'admin_signin.html';
-
-    // Optional: After the user clicks "OK", you can redirect them
-    // window.location.href = '/login.html';
-  });
-});

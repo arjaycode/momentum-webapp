@@ -64,26 +64,9 @@ document.querySelectorAll('.btn-edit').forEach((btn) => {
     const row = this.closest('tr');
     const userName = row.querySelector('.user-name').textContent;
     // alert(`Edit user: ${userName}`);
-    window.location.href = 'edit-user.html';
+    window.location.href = '';
   });
 });
-
-// document.querySelectorAll('.btn-delete').forEach((btn) => {
-//   btn.addEventListener('click', function () {
-//     const row = this.closest('tr');
-//     const userName = row.querySelector('.user-name').textContent;
-
-//     if (confirm(`Are you sure you want to delete ${userName}?`)) {
-//       row.style.opacity = '0';
-//       row.style.transform = 'translateX(-20px)';
-
-//       setTimeout(() => {
-//         row.remove();
-//         updateTableInfo();
-//       }, 300);
-//     }
-//   });
-// });
 
 // Modal variables
 const deleteModal = document.getElementById('deleteModal');
@@ -160,20 +143,6 @@ document.querySelectorAll('.btn-delete').forEach((btn) => {
     });
   });
 });
-
-// document.querySelectorAll('.btn-ban').forEach((btn) => {
-//   btn.addEventListener('click', function () {
-//     const row = this.closest('tr');
-//     const userName = row.querySelector('.user-name').textContent;
-//     const statusBadge = row.querySelector('.status-badge');
-
-//     if (confirm(`Are you sure you want to ban ${userName}?`)) {
-//       statusBadge.textContent = 'Blocked';
-//       statusBadge.className = 'status-badge blocked';
-//       alert(`${userName} has been banned.`);
-//     }
-//   });
-// });
 
 // Ban Modal variables
 const banModal = document.getElementById('banModal');
@@ -288,11 +257,6 @@ document.querySelectorAll('.btn-ban').forEach((btn) => {
   });
 });
 
-// Add New User button
-document.querySelector('.btn-primary').addEventListener('click', function () {
-  window.location.href = 'create-user.html';
-});
-
 // Pagination
 const paginationBtns = document.querySelectorAll(
   '.pagination-btn:not([disabled])'
@@ -324,17 +288,6 @@ function updateTableInfo() {
     '.table-info'
   ).textContent = `Showing 1 to ${showing} of ${totalRows} results`;
 }
-
-// Row hover effect enhancement
-tableRows.forEach((row) => {
-  row.addEventListener('mouseenter', function () {
-    this.style.transform = 'scale(1.001)';
-  });
-
-  row.addEventListener('mouseleave', function () {
-    this.style.transform = 'scale(1)';
-  });
-});
 
 // Animation on load
 window.addEventListener('load', function () {

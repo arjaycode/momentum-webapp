@@ -33,47 +33,119 @@ searchInput.addEventListener('input', function () {
   updateStats();
 });
 
-// Edit button functionality
-document.querySelectorAll('.edit-btn').forEach((btn) => {
-  btn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    const noteItem = this.closest('.note-item');
-    const userName = noteItem.querySelector('.user-name').textContent;
-    const categoryName = noteItem.querySelector('.category-name').textContent;
-    const noteDescription =
-      noteItem.querySelector('.note-description').textContent;
-
-    console.log('Edit note:', {
-      user: userName,
-      category: categoryName,
-      note: noteDescription,
-    });
-
-    alert(`Edit note by ${userName}`);
-  });
+// --- FIX 1: Prevent Enter key in search from reloading page ---
+searchInput.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+  }
 });
 
-// Delete button functionality
-document.querySelectorAll('.delete-btn').forEach((btn) => {
-  btn.addEventListener('click', function (e) {
-    e.stopPropagation();
-    const noteItem = this.closest('.note-item');
-    const userName = noteItem.querySelector('.user-name').textContent;
+// delete functionality
+document.addEventListener('DOMContentLoaded', function () {
+  // Global variable to store the note being deleted
+  let noteToDelete = null;
 
-    if (confirm(`Are you sure you want to delete this note by ${userName}?`)) {
-      noteItem.style.animation = 'fadeOut 0.3s ease';
+  // Get references to modal elements
+  const modalBackdrop = document.getElementById('deleteModal');
+  const modalConfirmButton = document.getElementById('modalConfirm');
+  const modalCancelButton = document.getElementById('modalCancel');
+  // We will inject the HTML into this container
+  const modalNotePreview = modalBackdrop.querySelector('.note-preview');
 
+  // --- Functions ---
+
+  // Function to open the modal
+  function openDeleteModal(noteElement) {
+    // 1. Store the note element for later use
+    noteToDelete = noteElement;
+
+    // 2. Extract data from the note item
+    const userName = noteElement.querySelector('.user-name').textContent;
+    const userId = noteElement.querySelector('.user-id').textContent;
+    const userAvatar = noteElement.querySelector('.user-avatar').src;
+    const habitName = noteElement.querySelector('.category-name').textContent;
+    // Get the icon HTML (the <i> tag)
+    const habitIconInner =
+      noteElement.querySelector('.category-icon').innerHTML;
+    const noteDescription =
+      noteElement.querySelector('.note-description').textContent;
+
+    // 3. Populate the modal preview using Template Literal
+    // We rebuild the structure inside .note-preview
+    modalNotePreview.innerHTML = `
+      <div class="preview-header">
+        <img src="${userAvatar}" alt="User" class="user-avatar" />
+        <div>
+          <div class="preview-user">${userName}</div>
+          <div class="preview-id">${userId}</div>
+        </div>
+      </div>
+
+      <div class="preview-habit">
+        <span class="habit-icon">${habitIconInner}</span>
+        <span class="habit-name">${habitName}</span>
+      </div>
+
+      <div class="preview-note">
+        <span class="note-label">Note:</span>
+        <span>${noteDescription}</span>
+      </div>
+    `;
+
+    // 4. Show the modal
+    modalBackdrop.classList.add('show');
+  }
+
+  // Function to close the modal
+  function closeDeleteModal() {
+    modalBackdrop.classList.remove('show');
+    // Clear the stored reference after a short delay to allow fade out
+    setTimeout(() => {
+      noteToDelete = null;
+    }, 200);
+  }
+
+  // --- Event Listeners ---
+
+  // 1. Listeners for the Note Delete button clicks
+  document.querySelectorAll('.delete-btn').forEach((btn) => {
+    btn.addEventListener('click', function (e) {
+      e.preventDefault(); // Stop link navigation
+      e.stopPropagation(); // Stop bubbling
+      const noteItem = this.closest('.note-item');
+      openDeleteModal(noteItem);
+    });
+  });
+
+  // 2. Listener for the Modal Confirm button
+  // --- FIX 2: Added 'e' parameter and preventDefault() ---
+  modalConfirmButton.addEventListener('click', function (e) {
+    e.preventDefault(); // <--- THIS STOPS THE RELOAD
+
+    if (noteToDelete) {
+      // Apply fade-out animation
+      noteToDelete.style.transition = 'all 0.3s ease';
+      noteToDelete.style.opacity = '0';
+      noteToDelete.style.transform = 'translateX(20px)';
+
+      // Remove the item after the animation
       setTimeout(() => {
-        noteItem.remove();
-        updateStats();
+        noteToDelete.remove();
+        closeDeleteModal();
       }, 300);
     }
   });
-});
 
-// Add New Note button
-document.querySelector('.btn-primary').addEventListener('click', function () {
-  alert('Add New Note modal would open here');
+  // 3. Listener for the Modal Cancel button
+  modalCancelButton.addEventListener('click', closeDeleteModal);
+
+  // 4. Listener for Backdrop click to close
+  window.addEventListener('click', function (e) {
+    // Only close if the click is directly on the backdrop container
+    if (e.target === modalBackdrop) {
+      closeDeleteModal();
+    }
+  });
 });
 
 // Update stats dynamically

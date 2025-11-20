@@ -29,9 +29,7 @@
       <i class="fas fa-search"></i>
       <input type="text" placeholder="Search categories..." id="notesSearch" />
     </div>
-    <button class="btn-primary">
-      <i class="fas fa-plus"></i> Add New Note
-    </button>
+    <a class="btn-primary" href=" {{ route('note-management.create') }}"><i class="fas fa-plus"></i> Add New Note</a>
   </div>
 
   <!-- Notes List -->
@@ -48,9 +46,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <button class="action-btn edit-btn" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -90,9 +86,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <button class="action-btn edit-btn" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -132,9 +126,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <button class="action-btn edit-btn" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -174,9 +166,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <button class="action-btn edit-btn" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -216,9 +206,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <button class="action-btn edit-btn" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -258,9 +246,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <button class="action-btn edit-btn" title="Edit">
-            <i class="fas fa-edit"></i>
-          </button>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -289,4 +275,40 @@
     </div>
   </div>
 </main>
+@endsection
+
+@section('modals')
+<!-- Delete Confirmation Modal -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-icon">❗</div>
+    <p class="modal-title">Are you sure to delete note for this user?</p>
+
+    <div class="note-preview">
+      <div class="preview-header">
+        <img src="https://via.placeholder.com/40" alt="User" class="user-avatar" />
+        <div>
+          <div class="preview-user" id="modalUserName">Johnson</div>
+          <div class="preview-id" id="modalUserId">ID: 4001</div>
+        </div>
+      </div>
+
+      <div class="preview-habit">
+        <span class="habit-icon" id="modalHabitIcon">💪</span>
+        <span class="habit-name" id="modalHabitName">Fitness</span>
+      </div>
+
+      <div class="preview-note">
+        <span class="note-label">Note:</span>
+        <span id="modalNoteText">Felt more energized than usual. Form on squats improving. Need to
+          increase push-up reps next session.</span>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-cancel" id="modalCancel">Cancel</button>
+      <button class="btn btn-confirm" id="modalConfirm">Confirm</button>
+    </div>
+  </div>
+</div>
 @endsection

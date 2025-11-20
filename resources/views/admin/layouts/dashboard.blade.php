@@ -4,6 +4,8 @@
 @section('active-link', 'dashboard')
 @section('page-title', 'Dashboard')
 @section('page-description', 'Monitor your platform\'s performance and user engagement')
+@section('css-file', 'dashboard.css')
+@section('js-file', 'dashboard.js')
 
 @section('content')
 <!-- Main Content -->

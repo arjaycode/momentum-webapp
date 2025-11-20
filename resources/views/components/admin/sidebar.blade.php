@@ -18,7 +18,7 @@
     </a>
 
     {{-- Users --}}
-    <a href="#" class="nav-item {{ $active === 'users' ? 'active' : '' }}">
+    <a href="{{ route('user-management') }}" class="nav-item {{ $active === 'users' ? 'active' : '' }}">
       <i class="fas fa-users"></i>
       <span>Users</span>
     </a>

@@ -8,9 +8,9 @@
   $cssfile = trim($__env->yieldContent('css-file'));
   $jsfile = trim($__env->yieldContent('js-file'));
   @endphp
-  <link rel="stylesheet" href="{{ asset('AdminSide/css/'.$cssfile) }}" />
   <link rel="stylesheet" href="{{ asset('AdminSide/css/sidebar.css') }}" />
   <link rel="stylesheet" href="{{ asset('AdminSide/css/header.css') }}" />
+  <link rel="stylesheet" href="{{ asset('AdminSide/css/'.$cssfile) }}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 </head>
 <body>
@@ -26,7 +26,7 @@
       @yield('content')
     </div>
   </div>
-
+  @yield('modals')
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
   <script src="{{ asset('AdminSide/js/'.$jsfile) }}"></script>
 </body>

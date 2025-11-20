@@ -88,7 +88,7 @@
     </div>
 
     <div class="table-controls">
-      <div class="search-box">
+      <div class="search-box-container">
         <i class="fas fa-search"></i>
         <input type="text" placeholder="Search users..." id="userSearch" />
       </div>
@@ -111,9 +111,6 @@
       <table class="user-table">
         <thead>
           <tr>
-            <th width="40">
-              <input type="checkbox" id="selectAll" />
-            </th>
             <th>User</th>
             <th>Email</th>
             <th>Role</th>
@@ -124,9 +121,6 @@
         </thead>
         <tbody id="userTableBody">
           <tr>
-            <td>
-              <input type="checkbox" class="row-checkbox" />
-            </td>
             <td>
               <div class="user-cell">
                 <img src="https://i.pravatar.cc/40?img=1" alt="Sarah Johnson" class="user-avatar" />
@@ -156,9 +150,6 @@
           </tr>
           <tr>
             <td>
-              <input type="checkbox" class="row-checkbox" />
-            </td>
-            <td>
               <div class="user-cell">
                 <img src="https://i.pravatar.cc/40?img=2" alt="Johnson" class="user-avatar" />
                 <div class="user-details">
@@ -186,9 +177,7 @@
             </td>
           </tr>
           <tr>
-            <td>
-              <input type="checkbox" class="row-checkbox" />
-            </td>
+
             <td>
               <div class="user-cell">
                 <img src="https://i.pravatar.cc/40?img=3" alt="Sarah Johnson" class="user-avatar" />
@@ -217,9 +206,7 @@
             </td>
           </tr>
           <tr>
-            <td>
-              <input type="checkbox" class="row-checkbox" />
-            </td>
+
             <td>
               <div class="user-cell">
                 <img src="https://i.pravatar.cc/40?img=4" alt="Sarah Johnson" class="user-avatar" />
@@ -248,9 +235,7 @@
             </td>
           </tr>
           <tr>
-            <td>
-              <input type="checkbox" class="row-checkbox" />
-            </td>
+
             <td>
               <div class="user-cell">
                 <img src="https://i.pravatar.cc/40?img=5" alt="Sarah Johnson" class="user-avatar" />
@@ -294,4 +279,71 @@
     </div>
   </div>
 </main>
+@endsection
+
+@section('modals')
+<!-- MODAL -->
+<!-- Delete Modal Overlay -->
+<div class="delete-modal-overlay" id="deleteModalOverlay"></div>
+
+<!-- Delete Modal -->
+<div class="delete-modal" id="deleteModal">
+  <div class="delete-modal-icon"></div>
+
+  <h3 class="delete-modal-title">Are you sure to delete this user?</h3>
+
+  <div class="delete-user-info">
+    <img src="" alt="User" class="delete-user-avatar" id="deleteUserAvatar" />
+    <div class="delete-user-details">
+      <div class="delete-user-name" id="deleteUserName"></div>
+      <div class="delete-user-id" id="deleteUserId"></div>
+    </div>
+    <div class="delete-user-email" id="deleteUserEmail"></div>
+  </div>
+
+  <div class="delete-modal-actions">
+    <button class="delete-modal-btn delete-modal-cancel" id="deleteModalCancel">
+      Cancel
+    </button>
+    <button class="delete-modal-btn delete-modal-confirm" id="deleteModalConfirm">
+      Confirm
+    </button>
+  </div>
+</div>
+<!-- BAN MODAL -->
+<!-- Ban Modal Overlay -->
+<div class="ban-modal-overlay" id="banModalOverlay"></div>
+
+<!-- Ban Modal -->
+<div class="ban-modal" id="banModal">
+  <div class="ban-modal-icon"></div>
+
+  <h3 class="ban-modal-title">Are you sure to ban this user?</h3>
+
+  <div class="ban-user-info">
+    <img src="" alt="User" class="ban-user-avatar" id="banUserAvatar" />
+    <div class="ban-user-details">
+      <div class="ban-user-name" id="banUserName"></div>
+      <div class="ban-user-id" id="banUserId"></div>
+    </div>
+    <div class="ban-user-email" id="banUserEmail"></div>
+  </div>
+
+  <div class="ban-reason-group">
+    <label class="ban-reason-label" for="banReason">Reason</label>
+    <textarea class="ban-reason-textarea" id="banReason" placeholder="Enter reason..." rows="4"></textarea>
+    <div class="ban-error-message" id="banReasonError">
+      Please provide a reason for banning this user.
+    </div>
+  </div>
+
+  <div class="ban-modal-actions">
+    <button class="ban-modal-btn ban-modal-cancel" id="banModalCancel">
+      Cancel
+    </button>
+    <button class="ban-modal-btn ban-modal-confirm" id="banModalConfirm">
+      Confirm
+    </button>
+  </div>
+</div>
 @endsection

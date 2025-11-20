@@ -1,24 +1,3 @@
-// Select All Checkbox
-const selectAllCheckbox = document.getElementById('selectAll');
-const rowCheckboxes = document.querySelectorAll('.row-checkbox');
-
-selectAllCheckbox.addEventListener('change', function () {
-  rowCheckboxes.forEach((checkbox) => {
-    checkbox.checked = this.checked;
-  });
-});
-
-// Individual checkbox handling
-rowCheckboxes.forEach((checkbox) => {
-  checkbox.addEventListener('change', function () {
-    const allChecked = Array.from(rowCheckboxes).every((cb) => cb.checked);
-    const someChecked = Array.from(rowCheckboxes).some((cb) => cb.checked);
-
-    selectAllCheckbox.checked = allChecked;
-    selectAllCheckbox.indeterminate = someChecked && !allChecked;
-  });
-});
-
 // Search functionality
 const searchInput = document.getElementById('userSearch');
 const tableRows = document.querySelectorAll('.user-table tbody tr');

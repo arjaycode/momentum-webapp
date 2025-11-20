@@ -24,19 +24,19 @@
     </a>
 
     {{-- Habits --}}
-    <a href="#" class="nav-item {{ $active === 'habits' ? 'active' : '' }}">
+    <a href="{{ route('habit-management') }}" class="nav-item {{ $active === 'habits' ? 'active' : '' }}">
       <i class="fas fa-heart"></i>
       <span>Habits</span>
     </a>
 
     {{-- Notes --}}
-    <a href="#" class="nav-item {{ $active === 'notes' ? 'active' : '' }}">
+    <a href="{{ route('note-management') }}" class="nav-item {{ $active === 'notes' ? 'active' : '' }}">
       <i class="fas fa-sticky-note"></i>
       <span>Notes</span>
     </a>
 
     {{-- Settings --}}
-    <a href="#" class="nav-item {{ $active === 'settings' ? 'active' : '' }}">
+    <a href="{{ route('admin-settings') }}" class="nav-item {{ $active === 'settings' ? 'active' : '' }}">
       <i class="fas fa-cog"></i>
       <span>Settings</span>
     </a>

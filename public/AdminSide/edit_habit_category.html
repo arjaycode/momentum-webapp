@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Habit Category - Momentum</title>
+    <link rel="stylesheet" href="./css/edit_habit_category.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <span class="logo-text">MOMENTUM</span>
+        </div>
+
+        <nav class="nav-menu">
+          <a href="#" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+          </a>
+          <a href="#" class="nav-item active">
+            <i class="fas fa-heart"></i>
+            <span>Habits</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-sticky-note"></i>
+            <span>Notes</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <div class="user-profile">
+          <img
+            src="https://i.pravatar.cc/40?img=12"
+            alt="John Admin"
+            class="profile-img" />
+          <div class="profile-info">
+            <div class="profile-name">John Admin</div>
+            <div class="profile-role">Administrator</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-left">
+            <h1 class="page-title">Edit Habit Category</h1>
+            <p class="page-subtitle">
+              Manage and organize your habit categories
+            </p>
+          </div>
+          <div class="header-right">
+            <button class="icon-btn">
+              <i class="fas fa-search"></i>
+            </button>
+            <button class="icon-btn">
+              <i class="fas fa-user"></i>
+            </button>
+            <span class="date-display">Tuesday, September 27, 2025</span>
+          </div>
+        </header>
+
+        <!-- Back Button -->
+        <div class="back-section">
+          <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i>
+            Back to Habit Management
+          </button>
+        </div>
+
+        <!-- Edit Category Form -->
+        <div class="form-container">
+          <form id="editCategoryForm" class="category-form">
+            <!-- Habit Name -->
+            <div class="form-group">
+              <label for="habitName">Habit Name</label>
+              <input
+                type="text"
+                id="habitName"
+                name="habitName"
+                value="Mental Health"
+                class="form-input"
+                required />
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="5"
+                class="form-textarea"
+                required>
+Mindfulness, meditation and mental wellness</textarea
+              >
+            </div>
+
+            <!-- Status -->
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select id="status" name="status" class="form-select" required>
+                <option value="">Select status</option>
+                <option value="active" selected>Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+
+            <!-- Color Theme -->
+            <div class="form-group">
+              <label>Color Theme</label>
+              <div class="color-picker">
+                <input
+                  type="radio"
+                  name="color"
+                  id="color-blue"
+                  value="blue"
+                  class="color-radio" />
+                <label for="color-blue" class="color-option blue" title="Blue">
+                  <span class="color-circle"></span>
+                </label>
+
+                <input
+                  type="radio"
+                  name="color"
+                  id="color-green"
+                  value="green"
+                  class="color-radio" />
+                <label
+                  for="color-green"
+                  class="color-option green"
+                  title="Green">
+                  <span class="color-circle"></span>
+                </label>
+
+                <input
+                  type="radio"
+                  name="color"
+                  id="color-purple"
+                  value="purple"
+                  class="color-radio"
+                  checked />
+                <label
+                  for="color-purple"
+                  class="color-option purple"
+                  title="Purple">
+                  <span class="color-circle"></span>
+                </label>
+
+                <input
+                  type="radio"
+                  name="color"
+                  id="color-red"
+                  value="red"
+                  class="color-radio" />
+                <label for="color-red" class="color-option red" title="Red">
+                  <span class="color-circle"></span>
+                </label>
+
+                <input
+                  type="radio"
+                  name="color"
+                  id="color-orange"
+                  value="orange"
+                  class="color-radio" />
+                <label
+                  for="color-orange"
+                  class="color-option orange"
+                  title="Orange">
+                  <span class="color-circle"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Icon -->
+            <div class="form-group">
+              <label>Icon</label>
+              <div class="icon-picker">
+                <input
+                  type="radio"
+                  name="icon"
+                  id="icon-heart"
+                  value="heart"
+                  class="icon-radio" />
+                <label for="icon-heart" class="icon-option" title="Heart">
+                  <i class="fas fa-heart"></i>
+                </label>
+
+                <input
+                  type="radio"
+                  name="icon"
+                  id="icon-brain"
+                  value="brain"
+                  class="icon-radio"
+                  checked />
+                <label for="icon-brain" class="icon-option" title="Brain">
+                  <i class="fas fa-brain"></i>
+                </label>
+
+                <input
+                  type="radio"
+                  name="icon"
+                  id="icon-book"
+                  value="book"
+                  class="icon-radio" />
+                <label for="icon-book" class="icon-option" title="Book">
+                  <i class="fas fa-book"></i>
+                </label>
+
+                <input
+                  type="radio"
+                  name="icon"
+                  id="icon-star"
+                  value="star"
+                  class="icon-radio" />
+                <label for="icon-star" class="icon-option" title="Star">
+                  <i class="fas fa-star"></i>
+                </label>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+              <button type="button" class="btn-cancel" id="cancelBtn">
+                Cancel
+              </button>
+              <button type="submit" class="btn-save">
+                <i class="fas fa-check"></i>
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script src="./js/edit_habit_category.js"></script>
+  </body>
+</html>

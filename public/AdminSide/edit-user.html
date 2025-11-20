@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit User - Momentum</title>
+    <link rel="stylesheet" href="./css/edit-user.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <span class="logo-text">MOMENTUM</span>
+        </div>
+
+        <nav class="nav-menu">
+          <a href="#" class="nav-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-item active">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Habits</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-sticky-note"></i>
+            <span>Notes</span>
+          </a>
+          <a href="#" class="nav-item">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </nav>
+
+        <div class="user-profile">
+          <img
+            src="https://i.pravatar.cc/40?img=12"
+            alt="John Admin"
+            class="profile-img" />
+          <div class="profile-info">
+            <div class="profile-name">John Admin</div>
+            <div class="profile-role">Administrator</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+          <div class="header-left">
+            <h1 class="page-title">Edit User</h1>
+            <p class="page-subtitle">Edit the details of this user</p>
+          </div>
+          <div class="header-right">
+            <button class="icon-btn">
+              <i class="fas fa-search"></i>
+            </button>
+            <button class="icon-btn">
+              <i class="fas fa-user"></i>
+            </button>
+            <span class="date-display">Tuesday, September 27, 2025</span>
+          </div>
+        </header>
+
+        <!-- Back Button -->
+        <div class="back-section">
+          <button class="back-btn" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i>
+            Back to User Management
+          </button>
+        </div>
+
+        <!-- Edit User Form -->
+        <div class="form-container">
+          <form id="editUserForm" class="user-form">
+            <!-- Name Fields -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  name="firstName"
+                  value="Sarah"
+                  class="form-input"
+                  required />
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  name="lastName"
+                  value="Johnson"
+                  class="form-input"
+                  required />
+              </div>
+            </div>
+
+            <!-- Email Address -->
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value="sarah.johnson@email.com"
+                class="form-input"
+                required />
+            </div>
+
+            <!-- Role and Status -->
+            <div class="form-row">
+              <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" name="role" class="form-select" required>
+                  <option value="">Select role</option>
+                  <option value="user" selected>User</option>
+                  <option value="moderator">Moderator</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="status">Status</label>
+                <select id="status" name="status" class="form-select" required>
+                  <option value="">Select status</option>
+                  <option value="active" selected>Active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="pending">Pending</option>
+                  <option value="blocked">Blocked</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+              <button type="button" class="btn-cancel" id="cancelBtn">
+                Cancel
+              </button>
+              <button type="submit" class="btn-save">
+                <i class="fas fa-check"></i>
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script src="./js/edit-user.js"></script>
+  </body>
+</html>

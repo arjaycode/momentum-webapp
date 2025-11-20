@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notes Management</title>
+    <link rel="stylesheet" href="./note.css" />
+  </head>
+  <body>
+    <!-- Create/Edit Note Form -->
+    <div class="container">
+      <div class="header">
+        <a href="#" class="back-link">← Back to Notes Management</a>
+      </div>
+
+      <div class="form-card">
+        <div class="form-row">
+          <div class="form-group">
+            <label>For User</label>
+            <select id="userSelect" class="select-input">
+              <option value="">Select User</option>
+              <option value="johnson">Johnson (ID: 4001)</option>
+              <option value="smith">Smith (ID: 4002)</option>
+              <option value="davis">Davis (ID: 4003)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>For Habit</label>
+            <select id="habitSelect" class="select-input">
+              <option value="">Select Habit</option>
+              <option value="fitness">Fitness</option>
+              <option value="reading">Reading</option>
+              <option value="meditation">Meditation</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Note</label>
+          <textarea
+            id="noteText"
+            class="textarea-input"
+            placeholder="Put your note here..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Color Theme</label>
+          <div class="color-options">
+            <button
+              class="color-btn"
+              data-color="blue"
+              style="background-color: #3b82f6"></button>
+            <button
+              class="color-btn"
+              data-color="green"
+              style="background-color: #10b981"></button>
+            <button
+              class="color-btn"
+              data-color="pink"
+              style="background-color: #ec4899"></button>
+            <button
+              class="color-btn"
+              data-color="purple"
+              style="background-color: #8b5cf6"></button>
+            <button
+              class="color-btn"
+              data-color="orange"
+              style="background-color: #f97316"></button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Icon</label>
+          <div class="icon-options">
+            <button class="icon-btn" data-icon="heart">❤️</button>
+            <button class="icon-btn" data-icon="dumbbell">💪</button>
+            <button class="icon-btn" data-icon="calendar">📅</button>
+            <button class="icon-btn" data-icon="star">⭐</button>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-cancel">Cancel</button>
+          <button class="btn btn-delete" id="deleteBtn">Delete</button>
+          <button class="btn btn-primary" id="saveBtn">Create Note</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-icon">❗</div>
+        <p class="modal-title">Are you sure to delete note for this user?</p>
+
+        <div class="note-preview">
+          <div class="preview-header">
+            <img
+              src="https://via.placeholder.com/40"
+              alt="User"
+              class="user-avatar" />
+            <div>
+              <div class="preview-user" id="modalUserName">Johnson</div>
+              <div class="preview-id" id="modalUserId">ID: 4001</div>
+            </div>
+          </div>
+
+          <div class="preview-habit">
+            <span class="habit-icon" id="modalHabitIcon">💪</span>
+            <span class="habit-name" id="modalHabitName">Fitness</span>
+          </div>
+
+          <div class="preview-note">
+            <span class="note-label">Note:</span>
+            <span id="modalNoteText"
+              >Felt more energized than usual. Form on squats improving. Need to
+              increase push-up reps next session.</span
+            >
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-cancel" id="modalCancel">Cancel</button>
+          <button class="btn btn-confirm" id="modalConfirm">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="./note.js"></script>
+  </body>
+</html>

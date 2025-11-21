@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Habits | Username</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/sidebar.css" />
+    <link rel="stylesheet" href="../css/header.css" />
+    <link rel="stylesheet" href="../css/habits.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  </head>
+  <body>
+    <nav class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <img src="../img/Logo.png" alt="" />
+        </div>
+        <h1 class="app-name">MOMENTUM</h1>
+      </div>
+
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <i class="fas fa-chart-line"></i>
+          <span>Dashboard</span>
+        </li>
+        <li class="nav-item active">
+          <i class="fas fa-list-check"></i>
+          <span>Habits</span>
+        </li>
+        <li class="nav-item">
+          <i class="far fa-calendar"></i>
+          <span>Calendar</span>
+        </li>
+        <li class="nav-item">
+          <i class="fas fa-gear"></i>
+          <span>Settings</span>
+        </li>
+      </ul>
+
+      <div class="user-profile">
+        <img
+          src="https://i.pravatar.cc/150?img=12"
+          alt="User Avatar"
+          class="avatar" />
+        <div class="user-info">
+          <div class="user-name">John Doe</div>
+          <div class="user-role">Student</div>
+        </div>
+        <a href="#" title="logout" class="logout-btn"
+          ><i class="fa-solid fa-arrow-right-from-bracket"></i
+        ></a>
+      </div>
+    </nav>
+    <div class="main-container">
+      <header class="main-header">
+        <div class="header-left">
+          <h1 class="header-title">Edit Habit</h1>
+          <p class="header-subtitle">
+            Modify your habit, according to your needs
+          </p>
+        </div>
+        <div class="header-right">
+          <input type="text" class="search-box" name="search-box" />
+          <button class="icon-button search-button">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="icon-button notification-button">
+            <i class="fas fa-bell"></i>
+          </button>
+          <div class="header-date">Tuesday, September 27, 2025</div>
+        </div>
+      </header>
+      <div class="main-content">
+        <div class="content-area">
+          <div class="details-section">
+            <div class="form-group">
+              <label class="form-label">Habit Title</label>
+              <input type="text" class="form-input" id="habitTitle" value="" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Habit Category</label>
+              <select
+                class="form-input"
+                name="habit-category"
+                id="habit-category">
+                <option value="" selected>Select Category</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea class="form-textarea" id="habitDesc"></textarea>
+            </div>
+
+            <div class="notification-section">
+              <div class="notification-header">
+                <div class="notification-icon">🔔</div>
+                <div class="notification-content">
+                  <div class="notification-title">Push Notifications</div>
+                  <div class="notification-text">
+                    Get reminder when it's time for your habit
+                  </div>
+                </div>
+                <label class="notification-toggle">
+                  <input type="checkbox" id="notifToggle" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="notification-time">⏰ Daily at 7:00 AM</div>
+            </div>
+
+            <div class="notes-section">
+              <div class="notes-header">
+                <h2 class="notes-title">Quick Notes</h2>
+                <button class="add-note-btn" id="addNoteBtn">+</button>
+              </div>
+
+              <div
+                class="note-input-area"
+                id="noteInputArea"
+                style="display: none">
+                <textarea
+                  class="note-textarea"
+                  id="noteInput"
+                  placeholder="What's on your mind?"></textarea>
+                <div class="note-toolbar">
+                  <div class="toolbar-buttons">
+                    <button class="toolbar-btn">B</button>
+                    <button class="toolbar-btn">I</button>
+                    <button class="toolbar-btn">≡</button>
+                  </div>
+                  <button class="save-note-btn" id="saveNoteBtn">Save</button>
+                </div>
+              </div>
+
+              <div class="notes-list" id="notesList"></div>
+            </div>
+          </div>
+
+          <div class="stats-panel">
+            <div class="days-selector">
+              <div class="form-label">Target Days</div>
+              <div class="days-grid" id="daysGrid">
+                <div class="day-circle inactive" data-day="Mon">
+                  <span class="day-initial">M</span>
+                </div>
+                <div class="day-circle inactive" data-day="Tue">
+                  <span class="day-initial">T</span>
+                </div>
+                <div class="day-circle inactive" data-day="Wed">
+                  <span class="day-initial">W</span>
+                </div>
+                <div class="day-circle inactive" data-day="Thu">
+                  <span class="day-initial">T</span>
+                </div>
+                <div class="day-circle inactive" data-day="Fri">
+                  <span class="day-initial">F</span>
+                </div>
+                <div class="day-circle inactive" data-day="Sat">
+                  <span class="day-initial">S</span>
+                </div>
+                <div class="day-circle inactive" data-day="Sun">
+                  <span class="day-initial">S</span>
+                </div>
+              </div>
+              <div
+                class="day-label"
+                style="
+                  display: grid;
+                  grid-template-columns: repeat(7, 1fr);
+                  gap: 8px;
+                  font-size: 10px;
+                  color: #999;
+                ">
+                <span style="text-align: center">Mon</span>
+                <span style="text-align: center">Tue</span>
+                <span style="text-align: center">Wed</span>
+                <span style="text-align: center">Thu</span>
+                <span style="text-align: center">Fri</span>
+                <span style="text-align: center">Sat</span>
+                <span style="text-align: center">Sun</span>
+              </div>
+              <div class="days-info">0 days per week</div>
+            </div>
+
+            <div class="progress-stats">
+              <div class="stat-label">Progress Overview</div>
+              <div class="stats-row">
+                <div class="stat-item">
+                  <div class="stat-value blue" id="currentStreak">0</div>
+                  <div class="stat-description">Current Streak</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value purple">0%</div>
+                  <div class="stat-description">Success Rate</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value green" id="totalDays">0</div>
+                  <div class="stat-description">Total Days</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="save-changes-btn" id="saveChangesBtn">
+          Save Changes
+        </button>
+      </div>
+    </div>
+    <script src="../js/habits_edit.js"></script>
+  </body>
+</html>

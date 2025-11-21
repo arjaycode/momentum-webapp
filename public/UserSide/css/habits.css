@@ -169,10 +169,16 @@
   cursor: pointer;
   font-size: 0.85rem;
   transition: background 0.3s ease;
-  font-weight: 500;
+}
+
+.btn-view {
+  text-decoration: none;
+  background-color: #b9ceff;
+  color: #333;
 }
 
 .btn-edit {
+  text-decoration: none;
   background-color: #f1c40f; /* Yellow/Orange */
   color: #333;
 }

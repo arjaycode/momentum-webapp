@@ -11,7 +11,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url('../images/figma.jpg') center/cover no-repeat fixed;
   overflow: scroll;
 }
 

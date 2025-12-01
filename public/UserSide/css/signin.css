@@ -384,3 +384,39 @@ body {
     max-width: 420px;
   }
 }
+
+.success-alert {
+  background-color: #d4edda; /* Light green background */
+  color: #155724; /* Dark green text */
+  border: 1px solid #c3e6cb;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  font-family: sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+.success-icon {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-right: 10px;
+}
+
+/* validation message */
+.msg {
+  display: block;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+.msg.success {
+  background: #e8f7ee;
+  color: #185b2b;
+}
+.msg.error {
+  background: #fff0f0;
+  color: #9b2b2b;
+  list-style-type: none;
+}

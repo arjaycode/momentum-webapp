@@ -260,11 +260,12 @@ input:focus {
 }
 
 .socials {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .social-btn {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -275,6 +276,11 @@ input:focus {
   background: #fff;
   cursor: pointer;
   font-size: 14px;
+  transition: background ease-in-out 300ms;
+}
+
+.social-btn:hover {
+  background: #e7e6e6;
 }
 
 .signin {
@@ -291,7 +297,7 @@ input:focus {
 
 /* validation message */
 .msg {
-  display: none;
+  display: block;
   padding: 10px;
   border-radius: 8px;
   margin-top: 8px;
@@ -304,6 +310,7 @@ input:focus {
 .msg.error {
   background: #fff0f0;
   color: #9b2b2b;
+  list-style-type: none;
 }
 
 /* responsive */

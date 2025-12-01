@@ -18,12 +18,13 @@
       <h1 class="auth-title">Momentum Admin</h1>
       <p class="auth-subtitle">Secure admin panel access</p>
 
-      <form id="signinForm" class="auth-form active" action="{{ route('dashboard') }}" method="get">
+      <form id="signinForm" class="auth-form active" action="{{ route('user.signin.submit') }}" method="POST">
+        @csrf
         <div class="form-group">
           <label for="signinEmail">Email or Username</label>
           <div class="input-wrapper">
             <i class="fas fa-user input-icon"></i>
-            <input type="text" id="signinEmail" placeholder="Enter email or username" class="auth-input" required />
+            <input type="text" id="signinEmail" name="email" placeholder="Enter email or username" class="auth-input" required />
           </div>
         </div>
 
@@ -31,7 +32,7 @@
           <label for="signinPassword">Password</label>
           <div class="input-wrapper">
             <i class="fas fa-lock input-icon"></i>
-            <input type="password" id="signinPassword" placeholder="Enter password" class="auth-input" required />
+            <input type="password" id="signinPassword" name="password" placeholder="Enter password" class="auth-input" required />
             <button type="button" class="password-toggle" id="toggleSigninPassword">
               <i class="fas fa-eye"></i>
             </button>

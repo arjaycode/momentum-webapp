@@ -8,11 +8,12 @@
 </head>
 <body style="background: url('{{ asset('UserSide/img/figma.jpg')}}') center/cover no-repeat fixed;">
   <div class="bg-rings" aria-hidden="true"></div>
-
   <div class="container" role="main">
     <section class="promo" aria-label="Marketing">
       <div class="logo">
-        <div class="brand-square">M</div>
+        <div class="brand-square"><svg viewBox="0 0 24 24">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg></div>
         <div style="color: rgba(255, 255, 255, 0.95); font-weight: 700">
           Momentum
         </div>
@@ -34,32 +35,35 @@
     <aside class="card" aria-label="Create Account">
       <div class="brand">
         <div class="brand-square" style="width: 30px; height: 30px; font-size: 13px">
-          M
+          <svg viewBox="0 0 24 24">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
         </div>
       </div>
 
       <h2>Create Account</h2>
       <p class="subtitle">Start your habit-building journey today</p>
 
-      <form id="signupForm" novalidate autocomplete="off" action="{{ route('user-signin') }}">
+      <form action="{{ route('user.signup.submit') }}" method="POST">
+        @csrf
         <div class="form-grid" role="group" aria-label="Name and email">
           <div>
             <label for="firstName">First Name</label>
-            <input id="firstName" name="firstName" type="text" placeholder="John" value="" required />
+            <input id="firstName" name="firstname" type="text" placeholder="John" value="" />
           </div>
           <div>
             <label for="lastName">Last Name</label>
-            <input id="lastName" name="lastName" type="text" placeholder="Doe" value="" required />
+            <input id="lastName" name="lastname" type="text" placeholder="Doe" value="" />
           </div>
 
           <div class="full-row">
             <label for="email">Email Address</label>
-            <input id="email" name="email" type="email" placeholder="john@example.com" value="" required />
+            <input id="email" name="email" type="email" placeholder="john@example.com" value="" />
           </div>
 
           <div class="full-row pw-row">
             <label for="password">Password</label>
-            <input id="password" name="password" type="password" placeholder="Create a strong password" aria-describedby="pwHelp" required />
+            <input id="password" name="password" type="password" placeholder="Create a strong password" aria-describedby="pwHelp" />
             <button type="button" class="pw-toggle" id="togglePw" aria-pressed="false" title="Show password">
               Show
             </button>
@@ -68,15 +72,15 @@
             </div>
           </div>
         </div>
-
-        <div class="terms">
-          <input type="checkbox" id="agree" name="agree" aria-label="Agree to terms" />
-          <label for="agree" style="margin: 0; font-size: 13px; color: #444">I agree to the
-            <a href="#" style="color: var(--accent); text-decoration: none">Terms of Service</a>
-            and
-            <a href="#" style="color: var(--accent); text-decoration: none">Privacy Policy</a></label>
+        @if ($errors->any())
+        <div>
+          <ul class="msg">
+            @foreach ($errors->all() as $error)
+            <li class="msg error">{{ $error }}</li>
+            @endforeach
+          </ul>
         </div>
-
+        @endif
         <div>
           <button class="btn btn-primary" id="createBtn" type="Submit">
             Create Account
@@ -95,13 +99,10 @@
           <button type="button" class="social-btn" id="googleBtn">
             G Google
           </button>
-          <button type="button" class="social-btn" id="appleBtn">
-             Apple
-          </button>
         </div>
 
         <div class="signin">
-          Already have an account? <a href="{{ route('user-signin') }}">Sign in here</a>
+          Already have an account? <a href="{{ route('user.signin') }}">Sign in here</a>
         </div>
       </form>
     </aside>

@@ -69,6 +69,22 @@
   width: 20px;
 }
 
+.logout-btn {
+  flex: 1;
+  color: #666;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.logout-btn:hover {
+  cursor: pointer;
+}
+
 .user-profile {
   display: flex;
   align-items: center;

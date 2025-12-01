@@ -43,7 +43,12 @@
       </div>
       <h2>Momentum</h2>
       <p class="subtitle">Build better habits, track your progress</p>
-
+      @if (session('success'))
+      <div class="success-alert">
+        <span class="success-icon">✓</span>
+        {{ session('success') }}
+      </div>
+      @endif
       <div class="welcome-title">Welcome Back</div>
       <p class="subtitle" style="margin-bottom: 20px">
         Sign in to continue your habit journey
@@ -63,12 +68,13 @@
 
       <div class="divider">or</div>
 
-      <form action="{{ route('user-dashboard') }}" method="GET">
+      <form action="{{ route('user.signin.submit') }}" method="POST">
+        @csrf
         <div class="form-group">
           <label>Email Address</label>
           <div class="input-wrapper">
             <span class="input-icon">✉</span>
-            <input type="email" placeholder="Enter your email" required />
+            <input type="email" name="email" placeholder="Enter your email" />
           </div>
         </div>
 
@@ -76,7 +82,7 @@
           <label>Password</label>
           <div class="input-wrapper">
             <span class="input-icon">🔒</span>
-            <input type="password" id="password" placeholder="Enter your password" required />
+            <input type="password" id="password" name="password" placeholder="Enter your password" />
             <button type="button" class="toggle-password" onclick="togglePassword()">
               👁
             </button>
@@ -89,12 +95,21 @@
           </label>
           <a href="#" class="forgot-link" onclick="alert('Password reset coming soon!'); return false;">Forgot password?</a>
         </div>
+        @if ($errors->any())
+        <div>
+          <ul class="msg">
+            @foreach ($errors->all() as $error)
+            <li class="msg error">{{ $error }}</li>
+            @endforeach
+          </ul>
+        </div>
+        @endif
 
         <button type="submit" class="sign-in-btn">Sign In</button>
       </form>
 
       <div class="sign-up-link">
-        Don't have an account? <a href="{{ route('user-signup') }}">Sign up here</a>
+        Don't have an account? <a href="{{ route('user.signup') }}">Sign up here</a>
       </div>
 
       <div class="benefits">

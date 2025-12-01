@@ -40,7 +40,7 @@
         <th>Streak</th>
         <th class="flex-between">
           Actions
-          <a class="add-btn" href="{{ route('user-habits-add') }}"><i class="fas fa-plus"></i>Add Habit</a>
+          <a class="add-btn" href="{{ route('user.habits.add') }}"><i class="fas fa-plus"></i>Add Habit</a>
         </th>
       </tr>
     </thead>
@@ -52,10 +52,10 @@
         <td>
           <div class="action-container">
             <div class="action-buttons">
-              <a class="btn btn-view" href="{{ route('user-habits-view') }}">
+              <a class="btn btn-view" href="{{ route('user.habits.view') }}">
                 <i class="fa-solid fa-expand"></i> View
               </a>
-              <a class="btn btn-edit" href="{{ route('user-habits-edit') }}">
+              <a class="btn btn-edit" href="{{ route('user.habits.edit') }}">
                 <i class="fa-regular fa-pen-to-square"></i> Edit
               </a>
               <a class="btn btn-delete">
@@ -78,10 +78,10 @@
         <td>
           <div class="action-container">
             <div class="action-buttons">
-              <a class="btn btn-view" href="{{ route('user-habits-view') }}">
+              <a class="btn btn-view" href="{{ route('user.habits.view') }}">
                 <i class="fa-solid fa-expand"></i> View
               </a>
-              <a class="btn btn-edit" href="{{ route('user-habits-edit') }}">
+              <a class="btn btn-edit" href="{{ route('user.habits.edit') }}">
                 <i class="fa-regular fa-pen-to-square"></i> Edit
               </a>
               <a class="btn btn-delete">
@@ -104,10 +104,10 @@
         <td>
           <div class="action-container">
             <div class="action-buttons">
-              <a class="btn btn-view" href="{{ route('user-habits-view') }}">
+              <a class="btn btn-view" href="{{ route('user.habits.view') }}">
                 <i class="fa-solid fa-expand"></i> View
               </a>
-              <a class="btn btn-edit" href="{{ route('user-habits-edit') }}">
+              <a class="btn btn-edit" href="{{ route('user.habits.edit') }}">
                 <i class="fa-regular fa-pen-to-square"></i> Edit
               </a>
               <a class="btn btn-delete">

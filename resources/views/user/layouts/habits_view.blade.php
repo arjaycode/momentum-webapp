@@ -130,7 +130,7 @@
   </div>
 </div>
 
-<a class="save-changes-btn" href="{{ route('user-habits') }}">
+<a class="save-changes-btn" href="{{ route('user.habits') }}">
   Back
 </a>
 @endsection

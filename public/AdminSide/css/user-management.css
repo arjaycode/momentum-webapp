@@ -360,6 +360,7 @@ body {
 .btn-edit {
   background: #10b981;
   color: white;
+  text-decoration: none;
 }
 
 .btn-edit:hover {

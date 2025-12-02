@@ -12,7 +12,7 @@
 <main class="main-content">
   <!-- Back Button -->
   <div class="back-section">
-    <a href="{{ route('user-management') }}" class="back-btn">
+    <a href="{{ route('admin.user-management') }}" class="back-btn">
       <i class="fas fa-arrow-left"></i>
       Back to User Management
     </a>
@@ -22,16 +22,32 @@
 
   <!-- Create User Form -->
   <div class="form-container">
-    <form id="createUserForm" class="user-form">
+    @if (session('success'))
+    <div class="success-alert">
+      <span class="success-icon">✓</span>
+      {{ session('success') }}
+    </div>
+    @endif
+    @if ($errors->any())
+    <div>
+      <ul class="msg">
+        @foreach ($errors->all() as $error)
+        <li class="msg error">{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+    @endif
+    <form id="createUserForm" class="user-form" action="{{ route('admin.user-management.create.submit') }}" method="POST">
+      @csrf
       <!-- Name Fields -->
       <div class="form-row">
         <div class="form-group">
           <label for="firstName">First Name</label>
-          <input type="text" id="firstName" name="firstName" placeholder="Enter first name" class="form-input" required />
+          <input type="text" id="firstName" name="firstname" placeholder="Enter first name" class="form-input" required />
         </div>
         <div class="form-group">
           <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" name="lastName" placeholder="Enter last name" class="form-input" required />
+          <input type="text" id="lastName" name="lastname" placeholder="Enter last name" class="form-input" required />
         </div>
       </div>
 
@@ -70,7 +86,6 @@
           <select id="role" name="role" class="form-select" required>
             <option value="">Select role</option>
             <option value="user">User</option>
-            <option value="moderator">Moderator</option>
             <option value="admin">Admin</option>
           </select>
         </div>
@@ -80,16 +95,14 @@
             <option value="">Select status</option>
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
-            <option value="pending">Pending</option>
+            <option value="blocked">Blocked</option>
           </select>
         </div>
       </div>
 
       <!-- Form Actions -->
       <div class="form-actions">
-        <button type="button" class="btn-cancel" id="cancelBtn">
-          Cancel
-        </button>
+        <a href="{{ route('admin.user-management') }}" class="btn-cancel" id="cancelBtn">Cancel</a>
         <button type="submit" class="btn-create">
           <i class="fas fa-plus"></i>
           Create User

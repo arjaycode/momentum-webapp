@@ -254,6 +254,7 @@ body {
   outline: none;
   transition: all 0.2s;
   background: white;
+  width: min-content;
 }
 
 .form-input::placeholder {

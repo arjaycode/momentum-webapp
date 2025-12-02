@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             'lastname' => 'Aranas',
             'email' => 'admin@momentum.com',
             'password' => '12341234',
-            'role' => 'admin'
+            'role' => 'admin',
+            'status' => 'active'
         ]);
     }
 }

@@ -136,10 +136,14 @@ body {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  width: fit-content;
+  min-width: 340px;
 }
 
 .password-input-wrapper .form-input {
   padding-right: 48px;
+  flex: 1;
 }
 
 .password-toggle {

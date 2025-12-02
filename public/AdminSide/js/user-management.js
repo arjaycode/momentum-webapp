@@ -74,7 +74,7 @@ const deleteModalOverlay = document.getElementById('deleteModalOverlay');
 const deleteModalCancel = document.getElementById('deleteModalCancel');
 const deleteModalConfirm = document.getElementById('deleteModalConfirm');
 let currentRowToDelete = null;
-
+let userId = null;
 // Open Delete Modal
 function openDeleteModal(userData) {
   document.getElementById('deleteUserName').textContent = userData.name;
@@ -82,7 +82,7 @@ function openDeleteModal(userData) {
   document.getElementById('deleteUserEmail').textContent = userData.email;
   document.getElementById('deleteUserAvatar').src = userData.avatar;
   currentRowToDelete = userData.row;
-
+  userId = userData.id;
   deleteModal.classList.add('active');
   deleteModalOverlay.classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -114,6 +114,17 @@ deleteModalConfirm.addEventListener('click', function () {
       closeDeleteModal();
     }, 300);
   }
+  // Delete Request
+  const url = `/admin/user-management/delete/${userId}`;
+  const token = document
+    .querySelector('meta[name="csrf-token"]')
+    .getAttribute('content');
+  fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'X-CSRF-TOKEN': token,
+    },
+  });
 });
 
 // Close on Escape
@@ -128,7 +139,7 @@ document.querySelectorAll('.btn-delete').forEach((btn) => {
   btn.addEventListener('click', function () {
     const row = this.closest('tr');
     const userName = row.querySelector('.user-name').textContent;
-    const userId = row.querySelector('.user-id')?.textContent || 'ID: #001';
+    const userId = row.querySelector('.user-id1')?.textContent || 'ID: #001';
     const userEmail = row.cells[2]?.textContent || 'email@example.com';
     const userAvatar =
       row.querySelector('.user-avatar')?.src ||
@@ -153,6 +164,7 @@ const banReasonTextarea = document.getElementById('banReason');
 const banReasonError = document.getElementById('banReasonError');
 let currentRowToBan = null;
 let currentUserName = null;
+let banId = null;
 
 // Open Ban Modal
 function openBanModal(userData) {
@@ -162,6 +174,7 @@ function openBanModal(userData) {
   document.getElementById('banUserAvatar').src = userData.avatar;
   currentRowToBan = userData.row;
   currentUserName = userData.name;
+  banId = userData.id;
 
   banReasonTextarea.value = '';
   banReasonTextarea.classList.remove('error');
@@ -224,9 +237,29 @@ banModalConfirm.addEventListener('click', function () {
     statusBadge.className = 'status-badge blocked';
 
     console.log('Ban reason:', reason);
-    alert(`${currentUserName} has been banned.`);
     closeBanModal();
   }
+
+  //Ban Request
+  const url = `/admin/user-management/${banId}/update-status`;
+  const token = document
+    .querySelector('meta[name="csrf-token"]')
+    .getAttribute('content');
+  const newStatus = 'blocked';
+
+  fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'X-CSRF-TOKEN': token,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      status: newStatus,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => console.log(data));
 });
 
 // Close on Escape
@@ -241,7 +274,7 @@ document.querySelectorAll('.btn-ban').forEach((btn) => {
   btn.addEventListener('click', function () {
     const row = this.closest('tr');
     const userName = row.querySelector('.user-name').textContent;
-    const userId = row.querySelector('.user-id')?.textContent || 'ID: #001';
+    const userId = row.querySelector('.user-id1')?.textContent || 'ID: #001';
     const userEmail = row.cells[2]?.textContent || 'email@example.com';
     const userAvatar =
       row.querySelector('.user-avatar')?.src ||

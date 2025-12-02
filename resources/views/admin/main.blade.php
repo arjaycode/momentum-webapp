@@ -3,11 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>@yield('title')</title>
   @php
   $cssfile = trim($__env->yieldContent('css-file'));
   $jsfile = trim($__env->yieldContent('js-file'));
   @endphp
+  <link rel="icon" type="image/x-icon" href="{{ asset('AdminSide/img/Logo.png') }}">
   <link rel="stylesheet" href="{{ asset('AdminSide/css/sidebar.css') }}" />
   <link rel="stylesheet" href="{{ asset('AdminSide/css/header.css') }}" />
   <link rel="stylesheet" href="{{ asset('AdminSide/css/'.$cssfile) }}" />

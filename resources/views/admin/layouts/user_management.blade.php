@@ -16,7 +16,7 @@
       <div class="stat-header">
         <div class="stat-info">
           <span class="stat-label">Total Users</span>
-          <div class="stat-value">2,847</div>
+          <div class="stat-value">{{ $totalUsers }}</div>
           <div class="stat-change positive">
             <i class="fas fa-arrow-up"></i> 12% from last month
           </div>
@@ -31,7 +31,7 @@
       <div class="stat-header">
         <div class="stat-info">
           <span class="stat-label">Active Users</span>
-          <div class="stat-value">2,234</div>
+          <div class="stat-value">{{ $totalActiveUsers }}</div>
           <div class="stat-change positive">
             <i class="fas fa-arrow-up"></i> 8% from last month
           </div>
@@ -45,8 +45,8 @@
     <div class="stat-card">
       <div class="stat-header">
         <div class="stat-info">
-          <span class="stat-label">New Users</span>
-          <div class="stat-value">156</div>
+          <span class="stat-label">Inactive Users</span>
+          <div class="stat-value">{{ $totalInactiveUsers }}</div>
           <div class="stat-change negative">
             <i class="fas fa-arrow-down"></i> 3% from last month
           </div>
@@ -61,7 +61,7 @@
       <div class="stat-header">
         <div class="stat-info">
           <span class="stat-label">Blocked Users</span>
-          <div class="stat-value">23</div>
+          <div class="stat-value">{{ $totalBlockedUsers }}</div>
           <div class="stat-change positive">
             <i class="fas fa-arrow-up"></i> 2 new blocks
           </div>
@@ -83,7 +83,7 @@
         </p>
       </div>
       <button class="btn-primary">
-        <a class="adduser" href="{{ route('user-management.create') }}"><i class="fas fa-plus"></i> Add New User</a>
+        <a class="adduser" href="{{ route('admin.user-management.create') }}"><i class="fas fa-plus"></i> Add New User</a>
       </button>
     </div>
 
@@ -120,23 +120,24 @@
           </tr>
         </thead>
         <tbody>
+          @foreach ($users as $user)
           <tr>
             <td>
               <div class="user-cell">
                 <img src="https://i.pravatar.cc/40?img=1" alt="Sarah Johnson" class="user-avatar" />
                 <div class="user-details">
-                  <div class="user-name">Sarah Johnson</div>
-                  <div class="user-id">ID: #001</div>
+                  <div class="user-name">{{$user->firstname." ".$user->lastname}}</div>
+                  <div class="user-id">ID: #<span class="user-id1">{{$user->id}}</span></div>
                 </div>
               </div>
             </td>
-            <td>sarah.johnson@email.com</td>
-            <td><span class="role-badge user">User</span></td>
-            <td><span class="status-badge active">Active</span></td>
+            <td>{{ $user->email }}</td>
+            <td><span class="role-badge user">{{ $user->role}}</span></td>
+            <td><span class="status-badge active">{{ $user->status}}</span></td>
             <td>2 hours ago</td>
             <td>
               <div class="action-buttons">
-                <a class="btn-action btn-edit" href="{{ route('user-management.edit')}}"><i class="fas fa-edit"></i> Edit User</a>
+                <a class="btn-action btn-edit" href="{{ route('admin.user-management.edit', $user->id)}}"><i class="fas fa-edit"></i> Edit User</a>
                 <button class="btn-action btn-delete">
                   <i class="fas fa-trash"></i> Delete User
                 </button>
@@ -146,6 +147,7 @@
               </div>
             </td>
           </tr>
+          @endforeach
         </tbody>
       </table>
     </div>
@@ -168,13 +170,10 @@
 <!-- MODAL -->
 <!-- Delete Modal Overlay -->
 <div class="delete-modal-overlay" id="deleteModalOverlay"></div>
-
 <!-- Delete Modal -->
 <div class="delete-modal" id="deleteModal">
   <div class="delete-modal-icon"></div>
-
   <h3 class="delete-modal-title">Are you sure to delete this user?</h3>
-
   <div class="delete-user-info">
     <img src="" alt="User" class="delete-user-avatar" id="deleteUserAvatar" />
     <div class="delete-user-details">
@@ -183,7 +182,6 @@
     </div>
     <div class="delete-user-email" id="deleteUserEmail"></div>
   </div>
-
   <div class="delete-modal-actions">
     <button class="delete-modal-btn delete-modal-cancel" id="deleteModalCancel">
       Cancel

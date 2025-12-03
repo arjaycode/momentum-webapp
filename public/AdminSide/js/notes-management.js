@@ -312,15 +312,15 @@ document.addEventListener('click', function () {
   }
 });
 
-// Auto-save simulation (for future implementation)
-let autoSaveTimer;
-function simulateAutoSave() {
-  clearTimeout(autoSaveTimer);
-  autoSaveTimer = setTimeout(() => {
-    console.log('Auto-save triggered');
-    // In a real app, this would save data to backend
-  }, 2000);
-}
+// // Auto-save simulation (for future implementation)
+// let autoSaveTimer;
+// function simulateAutoSave() {
+//   clearTimeout(autoSaveTimer);
+//   autoSaveTimer = setTimeout(() => {
+//     console.log('Auto-save triggered');
+//     // In a real app, this would save data to backend
+//   }, 2000);
+// }
 
-// Attach auto-save to search input
-searchInput.addEventListener('input', simulateAutoSave);
+// // Attach auto-save to search input
+// searchInput.addEventListener('input', simulateAutoSave);

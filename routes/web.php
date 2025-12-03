@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupController;
+use App\Http\Controllers\GoogleController;
 
 Route::get('/', function () {
   $user = Auth::user();
@@ -63,3 +64,6 @@ Route::middleware('auth')->group(function () {
     Route::view('/settings', 'user.layouts.settings')->name('settings');
   });
 });
+
+Route::get('auth/google', [GoogleController::class, 'google_auth'])->name('google.auth');
+Route::get('auth/google/callback', [GoogleController::class, 'google_callback'])->name('google.auth.callback');

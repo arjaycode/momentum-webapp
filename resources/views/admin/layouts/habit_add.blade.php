@@ -12,7 +12,7 @@
 <main class="main-content">
   <!-- Back Button -->
   <div class="back-section">
-    <a class="back-btn" href="{{ route('habit-management') }}"><i class="fas fa-arrow-left"></i>
+    <a class="back-btn" href="{{ route('admin.habit-management') }}"><i class="fas fa-arrow-left"></i>
       Back to Habit Management</a>
   </div>
 

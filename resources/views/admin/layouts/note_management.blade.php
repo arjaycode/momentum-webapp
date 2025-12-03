@@ -29,7 +29,7 @@
       <i class="fas fa-search"></i>
       <input type="text" placeholder="Search categories..." id="notesSearch" />
     </div>
-    <a class="btn-primary" href=" {{ route('note-management.create') }}"><i class="fas fa-plus"></i> Add New Note</a>
+    <a class="btn-primary" href=" {{ route('admin.note-management.create') }}"><i class="fas fa-plus"></i> Add New Note</a>
   </div>
 
   <!-- Notes List -->
@@ -46,7 +46,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('admin.note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -86,7 +86,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('admin.note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -126,7 +126,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('admin.note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -166,7 +166,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('admin.note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -206,7 +206,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('admin.note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>
@@ -246,7 +246,7 @@
         </div>
         <div class="user-email">sarah.johnson@email.com</div>
         <div class="note-actions">
-          <a class="action-btn edit-btn" title="Edit" href="{{ route('note-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-btn edit-btn" title="Edit" href="{{ route('admin.note-management.edit') }}"><i class="fas fa-edit"></i></a>
           <button class="action-btn delete-btn" title="Delete">
             <i class="fas fa-trash"></i>
           </button>

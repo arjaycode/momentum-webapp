@@ -55,7 +55,7 @@
         <option value="active">Active</option>
         <option value="inactive">Inactive</option>
       </select>
-      <a class="btn-primary" href="{{ route('habit-management.create') }}"><i class="fas fa-plus"></i> Add Category</a>
+      <a class="btn-primary" href="{{ route('admin.habit-management.create') }}"><i class="fas fa-plus"></i> Add Category</a>
     </div>
   </div>
 
@@ -68,7 +68,7 @@
           <i class="fas fa-dumbbell"></i>
         </div>
         <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
           <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
@@ -89,7 +89,7 @@
           <i class="fas fa-brain"></i>
         </div>
         <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
           <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
@@ -110,7 +110,7 @@
           <i class="fas fa-graduation-cap"></i>
         </div>
         <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
           <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
@@ -131,7 +131,7 @@
           <i class="fas fa-briefcase"></i>
         </div>
         <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
           <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
@@ -152,7 +152,7 @@
           <i class="fas fa-heart"></i>
         </div>
         <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
           <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
@@ -173,7 +173,7 @@
           <i class="fas fa-users"></i>
         </div>
         <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
           <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>

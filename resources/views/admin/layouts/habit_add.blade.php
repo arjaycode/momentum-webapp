@@ -18,17 +18,33 @@
 
   <!-- Add Category Form -->
   <div class="form-container">
-    <form id="addCategoryForm" class="category-form">
+    <form class="category-form" action="{{ route('admin.habit-management.create.submit')}}" method="POST">
+      @csrf
+      @if (session('success'))
+      <div class="success-alert">
+        <span class="success-icon">✓</span>
+        {{ session('success') }}
+      </div>
+      @endif
+      @if ($errors->any())
+      <div>
+        <ul class="msg">
+          @foreach ($errors->all() as $error)
+          <li class="msg error">{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+      @endif
       <!-- Habit Name -->
       <div class="form-group">
-        <label for="habitName">Habit Name</label>
-        <input type="text" id="habitName" name="habitName" placeholder="Enter habit name..." class="form-input" required />
+        <label for="title">Habit Title</label>
+        <input type="text" id="title" name="title" placeholder="Enter habit name..." class="form-input" required />
       </div>
 
       <!-- Description -->
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea id="description" name="description" placeholder="Enter description..." rows="5" class="form-textarea" required></textarea>
+        <textarea id="description" name="description" placeholder="Enter description..." rows="5" class="form-textarea"></textarea>
       </div>
 
       <!-- Status -->

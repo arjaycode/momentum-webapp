@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('habits_categories', function (Blueprint $table) {
+        Schema::create('habit_logs', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 30);
-            $table->text('description')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->string('color', 20)->default('blue'); // Default color
-            $table->string('icon', 20)->nullable();
+            $table->foreignId('habit_id')->constrained('habits')->onDelete('cascade');
+
+            // The specific date this was completed
+            $table->date('completed_at');
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('habits_categories');
+        Schema::dropIfExists('habit_logs');
     }
 };

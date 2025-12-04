@@ -132,8 +132,8 @@
               </div>
             </td>
             <td>{{ $user->email }}</td>
-            <td><span class="role-badge user">{{ $user->role}}</span></td>
-            <td><span class="status-badge active">{{ $user->status}}</span></td>
+            <td><span class="role-badge {{ $user->role }}">{{ $user->role}}</span></td>
+            <td><span class="status-badge {{ $user->status }}">{{ $user->status}}</span></td>
             <td>2 hours ago</td>
             <td>
               <div class="action-buttons">
@@ -150,17 +150,6 @@
           @endforeach
         </tbody>
       </table>
-    </div>
-
-    <div class="table-footer">
-      <div class="table-info">Showing 1 to 5 of 2,847 results</div>
-      <div class="pagination">
-        <button class="pagination-btn" disabled>Previous</button>
-        <button class="pagination-btn active">1</button>
-        <button class="pagination-btn">2</button>
-        <button class="pagination-btn">3</button>
-        <button class="pagination-btn">Next</button>
-      </div>
     </div>
   </div>
 </main>

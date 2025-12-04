@@ -6,6 +6,7 @@ use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\Habit\HabitCategoryController;
 
 Route::get('/', function () {
   $user = Auth::user();
@@ -36,6 +37,7 @@ Route::middleware('auth')->group(function () {
   //Admin
   Route::prefix('admin')->name('admin.')->middleware(['role:admin'])->group(function () {
     Route::view('/dashboard', 'admin.layouts.dashboard')->name('dashboard');
+    //User Management
     Route::get('/user-management', [UserController::class, 'index'])->name('user-management');
     Route::view('/user-management/create', 'admin.layouts.user_addnew')->name('user-management.create');
     Route::post('/user-management/create', [UserController::class, 'store'])->name('user-management.create.submit');
@@ -43,10 +45,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/user-management/edit/{id}', [UserController::class, 'update'])->name('user-management.edit.submit');
     Route::delete('/user-management/delete/{id}', [UserController::class, 'delete'])->name('user-management.delete');
     Route::patch('/user-management/{id}/update-status', [UserController::class, 'update_status'])->name('user-management.update-status');
-
-    Route::view('/habit-management', 'admin.layouts.habit_management')->name('habit-management');
+    //Habits Category Management
+    Route::get('/habit-management', [HabitCategoryController::class, 'index'])->name('habit-management');
     Route::view('/habit-management/create', 'admin.layouts.habit_add')->name('habit-management.create');
-    Route::view('/habit-management/edit', 'admin.layouts.habit_edit')->name('habit-management.edit');
+    Route::post('/habit-management/create', [HabitCategoryController::class, 'store'])->name('habit-management.create.submit');
+    Route::get('/habit-management/edit/{id}', [HabitCategoryController::class, 'edit'])->name('habit-management.edit');
+    Route::patch('/habit-management/edit/{id}', [HabitCategoryController::class, 'update'])->name('habit-management.edit.submit');
+    Route::delete('/habit-management/delete/{id}', [HabitCategoryController::class, 'delete'])->name('habit-management.delete');
+
     Route::view('/note-management', 'admin.layouts.note_management')->name('note-management');
     Route::view('/note-management/create', 'admin.layouts.note_add')->name('note-management.create');
     Route::view('/note-management/edit', 'admin.layouts.note_edit')->name('note-management.edit');

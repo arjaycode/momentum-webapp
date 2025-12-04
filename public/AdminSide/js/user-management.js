@@ -125,6 +125,8 @@ deleteModalConfirm.addEventListener('click', function () {
       'X-CSRF-TOKEN': token,
     },
   });
+
+  window.location.reload();
 });
 
 // Close on Escape
@@ -260,6 +262,7 @@ banModalConfirm.addEventListener('click', function () {
   })
     .then((response) => response.json())
     .then((data) => console.log(data));
+  window.location.reload();
 });
 
 // Close on Escape

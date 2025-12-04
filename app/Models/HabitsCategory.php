@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class HabitsCategory extends Model
 {
-    protected $table = '';
-
-    protected $fillable = [];
+    protected $fillable = [
+        'title',
+        'description',
+        'status',
+        'color',
+        'icon'
+    ];
 }

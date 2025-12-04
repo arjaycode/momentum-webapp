@@ -71,6 +71,7 @@ document.querySelectorAll('.action-icon[title="Edit"]').forEach((btn) => {
 
 // Global variables to store the card and title of the category being deleted
 let categoryToDelete = null;
+let categoryIdToDelete = null;
 
 // Get references to modal elements
 const modalBackdrop = document.getElementById('deleteConfirmationModal');
@@ -82,7 +83,8 @@ const modalCategoryPreview = document.getElementById('modalCategoryPreview');
 function openDeleteModal(cardElement) {
   // 1. Store the card element for later use
   categoryToDelete = cardElement;
-
+  categoryIdToDelete = cardElement.querySelector('[name="category-id"]').value;
+  console.log('ID to delete:', categoryIdToDelete);
   // 2. Extract data from the category card
   const title = cardElement.querySelector('.category-title').textContent;
   // You'll need to adjust selectors based on your actual card structure for details/habits
@@ -144,6 +146,18 @@ modalConfirmButton.addEventListener('click', function () {
       }
       closeDeleteModal(); // Close the modal after deletion
     }, 300);
+    // Delete Request
+    const url = `/admin/habit-management/delete/${categoryIdToDelete}`;
+    const token = document
+      .querySelector('meta[name="csrf-token"]')
+      .getAttribute('content');
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'X-CSRF-TOKEN': token,
+      },
+    });
+    window.location.reload();
   }
 });
 

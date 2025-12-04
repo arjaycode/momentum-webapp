@@ -15,7 +15,7 @@
     <div class="stat-card">
       <div class="stat-info">
         <span class="stat-label">Total Categories</span>
-        <div class="stat-value">6</div>
+        <div class="stat-value">{{ $categories->count() }}</div>
       </div>
       <div class="stat-icon blue">
         <i class="fas fa-layer-group"></i>
@@ -25,20 +25,19 @@
     <div class="stat-card">
       <div class="stat-info">
         <span class="stat-label">Active Categories</span>
-        <div class="stat-value">5</div>
+        <div class="stat-value">{{ $categories->where('status', 'active')->count() }}</div>
       </div>
       <div class="stat-icon green">
         <i class="fas fa-check-circle"></i>
       </div>
     </div>
-
     <div class="stat-card">
       <div class="stat-info">
-        <span class="stat-label">Total Habits</span>
-        <div class="stat-value">55</div>
+        <span class="stat-label">Inactive Categories</span>
+        <div class="stat-value">{{ $categories->where('status', 'inactive')->count() }}</div>
       </div>
-      <div class="stat-icon purple">
-        <i class="fas fa-list"></i>
+      <div class="stat-icon orange">
+        <i class="fas fa-circle-xmark"></i>
       </div>
     </div>
   </div>
@@ -61,131 +60,28 @@
 
   <!-- Categories Grid -->
   <div class="categories-grid" id="categoriesGrid">
-    <!-- Fitness Category -->
+    @foreach ($categories as $category)
     <div class="category-card" data-category="fitness" data-status="active">
+      <input name="category-id" type="number" hidden value="{{ $category->id }}">
       <div class="category-header">
-        <div class="category-icon blue">
-          <i class="fas fa-dumbbell"></i>
+        <div class="category-icon {{ $category->color }}">
+          <i class="fas fa-{{ $category->icon }}"></i>
         </div>
         <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
+          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit', $category->id) }}"><i class="fas fa-edit"></i></a>
           <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
         </div>
       </div>
-      <h3 class="category-title">Fitness</h3>
+      <h3 class="category-title">{{ $category->title }}</h3>
       <p class="category-description">
-        Physical health and exercise related habits
+        {{ $category->description }}
       </p>
       <div class="category-footer">
-        <span class="habit-count">12 habits</span>
-        <span class="status-badge active">Active</span>
+        <span class="habit-count">0 habits</span>
+        <span class="status-badge {{ $category->status }}">{{ $category->status }}</span>
       </div>
     </div>
-
-    <!-- Mental Health Category -->
-    <div class="category-card" data-category="mental-health" data-status="active">
-      <div class="category-header">
-        <div class="category-icon purple">
-          <i class="fas fa-brain"></i>
-        </div>
-        <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
-          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
-        </div>
-      </div>
-      <h3 class="category-title">Mental Health</h3>
-      <p class="category-description">
-        Mindfulness, meditation and mental wellness
-      </p>
-      <div class="category-footer">
-        <span class="habit-count">8 habits</span>
-        <span class="status-badge active">Active</span>
-      </div>
-    </div>
-
-    <!-- Learning Category -->
-    <div class="category-card" data-category="learning" data-status="active">
-      <div class="category-header">
-        <div class="category-icon green">
-          <i class="fas fa-graduation-cap"></i>
-        </div>
-        <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
-          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
-        </div>
-      </div>
-      <h3 class="category-title">Learning</h3>
-      <p class="category-description">
-        Educational and skill development habits
-      </p>
-      <div class="category-footer">
-        <span class="habit-count">15 habits</span>
-        <span class="status-badge active">Active</span>
-      </div>
-    </div>
-
-    <!-- Productivity Category -->
-    <div class="category-card" data-category="productivity" data-status="active">
-      <div class="category-header">
-        <div class="category-icon orange">
-          <i class="fas fa-briefcase"></i>
-        </div>
-        <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
-          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
-        </div>
-      </div>
-      <h3 class="category-title">Productivity</h3>
-      <p class="category-description">
-        Work efficiency and time management
-      </p>
-      <div class="category-footer">
-        <span class="habit-count">7 habits</span>
-        <span class="status-badge active">Active</span>
-      </div>
-    </div>
-
-    <!-- Health Category -->
-    <div class="category-card" data-category="health" data-status="inactive">
-      <div class="category-header">
-        <div class="category-icon red">
-          <i class="fas fa-heart"></i>
-        </div>
-        <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
-          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
-        </div>
-      </div>
-      <h3 class="category-title">Health</h3>
-      <p class="category-description">
-        General health and wellness habits
-      </p>
-      <div class="category-footer">
-        <span class="habit-count">10 habits</span>
-        <span class="status-badge inactive">Inactive</span>
-      </div>
-    </div>
-
-    <!-- Social Category -->
-    <div class="category-card" data-category="social" data-status="active">
-      <div class="category-header">
-        <div class="category-icon indigo">
-          <i class="fas fa-users"></i>
-        </div>
-        <div class="category-actions">
-          <a class="action-icon" title="Edit" href="{{ route('admin.habit-management.edit') }}"><i class="fas fa-edit"></i></a>
-          <div class="action-icon" title="Delete"><i class="fas fa-trash"></i></div>
-        </div>
-      </div>
-      <h3 class="category-title">Social</h3>
-      <p class="category-description">
-        Relationships and social interaction habits
-      </p>
-      <div class="category-footer">
-        <span class="habit-count">5 habits</span>
-        <span class="status-badge active">Active</span>
-      </div>
-    </div>
+    @endforeach
   </div>
 </main>
 @endsection

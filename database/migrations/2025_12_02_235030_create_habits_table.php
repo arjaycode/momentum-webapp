@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('habits', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->nullable()->constrained('habits_categories')->nullOnDelete();
+
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->boolean('enable_push_notifications')->default(false);
+
+            // Stores: ["Mon", "Wed", "Fri"]
+            $table->json('target_days');
+
             $table->timestamps();
         });
     }

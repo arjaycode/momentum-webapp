@@ -286,7 +286,7 @@
 
     <div class="note-preview">
       <div class="preview-header">
-        <img src="https://via.placeholder.com/40" alt="User" class="user-avatar" />
+        <img src="https://i.pravatar.cc/40?img=12" alt="User" class="user-avatar" />
         <div>
           <div class="preview-user" id="modalUserName">Johnson</div>
           <div class="preview-id" id="modalUserId">ID: 4001</div>

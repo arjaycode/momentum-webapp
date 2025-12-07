@@ -4,14 +4,20 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Habit;
+<<<<<<< HEAD
 use App\Models\HabitLog;
 use App\Models\HabitsCategory;
 use App\Models\Notification;
+=======
+use App\Models\HabitsCategory;
+use Exception;
+>>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HabitController extends Controller
 {
+<<<<<<< HEAD
     public function index()
     {
         $user = Auth::user();
@@ -31,10 +37,40 @@ class HabitController extends Controller
     {
         $categories = HabitsCategory::where('status', 'active')->get();
         return view('user.layouts.habits_add', compact('categories'));
+=======
+    //
+    public function index()
+    {
+        $habits = Habit::all();
+        $withHighest = Habit::where('user_id', Auth::id())->orderBy('streak_days', 'desc')->first();
+        return view('user.layouts.habits', compact('habits', 'withHighest'));
+    }
+    public function create()
+    {
+        try {
+            $user_id = Auth::user()->id;
+            $habits_category = HabitsCategory::all();
+            return view('user.layouts.habits_add', compact('habits_category', 'user_id'));
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+    }
+
+
+
+    public function edit()
+    {
+        return view('user.layouts.habits_edit');
+    }
+    public function view()
+    {
+        return view('user.layouts.habits_view');
+>>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
     }
 
     public function store(Request $request)
     {
+<<<<<<< HEAD
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:habits_categories,id',
@@ -340,3 +376,16 @@ class HabitController extends Controller
     }
 }
 
+=======
+        $incoming_data = $request->validate([
+            'habit_name' => 'required|string|max:50',
+            'description' => 'string|nullable',
+            'enable_push_notifications' => 'boolean|required',
+            'target_days' => 'json'
+        ]);
+
+        Habit::create($incoming_data);
+        return redirect(route('user.habits'), 201)->with('success', 'Habit Added');
+    }
+}
+>>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8

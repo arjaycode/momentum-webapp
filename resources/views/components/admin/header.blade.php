@@ -15,10 +15,6 @@
   </div>
 
   <div class="header-right">
-    <input type="text" class="search-box" />
-    <button class="icon-btn">
-      <i class="fas fa-search"></i>
-    </button>
     <button class="icon-btn">
       <i class="fas fa-bell"></i>
     </button>

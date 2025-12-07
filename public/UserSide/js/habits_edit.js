@@ -55,7 +55,7 @@ function deleteNoteFromDOM(btn) {
 // Add note functionality
 const addNoteBtn = document.getElementById('addNoteBtn');
 const noteInputArea = document.getElementById('noteInputArea');
-const saveNoteBtn = document.getElementById('saveNoteBtn');
+// const saveNoteBtn = document.getElementById('saveNoteBtn');
 const noteInput = document.getElementById('noteInput');
 
 if (addNoteBtn) {
@@ -144,6 +144,7 @@ document.querySelectorAll('.day-circle').forEach((day) => {
   });
 });
 
+<<<<<<< HEAD
 function updateDaysCount() {
   const activeDays = document.querySelectorAll('.day-circle.active').length;
   const daysInfo = document.querySelector('.days-info');
@@ -211,6 +212,64 @@ if (saveBtn && saveBtn.type !== 'submit') {
 }
 
 // Function to set the current date in the header (only if element exists)
+=======
+// saveNoteBtn.addEventListener('click', function () {
+//   const noteText = noteInput.value.trim();
+//   if (noteText) {
+//     const now = new Date();
+//     const timeStr =
+//       now.toLocaleDateString('en-US', {
+//         year: 'numeric',
+//         month: 'short',
+//         day: 'numeric',
+//       }) +
+//       ' at ' +
+//       now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+//     const timestamp = now.toISOString();
+
+//     const newNoteItem = document.createElement('div');
+//     newNoteItem.className = 'note-item';
+//     newNoteItem.setAttribute('data-timestamp', timestamp);
+//     newNoteItem.innerHTML = `
+//                     <div class="note-text">${noteText}</div>
+//                     <div class="note-footer">
+//                         <div class="note-time">${timeStr}</div>
+//                         <div class="note-actions">
+//                             <button class="delete-note-btn" onclick="deleteNoteFromDOM(this)">🗑️</button>
+//                         </div>
+//                     </div>
+//                 `;
+
+//     document
+//       .getElementById('notesList')
+//       .insertBefore(
+//         newNoteItem,
+//         document.getElementById('notesList').firstChild
+//       );
+//     noteInput.value = '';
+//     noteInputArea.style.display = 'none';
+//   }
+// });
+
+// Delete Habit Functionality (Fulfills implicit requirement for a delete button)
+document.getElementById('deleteBtn').addEventListener('click', function () {
+  if (
+    confirm(
+      'Are you sure you want to delete this habit? This action cannot be undone.'
+    )
+  ) {
+    const habits = JSON.parse(localStorage.getItem('habits') || '[]');
+    const newHabits = habits.filter((h) => h.id !== currentHabitId);
+
+    localStorage.setItem('habits', JSON.stringify(newHabits));
+    alert('Habit deleted successfully!');
+    // Redirect back to myhabit dashboard
+    window.location.href = 'myhabit.html';
+  }
+});
+
+// Function to set the current date in the header
+>>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
 function setCurrentDate() {
   const currentDateEl = document.getElementById('currentDate');
   if (currentDateEl) {
@@ -222,3 +281,30 @@ function setCurrentDate() {
 
 // Expose function to global scope for use in inline HTML `onclick`
 window.deleteNoteFromDOM = deleteNoteFromDOM;
+
+document
+  .querySelectorAll('.day-circle input[type="checkbox"]')
+  .forEach((checkbox) => {
+    checkbox.addEventListener('change', function () {
+      // 1. Toggle the visual class on the parent label
+      if (this.checked) {
+        this.parentElement.classList.remove('inactive');
+        this.parentElement.classList.add('active'); // Assuming your CSS uses 'active' for the selected color
+      } else {
+        this.parentElement.classList.add('inactive');
+        this.parentElement.classList.remove('active');
+      }
+
+      // 2. Update the "X days per week" text
+      updateDaysCount();
+    });
+  });
+
+function updateDaysCount() {
+  const checkedCount = document.querySelectorAll(
+    '.day-circle input[type="checkbox"]:checked'
+  ).length;
+  document.querySelector(
+    '.days-info'
+  ).textContent = `${checkedCount} days per week`;
+}

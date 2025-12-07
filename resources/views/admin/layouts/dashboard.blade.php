@@ -19,10 +19,7 @@
           <i class="fas fa-users"></i>
         </div>
       </div>
-      <div class="stat-value">12,847</div>
-      <div class="stat-change positive">
-        <i class="fas fa-arrow-up"></i> +12.5%
-      </div>
+      <div class="stat-value">{{ $users->count()}}</div>
     </div>
 
     <div class="stat-card">
@@ -33,9 +30,6 @@
         </div>
       </div>
       <div class="stat-value">8,234</div>
-      <div class="stat-change positive">
-        <i class="fas fa-arrow-up"></i> +8.2%
-      </div>
     </div>
 
     <div class="stat-card">
@@ -46,9 +40,6 @@
         </div>
       </div>
       <div class="stat-value">24,567</div>
-      <div class="stat-change positive">
-        <i class="fas fa-arrow-up"></i> +15.3%
-      </div>
     </div>
 
     <div class="stat-card">
@@ -58,10 +49,7 @@
           <i class="fas fa-user-slash"></i>
         </div>
       </div>
-      <div class="stat-value">1,234</div>
-      <div class="stat-change negative">
-        <i class="fas fa-arrow-down"></i> -3.2%
-      </div>
+      <div class="stat-value">{{ $users->where('status', 'inactive')->count() }}</div>
     </div>
 
     <div class="stat-card">
@@ -71,10 +59,7 @@
           <i class="fas fa-user-times"></i>
         </div>
       </div>
-      <div class="stat-value">89</div>
-      <div class="stat-change positive">
-        <i class="fas fa-arrow-up"></i> +2.1%
-      </div>
+      <div class="stat-value">{{ $users->where('status', 'blocked')->count() }}</div>
     </div>
   </div>
 

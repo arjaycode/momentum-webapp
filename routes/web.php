@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminDashboardController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
@@ -10,6 +11,11 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Habit\HabitCategoryController;
+use App\Http\Controllers\Notes\NoteController;
+use App\Http\Controllers\User\CalendarController;
+use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\HabitController;
+use App\Http\Controllers\User\SettingsController;
 
 Route::get('/', function () {
   $user = Auth::user();
@@ -43,7 +49,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
   //Admin
   Route::prefix('admin')->name('admin.')->middleware(['role:admin'])->group(function () {
-    Route::view('/dashboard', 'admin.layouts.dashboard')->name('dashboard');
+    Route::get('/dashboard', [AdminDashboardController::class, 'view_dashboard'])->name('dashboard');
     //User Management
     Route::get('/user-management', [UserController::class, 'index'])->name('user-management');
     Route::view('/user-management/create', 'admin.layouts.user_addnew')->name('user-management.create');
@@ -60,14 +66,15 @@ Route::middleware('auth')->group(function () {
     Route::patch('/habit-management/edit/{id}', [HabitCategoryController::class, 'update'])->name('habit-management.edit.submit');
     Route::delete('/habit-management/delete/{id}', [HabitCategoryController::class, 'delete'])->name('habit-management.delete');
 
-    Route::view('/note-management', 'admin.layouts.note_management')->name('note-management');
-    Route::view('/note-management/create', 'admin.layouts.note_add')->name('note-management.create');
-    Route::view('/note-management/edit', 'admin.layouts.note_edit')->name('note-management.edit');
+    Route::get('/note-management', [NoteController::class, 'index'])->name('note-management');
+    Route::get('/note-management/create', [NoteController::class, 'create'])->name('note-management.create');
+    Route::get('/note-management/edit', [NoteController::class, 'edit'])->name('note-management.edit');
     Route::view('/settings', 'admin.layouts.settings')->name('settings');
   });
 
   //User
   Route::prefix('user')->name('user.')->middleware(['role:user'])->group(function () {
+<<<<<<< HEAD
     Route::get('/dashboard', [\App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/today-habits', [\App\Http\Controllers\User\DashboardController::class, 'getTodayHabits'])->name('today-habits');
     // Habits Management
@@ -91,6 +98,18 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.delete');
     Route::get('/profile/export', [ProfileController::class, 'exportData'])->name('profile.export');
+=======
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/habits', [HabitController::class, 'index'])->name('habits');
+
+    Route::get('/habits/add', [HabitController::class, 'create'])->name('habits.add');
+    Route::post('/habits/add', [HabitController::class, 'store'])->name('habits.add.submit');
+
+    Route::get('/habits/edit', [HabitController::class, 'edit'])->name('habits.edit');
+    Route::get('/habits/view', [HabitController::class, 'view'])->name('habits.view');
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
+>>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
   });
 });
 

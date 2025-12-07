@@ -11,6 +11,7 @@
     </p>
   </div>
   <div class="header-right">
+<<<<<<< HEAD
     <div class="notification-container">
       <button class="icon-button notification-button" id="headerNotificationButton">
         <i class="fas fa-bell"></i>
@@ -30,6 +31,12 @@
         </div>
       </div>
     </div>
+=======
+    <button class="icon-button notification-button">
+      <i class="fas fa-bell"></i>
+    </button>
+    {{-- Uses Laravel's built-in Carbon instance to show today's date --}}
+>>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
     <div class="header-date">{{ now()->format('l, F j, Y') }}</div>
   </div>
 </header>

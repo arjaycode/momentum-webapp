@@ -17,9 +17,6 @@
         <div class="stat-info">
           <span class="stat-label">Total Users</span>
           <div class="stat-value">{{ $totalUsers }}</div>
-          <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i> 12% from last month
-          </div>
         </div>
         <div class="stat-icon blue">
           <i class="fas fa-users"></i>
@@ -32,9 +29,6 @@
         <div class="stat-info">
           <span class="stat-label">Active Users</span>
           <div class="stat-value">{{ $totalActiveUsers }}</div>
-          <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i> 8% from last month
-          </div>
         </div>
         <div class="stat-icon green">
           <i class="fas fa-user-check"></i>
@@ -47,9 +41,6 @@
         <div class="stat-info">
           <span class="stat-label">Inactive Users</span>
           <div class="stat-value">{{ $totalInactiveUsers }}</div>
-          <div class="stat-change negative">
-            <i class="fas fa-arrow-down"></i> 3% from last month
-          </div>
         </div>
         <div class="stat-icon orange">
           <i class="fas fa-user-plus"></i>
@@ -62,9 +53,6 @@
         <div class="stat-info">
           <span class="stat-label">Blocked Users</span>
           <div class="stat-value">{{ $totalBlockedUsers }}</div>
-          <div class="stat-change positive">
-            <i class="fas fa-arrow-up"></i> 2 new blocks
-          </div>
         </div>
         <div class="stat-icon red">
           <i class="fas fa-user-times"></i>

@@ -26,7 +26,7 @@
     {{-- Habits --}}
     <a href="{{ route('admin.habit-management') }}" class="nav-item {{ $active === 'habits' ? 'active' : '' }}">
       <i class="fas fa-heart"></i>
-      <span>Habits</span>
+      <span>Habit Categories</span>
     </a>
 
     {{-- Notes --}}

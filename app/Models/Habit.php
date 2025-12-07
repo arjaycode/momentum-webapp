@@ -8,12 +8,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Habit extends Model
 {
+<<<<<<< HEAD
+=======
+    //
+>>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
     protected $fillable = [
         'user_id',
         'category_id',
         'name',
         'description',
         'enable_push_notifications',
+<<<<<<< HEAD
         'target_days',
     ];
 
@@ -36,4 +41,8 @@ class Habit extends Model
     {
         return $this->hasMany(HabitLog::class);
     }
+=======
+        'target_days'
+    ];
+>>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
 }

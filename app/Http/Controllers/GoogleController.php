@@ -32,11 +32,10 @@ class GoogleController extends Controller
                 // 2. If not, check by email and fill in details
                 [
                     'email' => $googleUser->email,
+                    'google_id' => $googleUser->id,
                     'firstname' => $firstname,
                     'lastname' => $lastname,
                     'email_verified_at' => now(),
-                    'google_id' => $googleUser->id,
-                    // Note: Password field will be null if no local password is set
                 ]
             );
 

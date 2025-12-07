@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class AdminDashboardController extends Controller
+{
+    //
+    public function view_dashboard()
+    {
+        $users = User::all();
+        return view('admin.layouts.dashboard', compact('users'));
+    }
+}

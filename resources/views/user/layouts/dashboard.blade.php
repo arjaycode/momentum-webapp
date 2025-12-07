@@ -12,12 +12,12 @@
 <div class="stats-grid">
   <div class="stat-card">
     <div class="stat-header">
-      <span class="stat-label">Active Habits</span>
+      <span class="stat-label">Habits</span>
       <div class="stat-icon green-icon">
         <i class="fas fa-list"></i>
       </div>
     </div>
-    <div class="stat-value">8</div>
+    <div class="stat-value">{{ $habits->count() }}</div>
   </div>
 
   <div class="stat-card">
@@ -37,7 +37,7 @@
         <i class="fas fa-fire"></i>
       </div>
     </div>
-    <div class="stat-value">12 days</div>
+    <div class="stat-value">{{ $withHighest->streak_days ?? 0 }} days</div>
   </div>
 
   <div class="stat-card">
@@ -47,7 +47,7 @@
         <i class="fas fa-note-sticky"></i>
       </div>
     </div>
-    <div class="stat-value">23</div>
+    <div class="stat-value">{{ $notes->count() }}</div>
   </div>
 </div>
 

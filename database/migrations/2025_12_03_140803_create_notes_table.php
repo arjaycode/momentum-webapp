@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('habit_id')->constrained('habits')->onDelete('cascade');
             $table->text('message');
+            $table->string('color')->nullable()->default('blue');
+            $table->string('icon')->nullable()->default('heart');
             $table->timestamps();
         });
     }

@@ -114,7 +114,7 @@ function deleteNoteFromDOM(btn) {
 // Add note functionality
 const addNoteBtn = document.getElementById('addNoteBtn');
 const noteInputArea = document.getElementById('noteInputArea');
-const saveNoteBtn = document.getElementById('saveNoteBtn');
+// const saveNoteBtn = document.getElementById('saveNoteBtn');
 const noteInput = document.getElementById('noteInput');
 
 addNoteBtn.addEventListener('click', function () {
@@ -125,95 +125,43 @@ addNoteBtn.addEventListener('click', function () {
   }
 });
 
-saveNoteBtn.addEventListener('click', function () {
-  const noteText = noteInput.value.trim();
-  if (noteText) {
-    const now = new Date();
-    const timeStr =
-      now.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      }) +
-      ' at ' +
-      now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    const timestamp = now.toISOString();
+// saveNoteBtn.addEventListener('click', function () {
+//   const noteText = noteInput.value.trim();
+//   if (noteText) {
+//     const now = new Date();
+//     const timeStr =
+//       now.toLocaleDateString('en-US', {
+//         year: 'numeric',
+//         month: 'short',
+//         day: 'numeric',
+//       }) +
+//       ' at ' +
+//       now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+//     const timestamp = now.toISOString();
 
-    const newNoteItem = document.createElement('div');
-    newNoteItem.className = 'note-item';
-    newNoteItem.setAttribute('data-timestamp', timestamp);
-    newNoteItem.innerHTML = `
-                    <div class="note-text">${noteText}</div>
-                    <div class="note-footer">
-                        <div class="note-time">${timeStr}</div>
-                        <div class="note-actions">
-                            <button class="delete-note-btn" onclick="deleteNoteFromDOM(this)">🗑️</button>
-                        </div>
-                    </div>
-                `;
+//     const newNoteItem = document.createElement('div');
+//     newNoteItem.className = 'note-item';
+//     newNoteItem.setAttribute('data-timestamp', timestamp);
+//     newNoteItem.innerHTML = `
+//                     <div class="note-text">${noteText}</div>
+//                     <div class="note-footer">
+//                         <div class="note-time">${timeStr}</div>
+//                         <div class="note-actions">
+//                             <button class="delete-note-btn" onclick="deleteNoteFromDOM(this)">🗑️</button>
+//                         </div>
+//                     </div>
+//                 `;
 
-    document
-      .getElementById('notesList')
-      .insertBefore(
-        newNoteItem,
-        document.getElementById('notesList').firstChild
-      );
-    noteInput.value = '';
-    noteInputArea.style.display = 'none';
-  }
-});
-
-// Save Changes Function (Fulfills primary user requirement)
-function saveChanges() {
-  const habitTitle = document.getElementById('habitTitle').value.trim();
-  const habitDesc = document.getElementById('habitDesc').value.trim();
-  const notification = document.getElementById('notifToggle').checked;
-
-  if (!habitTitle) {
-    alert('Habit title cannot be empty.');
-    return;
-  }
-
-  // Get selected days
-  const selectedDays = Array.from(
-    document.querySelectorAll('.day-circle.active')
-  ).map((circle) => circle.getAttribute('data-day'));
-
-  // Get all current notes from the DOM
-  const currentNotes = Array.from(
-    document.querySelectorAll('#notesList .note-item')
-  ).map((item) => {
-    return {
-      text: item.querySelector('.note-text').textContent,
-      time: item.querySelector('.note-time').textContent,
-      timestamp:
-        item.getAttribute('data-timestamp') || new Date().toISOString(),
-    };
-  });
-
-  const habits = JSON.parse(localStorage.getItem('habits') || '[]');
-  const habitIndex = habits.findIndex((h) => h.id === currentHabitId);
-
-  if (habitIndex > -1) {
-    habits[habitIndex].title = habitTitle;
-    habits[habitIndex].description = habitDesc;
-    habits[habitIndex].notification = notification;
-    habits[habitIndex].days = selectedDays;
-    habits[habitIndex].notes = currentNotes;
-
-    localStorage.setItem('habits', JSON.stringify(habits));
-    alert('Habit updated successfully!');
-    // Redirect back to myhabit dashboard
-    window.location.href = 'myhabit.html';
-  } else {
-    alert('Error: Habit not found in storage.');
-  }
-}
-
-// Event listener for the Save Changes button
-document
-  .getElementById('saveChangesBtn')
-  .addEventListener('click', saveChanges);
+//     document
+//       .getElementById('notesList')
+//       .insertBefore(
+//         newNoteItem,
+//         document.getElementById('notesList').firstChild
+//       );
+//     noteInput.value = '';
+//     noteInputArea.style.display = 'none';
+//   }
+// });
 
 // Delete Habit Functionality (Fulfills implicit requirement for a delete button)
 document.getElementById('deleteBtn').addEventListener('click', function () {
@@ -247,3 +195,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Expose function to global scope for use in inline HTML `onclick`
 window.deleteNoteFromDOM = deleteNoteFromDOM;
+
+document
+  .querySelectorAll('.day-circle input[type="checkbox"]')
+  .forEach((checkbox) => {
+    checkbox.addEventListener('change', function () {
+      // 1. Toggle the visual class on the parent label
+      if (this.checked) {
+        this.parentElement.classList.remove('inactive');
+        this.parentElement.classList.add('active'); // Assuming your CSS uses 'active' for the selected color
+      } else {
+        this.parentElement.classList.add('inactive');
+        this.parentElement.classList.remove('active');
+      }
+
+      // 2. Update the "X days per week" text
+      updateDaysCount();
+    });
+  });
+
+function updateDaysCount() {
+  const checkedCount = document.querySelectorAll(
+    '.day-circle input[type="checkbox"]:checked'
+  ).length;
+  document.querySelector(
+    '.days-info'
+  ).textContent = `${checkedCount} days per week`;
+}

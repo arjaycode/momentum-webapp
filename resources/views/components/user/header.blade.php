@@ -11,10 +11,6 @@
     </p>
   </div>
   <div class="header-right">
-    <input type="text" class="search-box" name="search-box" placeholder="Search..." />
-    <button class="icon-button search-button">
-      <i class="fas fa-search"></i>
-    </button>
     <button class="icon-button notification-button">
       <i class="fas fa-bell"></i>
     </button>

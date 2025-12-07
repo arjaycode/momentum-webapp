@@ -16,13 +16,13 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->nullable()->constrained('habits_categories')->nullOnDelete();
 
-            $table->string('name');
+            $table->string('habit_name');
             $table->text('description')->nullable();
             $table->boolean('enable_push_notifications')->default(false);
+            $table->integer('streak_days', false, true)->default(0);
 
             // Stores: ["Mon", "Wed", "Fri"]
             $table->json('target_days');
-
             $table->timestamps();
         });
     }

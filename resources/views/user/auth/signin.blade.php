@@ -44,11 +44,33 @@
       <h2>Momentum</h2>
       <p class="subtitle">Build better habits, track your progress</p>
       @if (session('success'))
-      <div class="success-alert">
+      <div class="success-alert" id="successAlertSignin" style="display: block;">
         <span class="success-icon">✓</span>
         {{ session('success') }}
+        <button onclick="document.getElementById('successAlertSignin').style.display='none'" style="background: none; border: none; float: right; cursor: pointer; font-size: 18px; color: inherit;">×</button>
       </div>
+      <script>
+        setTimeout(function() {
+          const alert = document.getElementById('successAlertSignin');
+          if (alert) alert.style.display = 'none';
+        }, 5000);
+      </script>
       @endif
+
+      @if (session('status'))
+      <div class="success-alert" id="statusAlertSignin" style="display: block;">
+        <span class="success-icon">✓</span>
+        {{ session('status') }}
+        <button onclick="document.getElementById('statusAlertSignin').style.display='none'" style="background: none; border: none; float: right; cursor: pointer; font-size: 18px; color: inherit;">×</button>
+      </div>
+      <script>
+        setTimeout(function() {
+          const alert = document.getElementById('statusAlertSignin');
+          if (alert) alert.style.display = 'none';
+        }, 5000);
+      </script>
+      @endif
+
       <div class="welcome-title">Welcome Back</div>
       <p class="subtitle" style="margin-bottom: 20px">
         Sign in to continue your habit journey
@@ -73,26 +95,32 @@
           <label>Email Address</label>
           <div class="input-wrapper">
             <span class="input-icon">✉</span>
-            <input type="email" name="email" placeholder="Enter your email" />
+            <input type="email" name="email" value="{{ old('email') }}" placeholder="Enter your email" required />
           </div>
+          @error('email')
+            <p style="color: #ff4d4d; font-size: 12px; margin-top: 5px;">{{ $message }}</p>
+          @enderror
         </div>
 
         <div class="form-group">
           <label>Password</label>
           <div class="input-wrapper">
             <span class="input-icon">🔒</span>
-            <input type="password" id="password" name="password" placeholder="Enter your password" />
+            <input type="password" id="password" name="password" placeholder="Enter your password" required />
             <button type="button" class="toggle-password" onclick="togglePassword()">
               👁
             </button>
           </div>
+          @error('password')
+            <p style="color: #ff4d4d; font-size: 12px; margin-top: 5px;">{{ $message }}</p>
+          @enderror
         </div>
 
         <div class="form-footer">
           <label class="remember-me">
-            <input type="checkbox" /> Remember me
+            <input type="checkbox" name="remember" /> Remember me
           </label>
-          <a href="#" class="forgot-link" onclick="alert('Password reset coming soon!'); return false;">Forgot password?</a>
+          <a href="{{ route('password.request') }}" class="forgot-link">Forgot password?</a>
         </div>
         @if ($errors->any())
         <div>

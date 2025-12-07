@@ -1,82 +1,22 @@
-let currentHabitId = null;
+// Habits Edit Page JavaScript
+// Note: Habit data is already loaded from server in the blade template
 
-// Get habit ID from URL
-const urlParams = new URLSearchParams(window.location.search);
-currentHabitId = parseInt(urlParams.get('id'));
-
-// Load habit data
-function loadHabitData() {
-  if (!currentHabitId) {
-    alert('No habit selected');
-    window.location.href = 'myhabit.html';
-    return;
-  }
-
-  const habits = JSON.parse(localStorage.getItem('habits') || '[]');
-  const habit = habits.find((h) => h.id === currentHabitId);
-
-  if (!habit) {
-    alert('Habit not found');
-    window.location.href = 'myhabit.html';
-    return;
-  }
-
-  // Fill form with habit data
-  document.getElementById('habitTitle').value = habit.title;
-  document.getElementById('habitDesc').value = habit.description;
-  document.getElementById('notifToggle').checked = habit.notification;
-
-  // Set active days
-  document.querySelectorAll('.day-circle').forEach((circle) => {
-    const day = circle.getAttribute('data-day');
-    if (habit.days && habit.days.includes(day)) {
-      circle.classList.remove('inactive');
-      circle.classList.add('active');
-    } else {
-      circle.classList.remove('active');
-      circle.classList.add('inactive');
-    }
-  });
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize target days from server data (already set in blade template)
   updateDaysCount();
-
-  // Load notes
-  renderNotes(habit.notes);
-
-  // Update stats
-  document.getElementById('currentStreak').textContent = habit.streak || 0;
-  const completedDaysCount = habit.completedDays
-    ? habit.completedDays.length
-    : 0;
-  document.getElementById('totalDays').textContent = completedDaysCount;
-
-  // Simple Success Rate Calculation (Placeholder)
-  const totalDaysSinceCreation =
-    Math.ceil(
-      (new Date() - new Date(habit.createdDate || Date.now())) /
-        (1000 * 60 * 60 * 24)
-    ) || 1;
-  const successRate =
-    totalDaysSinceCreation > 0
-      ? Math.round((completedDaysCount / totalDaysSinceCreation) * 100)
-      : 0;
-  document.querySelector('.stat-value.purple').textContent = `${successRate}%`;
-}
-
-// Day selector toggle
-document.querySelectorAll('.day-circle').forEach((day) => {
-  day.addEventListener('click', function () {
-    this.classList.toggle('active');
-    this.classList.toggle('inactive');
-    updateDaysCount();
-  });
+  updateTargetDaysInput();
+  
+  // Auto-hide success alerts
+  const successAlert = document.querySelector('.success-alert');
+  if (successAlert) {
+    setTimeout(() => {
+      successAlert.style.transition = 'opacity 0.3s ease';
+      successAlert.style.opacity = '0';
+      setTimeout(() => successAlert.remove(), 300);
+    }, 5000);
+  }
 });
-
-function updateDaysCount() {
-  const activeDays = document.querySelectorAll('.day-circle.active').length;
-  document.querySelector(
-    '.days-info'
-  ).textContent = `${activeDays} days per week`;
-}
 
 // Render Notes Helper
 function renderNotes(notes = []) {
@@ -109,6 +49,7 @@ function deleteNoteFromDOM(btn) {
   ) {
     btn.closest('.note-item').remove();
   }
+  return false; // Prevent any form submission
 }
 
 // Add note functionality
@@ -117,53 +58,121 @@ const noteInputArea = document.getElementById('noteInputArea');
 const saveNoteBtn = document.getElementById('saveNoteBtn');
 const noteInput = document.getElementById('noteInput');
 
-addNoteBtn.addEventListener('click', function () {
-  noteInputArea.style.display =
-    noteInputArea.style.display === 'none' ? 'block' : 'none';
-  if (noteInputArea.style.display === 'block') {
-    noteInput.focus();
+if (addNoteBtn) {
+  addNoteBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    noteInputArea.style.display =
+      noteInputArea.style.display === 'none' ? 'block' : 'none';
+    if (noteInputArea.style.display === 'block') {
+      noteInput.focus();
+    }
+  });
+}
+
+if (saveNoteBtn) {
+  saveNoteBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const noteText = noteInput.value.trim();
+    if (noteText) {
+      const now = new Date();
+      const timeStr =
+        now.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        }) +
+        ' at ' +
+        now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      const timestamp = now.toISOString();
+
+      const newNoteItem = document.createElement('div');
+      newNoteItem.className = 'note-item';
+      newNoteItem.setAttribute('data-timestamp', timestamp);
+      newNoteItem.innerHTML = `
+                      <div class="note-text">${noteText}</div>
+                      <div class="note-footer">
+                          <div class="note-time">${timeStr}</div>
+                          <div class="note-actions">
+                              <button type="button" class="delete-note-btn" onclick="deleteNoteFromDOM(this)">🗑️</button>
+                          </div>
+                      </div>
+                  `;
+
+      const notesList = document.getElementById('notesList');
+      if (notesList) {
+        notesList.insertBefore(
+          newNoteItem,
+          notesList.firstChild
+        );
+      }
+      noteInput.value = '';
+      noteInputArea.style.display = 'none';
+    }
+  });
+}
+
+// Update target days input when days are selected
+function updateTargetDaysInput() {
+  const selectedDays = Array.from(
+    document.querySelectorAll('.day-circle.active')
+  ).map((circle) => circle.getAttribute('data-day'));
+  
+  const container = document.getElementById('targetDaysContainer');
+  if (container) {
+    // Clear existing inputs
+    container.innerHTML = '';
+    // Create hidden inputs for each selected day (Laravel expects array format)
+    selectedDays.forEach(day => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'target_days[]';
+      input.value = day;
+      container.appendChild(input);
+    });
   }
+}
+
+// Day selector toggle
+document.querySelectorAll('.day-circle').forEach((day) => {
+  day.addEventListener('click', function () {
+    this.classList.toggle('active');
+    this.classList.toggle('inactive');
+    updateDaysCount();
+    updateTargetDaysInput();
+  });
 });
 
-saveNoteBtn.addEventListener('click', function () {
-  const noteText = noteInput.value.trim();
-  if (noteText) {
-    const now = new Date();
-    const timeStr =
-      now.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      }) +
-      ' at ' +
-      now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-    const timestamp = now.toISOString();
-
-    const newNoteItem = document.createElement('div');
-    newNoteItem.className = 'note-item';
-    newNoteItem.setAttribute('data-timestamp', timestamp);
-    newNoteItem.innerHTML = `
-                    <div class="note-text">${noteText}</div>
-                    <div class="note-footer">
-                        <div class="note-time">${timeStr}</div>
-                        <div class="note-actions">
-                            <button class="delete-note-btn" onclick="deleteNoteFromDOM(this)">🗑️</button>
-                        </div>
-                    </div>
-                `;
-
-    document
-      .getElementById('notesList')
-      .insertBefore(
-        newNoteItem,
-        document.getElementById('notesList').firstChild
-      );
-    noteInput.value = '';
-    noteInputArea.style.display = 'none';
+function updateDaysCount() {
+  const activeDays = document.querySelectorAll('.day-circle.active').length;
+  const daysInfo = document.querySelector('.days-info');
+  if (daysInfo) {
+    daysInfo.textContent = `${activeDays} days per week`;
   }
-});
+  updateTargetDaysInput();
+}
 
-// Save Changes Function (Fulfills primary user requirement)
+// Form submission handler
+const habitForm = document.getElementById('habitForm');
+if (habitForm) {
+  habitForm.addEventListener('submit', function(e) {
+    const selectedDays = Array.from(
+      document.querySelectorAll('.day-circle.active')
+    ).map((circle) => circle.getAttribute('data-day'));
+
+    if (selectedDays.length === 0) {
+      e.preventDefault();
+      alert('Please select at least one target day for your habit.');
+      return false;
+    }
+
+    // Update hidden inputs before submit
+    updateTargetDaysInput();
+  });
+}
+
+// Save Changes Function (for edit mode - if needed)
 function saveChanges() {
   const habitTitle = document.getElementById('habitTitle').value.trim();
   const habitDesc = document.getElementById('habitDesc').value.trim();
@@ -179,71 +188,37 @@ function saveChanges() {
     document.querySelectorAll('.day-circle.active')
   ).map((circle) => circle.getAttribute('data-day'));
 
-  // Get all current notes from the DOM
-  const currentNotes = Array.from(
-    document.querySelectorAll('#notesList .note-item')
-  ).map((item) => {
-    return {
-      text: item.querySelector('.note-text').textContent,
-      time: item.querySelector('.note-time').textContent,
-      timestamp:
-        item.getAttribute('data-timestamp') || new Date().toISOString(),
-    };
+  if (selectedDays.length === 0) {
+    alert('Please select at least one target day.');
+    return;
+  }
+
+  // If form exists, submit it
+  const form = document.getElementById('habitForm');
+  if (form) {
+    updateTargetDaysInput();
+    form.submit();
+  }
+}
+
+// Event listener for the Save Changes button (if it's a button, not submit)
+const saveBtn = document.getElementById('saveChangesBtn');
+if (saveBtn && saveBtn.type !== 'submit') {
+  saveBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    saveChanges();
   });
-
-  const habits = JSON.parse(localStorage.getItem('habits') || '[]');
-  const habitIndex = habits.findIndex((h) => h.id === currentHabitId);
-
-  if (habitIndex > -1) {
-    habits[habitIndex].title = habitTitle;
-    habits[habitIndex].description = habitDesc;
-    habits[habitIndex].notification = notification;
-    habits[habitIndex].days = selectedDays;
-    habits[habitIndex].notes = currentNotes;
-
-    localStorage.setItem('habits', JSON.stringify(habits));
-    alert('Habit updated successfully!');
-    // Redirect back to myhabit dashboard
-    window.location.href = 'myhabit.html';
-  } else {
-    alert('Error: Habit not found in storage.');
-  }
 }
 
-// Event listener for the Save Changes button
-document
-  .getElementById('saveChangesBtn')
-  .addEventListener('click', saveChanges);
-
-// Delete Habit Functionality (Fulfills implicit requirement for a delete button)
-document.getElementById('deleteBtn').addEventListener('click', function () {
-  if (
-    confirm(
-      'Are you sure you want to delete this habit? This action cannot be undone.'
-    )
-  ) {
-    const habits = JSON.parse(localStorage.getItem('habits') || '[]');
-    const newHabits = habits.filter((h) => h.id !== currentHabitId);
-
-    localStorage.setItem('habits', JSON.stringify(newHabits));
-    alert('Habit deleted successfully!');
-    // Redirect back to myhabit dashboard
-    window.location.href = 'myhabit.html';
-  }
-});
-
-// Function to set the current date in the header
+// Function to set the current date in the header (only if element exists)
 function setCurrentDate() {
-  const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
-  document.getElementById('currentDate').textContent =
-    new Date().toLocaleDateString('en-US', dateOptions);
+  const currentDateEl = document.getElementById('currentDate');
+  if (currentDateEl) {
+    const dateOptions = { weekday: 'short', month: 'short', day: 'numeric' };
+    currentDateEl.textContent =
+      new Date().toLocaleDateString('en-US', dateOptions);
+  }
 }
-
-// Initialize page functions on load
-document.addEventListener('DOMContentLoaded', () => {
-  setCurrentDate();
-  loadHabitData();
-});
 
 // Expose function to global scope for use in inline HTML `onclick`
 window.deleteNoteFromDOM = deleteNoteFromDOM;

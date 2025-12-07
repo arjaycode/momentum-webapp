@@ -3,8 +3,11 @@
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Habit\HabitCategoryController;
 
@@ -31,6 +34,10 @@ Route::middleware('guest')->group(function () {
   Route::post('/signup', [SignupController::class, 'signup'])->name('user.signup.submit');
   Route::get('/signin', [LoginController::class, 'index'])->name('user.signin');
   Route::post('/signin', [LoginController::class, 'signin'])->name('user.signin.submit');
+  Route::get('/forgot-password', [ForgotPasswordController::class, 'showForgotPasswordForm'])->name('password.request');
+  Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+  Route::get('/reset-password/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+  Route::post('/reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
 Route::middleware('auth')->group(function () {
@@ -61,13 +68,29 @@ Route::middleware('auth')->group(function () {
 
   //User
   Route::prefix('user')->name('user.')->middleware(['role:user'])->group(function () {
-    Route::view('/dashboard', 'user.layouts.dashboard')->name('dashboard');
-    Route::view('/habits', 'user.layouts.habits')->name('habits');
-    Route::view('/habits/add', 'user.layouts.habits_add')->name('habits.add');
-    Route::view('/habits/edit', 'user.layouts.habits_edit')->name('habits.edit');
-    Route::view('/habits/view', 'user.layouts.habits_view')->name('habits.view');
+    Route::get('/dashboard', [\App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/today-habits', [\App\Http\Controllers\User\DashboardController::class, 'getTodayHabits'])->name('today-habits');
+    // Habits Management
+    Route::get('/habits', [\App\Http\Controllers\User\HabitController::class, 'index'])->name('habits');
+    Route::get('/habits/add', [\App\Http\Controllers\User\HabitController::class, 'create'])->name('habits.add');
+    Route::post('/habits/add', [\App\Http\Controllers\User\HabitController::class, 'store'])->name('habits.store');
+    Route::get('/habits/edit/{id}', [\App\Http\Controllers\User\HabitController::class, 'edit'])->name('habits.edit');
+    Route::put('/habits/edit/{id}', [\App\Http\Controllers\User\HabitController::class, 'update'])->name('habits.update');
+    Route::get('/habits/view/{id}', [\App\Http\Controllers\User\HabitController::class, 'show'])->name('habits.view');
+    Route::delete('/habits/delete/{id}', [\App\Http\Controllers\User\HabitController::class, 'destroy'])->name('habits.delete');
+    Route::post('/habits/{id}/mark-done', [\App\Http\Controllers\User\HabitController::class, 'markAsDone'])->name('habits.mark-done');
+    Route::get('/habits/calendar-data', [\App\Http\Controllers\User\HabitController::class, 'getCalendarData'])->name('habits.calendar-data');
+    Route::get('/habits/search', [\App\Http\Controllers\User\HabitController::class, 'search'])->name('habits.search');
+    Route::get('/notifications', [\App\Http\Controllers\User\NotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/clear', [\App\Http\Controllers\User\NotificationController::class, 'clear'])->name('notifications.clear');
     Route::view('/calendar', 'user.layouts.calendar')->name('calendar');
-    Route::view('/settings', 'user.layouts.settings')->name('settings');
+    // Profile Management
+    Route::get('/settings', [ProfileController::class, 'show'])->name('settings');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+    Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.delete');
+    Route::get('/profile/export', [ProfileController::class, 'exportData'])->name('profile.export');
   });
 });
 

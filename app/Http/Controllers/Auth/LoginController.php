@@ -17,19 +17,24 @@ class LoginController extends Controller
     {
         // 1. Validate Input
         $credentials = $request->validate([
-            'email' => 'required|exists:users,email',
+            'email' => 'required|email|exists:users,email',
             'password' => 'required',
+        ], [
+            'email.required' => 'Please enter your email address.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.exists' => 'We could not find a user with that email address.',
+            'password.required' => 'Please enter your password.',
         ]);
 
         // 2. Attempt Login
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
             // 3. Role-Based Redirect
             $role = Auth::user()->role;
             if ($role === 'admin') {
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.dashboard')->with('success', 'Welcome back!');
             }
-            return redirect()->route('user.dashboard');
+            return redirect()->route('user.dashboard')->with('success', 'Welcome back!');
         }
 
         // 4. Login Failed

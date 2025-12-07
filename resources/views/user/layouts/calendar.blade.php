@@ -8,7 +8,18 @@
 @section('js-file', 'calendar.js')
 
 @section('content')
+@if (session('success'))
+<div class="success-alert" style="margin: 20px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; display: flex; align-items: center;">
+  <span class="success-icon" style="font-weight: bold; font-size: 1.2em; margin-right: 10px;">✓</span>
+  {{ session('success') }}
+</div>
+@endif
 <div class="calendar-content">
+  <div style="margin-bottom: 20px; text-align: right;">
+    <a href="{{ route('user.habits.add') }}?redirect_to=calendar" class="btn btn-primary" style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+      <i class="fas fa-plus"></i> Add New Habit
+    </a>
+  </div>
   <div class="calendar-container">
     <div class="calendar-header">
       <div class="month-navigation">
@@ -41,22 +52,8 @@
   <div class="legend-section">
     <h3 class="legend-title">Active Habits Key</h3>
     <div class="legend-items">
-      <div class="legend-item" data-habit="exercise" tabindex="0">
-        <div class="legend-dot exercise"></div>
-        <span class="legend-label">Exercise (3/week)</span>
-      </div>
-      <div class="legend-item" data-habit="reading" tabindex="0">
-        <div class="legend-dot reading"></div>
-        <span class="legend-label">Reading (Daily)</span>
-      </div>
-      <div class="legend-item" data-habit="meditation" tabindex="0">
-        <div class="legend-dot meditation"></div>
-        <span class="legend-label">Meditation (4/week)</span>
-      </div>
-      <div class="legend-item" data-habit="water" tabindex="0">
-        <div class="legend-dot water"></div>
-        <span class="legend-label">Water Intake (Daily)</span>
-      </div>
+      <!-- Legend items will be populated dynamically by JavaScript -->
+      <p style="color: #999; font-size: 14px;">Loading habits...</p>
     </div>
   </div>
 </div>

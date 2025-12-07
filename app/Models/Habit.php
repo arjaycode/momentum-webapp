@@ -3,8 +3,37 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Habit extends Model
 {
-    //
+    protected $fillable = [
+        'user_id',
+        'category_id',
+        'name',
+        'description',
+        'enable_push_notifications',
+        'target_days',
+    ];
+
+    protected $casts = [
+        'enable_push_notifications' => 'boolean',
+        'target_days' => 'array',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(HabitsCategory::class, 'category_id');
+    }
+
+    public function logs(): HasMany
+    {
+        return $this->hasMany(HabitLog::class);
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 use function Laravel\Prompts\error;
 
@@ -46,7 +47,7 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
 
         $newCredentials = $request->validate([
             'firstname' => 'required|string|max:50',
@@ -67,13 +68,23 @@ class UserController extends Controller
 
     public function delete($id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
+        
+        // Prevent admin from deleting themselves
+        if (Auth::id() == $user->id) {
+            return redirect()->route('admin.user-management')
+                ->with('error', 'You cannot delete your own account.');
+        }
+        
         $user->delete();
+        
+        return redirect()->route('admin.user-management')
+            ->with('success', 'User deleted successfully.');
     }
 
     public function update_status(Request $request, $id)
     {
-        $user = User::find($id);
+        $user = User::findOrFail($id);
         $update = $request->validate([
             'status' => 'required|in:active,inactive,blocked'
         ]);

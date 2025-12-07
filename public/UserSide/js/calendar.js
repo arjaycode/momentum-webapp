@@ -2,43 +2,83 @@
 let currentDate = new Date();
 currentDate.setDate(1); // Set to the 1st to ensure proper month calculation
 
-// Dummy Habit data (Day: [habit1, habit2, ...])
-// Habit completion is randomized slightly for variety
-const HABIT_NAMES = {
-  exercise: 'Morning Workout',
-  reading: '30-min Reading',
-  meditation: 'Mindfulness Meditation',
-  water: '8 Glasses of Water',
-};
+// Real habit data from database
+let currentHabitData = {};
+let habitCategories = {};
 
-// Generates random habit data for a month
-function generateRandomHabitData(year, month) {
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const data = {};
-  const availableHabits = Object.keys(HABIT_NAMES);
+// Fetch real habit data from the server
+async function fetchHabitData(year, month) {
+  try {
+    const response = await fetch(`/user/habits/calendar-data?year=${year}&month=${month}`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+        'Accept': 'application/json',
+      },
+      credentials: 'same-origin'
+    });
 
-  for (let day = 1; day <= daysInMonth; day++) {
-    // Randomly assign a subset of habits for each day
-    if (Math.random() > 0.3) {
-      // 70% chance of having habits
-      data[day] = availableHabits.filter(() => Math.random() > 0.4); // 60% chance for each habit
+    if (!response.ok) {
+      throw new Error('Failed to fetch habit data');
     }
+
+    const data = await response.json();
+    currentHabitData = data;
+    
+    // Update legend with real habits
+    updateLegend(data);
+    
+    return data;
+  } catch (error) {
+    console.error('Error fetching habit data:', error);
+    currentHabitData = {};
+    return {};
   }
-  // Ensure the current day has some data for demonstration
-  if (year === new Date().getFullYear() && month === new Date().getMonth()) {
-    const today = new Date().getDate();
-    if (!data[today] || data[today].length === 0) {
-      data[today] = availableHabits.filter(() => Math.random() > 0.5);
-      if (data[today].length === 0) data[today].push('exercise'); // Make sure it's not totally empty
-    }
-  }
-  return data;
 }
 
-let currentHabitData = generateRandomHabitData(
-  currentDate.getFullYear(),
-  currentDate.getMonth()
-);
+// Update legend with real habits
+function updateLegend(habitData) {
+  const legendContainer = document.querySelector('.legend-items');
+  if (!legendContainer) return;
+
+  // Collect unique habits from the data
+  const uniqueHabits = {};
+  Object.values(habitData).forEach(dayHabits => {
+    dayHabits.forEach(habit => {
+      if (!uniqueHabits[habit.id]) {
+        uniqueHabits[habit.id] = habit;
+      }
+    });
+  });
+
+  // Clear existing legend (except title)
+  legendContainer.innerHTML = '';
+
+  // Add legend items for each habit
+  Object.values(uniqueHabits).forEach(habit => {
+    const legendItem = document.createElement('div');
+    legendItem.className = 'legend-item';
+    legendItem.setAttribute('data-habit-id', habit.id);
+    legendItem.setAttribute('tabindex', '0');
+    
+    const colorClass = habit.color || 'blue';
+    legendItem.innerHTML = `
+      <div class="legend-dot ${colorClass}"></div>
+      <span class="legend-label">${habit.name}</span>
+    `;
+    
+    legendItem.addEventListener('click', function() {
+      document.getElementById('calendarGrid').classList.toggle(`filter-${habit.id}`);
+      this.classList.toggle('active-filter');
+    });
+    
+    legendContainer.appendChild(legendItem);
+  });
+
+  // If no habits, show empty message
+  if (Object.keys(uniqueHabits).length === 0) {
+    legendContainer.innerHTML = '<p style="color: #999; font-size: 14px;">No habits yet. Add your first habit to see it here!</p>';
+  }
+}
 
 // function updateHeaderDate() {
 //   const headerDateElement = document.getElementById('headerDate');
@@ -50,25 +90,28 @@ let currentHabitData = generateRandomHabitData(
 //   });
 // }
 
-function renderCalendar() {
+async function renderCalendar() {
   const grid = document.getElementById('calendarGrid');
-  const month = currentDate.getMonth();
+  const month = currentDate.getMonth() + 1; // JavaScript months are 0-indexed, but API expects 1-indexed
   const year = currentDate.getFullYear();
 
-  // Re-generate dummy data for the new month
-  currentHabitData = generateRandomHabitData(year, month);
+  // Fetch real data for the new month
+  await fetchHabitData(year, month);
+  
+  // Use 0-indexed month for JavaScript Date operations
+  const jsMonth = month - 1;
 
   // Update month display
   document.getElementById('currentMonth').textContent =
     currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
   // Get first day of month (0=Sun, 6=Sat) and number of days
-  const firstDayIndex = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const daysInPrevMonth = new Date(year, month, 0).getDate();
+  const firstDayIndex = new Date(year, jsMonth, 1).getDay();
+  const daysInMonth = new Date(year, jsMonth + 1, 0).getDate();
+  const daysInPrevMonth = new Date(year, jsMonth, 0).getDate();
   const today = new Date();
   const isCurrentMonth =
-    year === today.getFullYear() && month === today.getMonth();
+    year === today.getFullYear() && jsMonth === today.getMonth();
 
   // Clear existing days (keep headers)
   const headers = Array.from(grid.querySelectorAll('.calendar-day-header'));
@@ -99,16 +142,24 @@ function renderCalendar() {
 
       habits.forEach((habit) => {
         const dot = document.createElement('div');
-        dot.className = `habit-dot ${habit}`;
-        dot.title = HABIT_NAMES[habit];
+        const colorClass = habit.color || 'blue';
+        dot.className = `habit-dot ${colorClass}`;
+        dot.title = habit.name;
+        if (habit.completed) {
+          dot.classList.add('completed');
+        }
         dots.appendChild(dot);
       });
 
       dayElement.appendChild(dots);
     }
 
-    // Add click listener
-    dayElement.addEventListener('click', () => showDayDetail(day, habits));
+    // Add click listener - fetch habits for this specific day
+    dayElement.addEventListener('click', () => {
+      // Get habits for this specific day from currentHabitData
+      const dayHabits = currentHabitData[day] || [];
+      showDayDetail(day, dayHabits);
+    });
     grid.appendChild(dayElement);
   }
 
@@ -140,33 +191,36 @@ function showDayDetail(day, habits) {
   const overlay = document.getElementById('popupOverlay');
   const title = document.getElementById('popupTitle');
   const habitsContainer = document.getElementById('popupHabits');
-  const dateStr = currentDate.toLocaleDateString('en-US', {
+  
+  const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+  const dateStr = date.toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
   });
 
-  title.textContent = dateStr.replace(currentDate.getDate(), day); // Correct the day number
+  title.textContent = dateStr;
   habitsContainer.innerHTML = '';
 
   if (habits.length === 0) {
     habitsContainer.innerHTML =
-      '<p class="empty-habits">No habits tracked for this day.</p>';
+      '<p class="empty-habits">No habits scheduled for this day.</p>';
   } else {
     habits.forEach((habit) => {
       const habitItem = document.createElement('div');
       habitItem.className = 'popup-habit-item';
-      habitItem.setAttribute('data-habit', habit); // For border styling
+      const colorClass = habit.color || 'blue';
+      habitItem.setAttribute('data-habit-id', habit.id);
       habitItem.innerHTML = `
-                        <div class="popup-habit-dot ${habit}"></div>
+                        <div class="popup-habit-dot ${colorClass} ${habit.completed ? 'completed' : ''}"></div>
                         <div class="popup-habit-info">
-                            <div class="popup-habit-name">${HABIT_NAMES[habit]}</div>
-                            <div class="popup-habit-status">✓ Completed</div>
+                            <div class="popup-habit-name">${habit.name}</div>
+                            <div class="popup-habit-status">${habit.completed ? '✓ Completed' : '○ Pending'}</div>
                         </div>
                     `;
       // Interactive element in popup
       habitItem.addEventListener('click', () => {
-        alert(`Viewing detailed streak/progress for: ${HABIT_NAMES[habit]}`);
+        window.location.href = `/user/habits/view/${habit.id}`;
       });
       habitsContainer.appendChild(habitItem);
     });
@@ -276,14 +330,14 @@ function closeDayDetail() {
 // });
 
 // Month Navigation
-document.getElementById('prevMonth').addEventListener('click', () => {
+document.getElementById('prevMonth').addEventListener('click', async () => {
   currentDate.setMonth(currentDate.getMonth() - 1);
-  renderCalendar();
+  await renderCalendar();
 });
 
-document.getElementById('nextMonth').addEventListener('click', () => {
+document.getElementById('nextMonth').addEventListener('click', async () => {
   currentDate.setMonth(currentDate.getMonth() + 1);
-  renderCalendar();
+  await renderCalendar();
 });
 
 // Popup Close
@@ -304,20 +358,7 @@ document.querySelectorAll('.view-btn').forEach((btn) => {
   });
 });
 
-// Legend Item Interaction (Filter/Highlight)
-document.querySelectorAll('.legend-item').forEach((item) => {
-  item.addEventListener('click', function () {
-    const habit = this.dataset.habit;
-    // Add class to calendar for filtering effect
-    document.getElementById('calendarGrid').classList.toggle(`filter-${habit}`);
-    this.classList.toggle('active-filter');
-    console.log(`Toggling filter for: ${HABIT_NAMES[habit]}`);
-
-    // In a real application, you would re-render or dynamically hide/show dots
-    // For this example, we'll keep the alert:
-    // alert(`Toggling filter for: ${HABIT_NAMES[habit]}`);
-  });
-});
+// Legend Item Interaction (Filter/Highlight) - handled in updateLegend function
 
 // // Keyboard Accessibility
 // document.addEventListener('keydown', (e) => {
@@ -346,5 +387,40 @@ document.querySelectorAll('.legend-item').forEach((item) => {
 // });
 
 // Initialize App
-// updateHeaderDate();
-renderCalendar();
+document.addEventListener('DOMContentLoaded', function() {
+  // Initial render
+  renderCalendar();
+  
+  // Check for success message and refresh if habit was just added
+  if (document.querySelector('.success-alert') || window.location.search.includes('success')) {
+    setTimeout(function() {
+      const month = currentDate.getMonth() + 1;
+      const year = currentDate.getFullYear();
+      fetchHabitData(year, month).then(() => {
+        renderCalendar();
+      });
+    }, 1000);
+  }
+});
+
+// Auto-refresh calendar when page becomes visible (e.g., after adding a habit)
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    const month = currentDate.getMonth() + 1;
+    const year = currentDate.getFullYear();
+    fetchHabitData(year, month).then(() => {
+      renderCalendar();
+    });
+  }
+});
+
+// Refresh calendar data periodically (every 30 seconds) to catch new habits
+setInterval(function() {
+  if (!document.hidden) {
+    const month = currentDate.getMonth() + 1;
+    const year = currentDate.getFullYear();
+    fetchHabitData(year, month).then(() => {
+      renderCalendar();
+    });
+  }
+}, 30000); // 30 seconds

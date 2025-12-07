@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class HabitsCategory extends Model
 {
@@ -13,4 +14,9 @@ class HabitsCategory extends Model
         'color',
         'icon'
     ];
+
+    public function habits(): HasMany
+    {
+        return $this->hasMany(Habit::class, 'category_id');
+    }
 }

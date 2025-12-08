@@ -4,20 +4,16 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Habit;
-<<<<<<< HEAD
 use App\Models\HabitLog;
 use App\Models\HabitsCategory;
 use App\Models\Notification;
-=======
-use App\Models\HabitsCategory;
-use Exception;
->>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
+use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class HabitController extends Controller
 {
-<<<<<<< HEAD
+
     public function index()
     {
         $user = Auth::user();
@@ -25,6 +21,17 @@ class HabitController extends Controller
             ->with('category')
             ->orderBy('created_at', 'desc')
             ->get();
+
+        // Calculate streak and check completion status for each habit
+        $today = now()->toDateString();
+        $habits = $habits->map(function($habit) use ($today) {
+            $habit->streak = $this->calculateHabitStreak($habit);
+            // Check if habit is completed today
+            $habit->isCompletedToday = \App\Models\HabitLog::where('habit_id', $habit->id)
+                ->whereDate('completed_at', $today)
+                ->exists();
+            return $habit;
+        });
 
         // Calculate stats
         $activeHabits = $habits->count();
@@ -36,52 +43,40 @@ class HabitController extends Controller
     public function create()
     {
         $categories = HabitsCategory::where('status', 'active')->get();
-        return view('user.layouts.habits_add', compact('categories'));
-=======
-    //
-    public function index()
-    {
-        $habits = Habit::all();
-        $withHighest = Habit::where('user_id', Auth::id())->orderBy('streak_days', 'desc')->first();
-        return view('user.layouts.habits', compact('habits', 'withHighest'));
-    }
-    public function create()
-    {
-        try {
-            $user_id = Auth::user()->id;
-            $habits_category = HabitsCategory::all();
-            return view('user.layouts.habits_add', compact('habits_category', 'user_id'));
-        } catch (Exception $e) {
-            $e->getMessage();
-        }
-    }
-
-
-
-    public function edit()
-    {
-        return view('user.layouts.habits_edit');
-    }
-    public function view()
-    {
-        return view('user.layouts.habits_view');
->>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
+        $user_id = Auth::id();
+        return view('user.layouts.habits_add', compact('categories', 'user_id'));
     }
 
     public function store(Request $request)
     {
-<<<<<<< HEAD
+        // Convert empty category_id to null
+        $request->merge([
+            'category_id' => $request->input('category_id') ?: null
+        ]);
+
+        // Check if habit name already exists for this user
+        $existingHabit = Habit::where('user_id', Auth::id())
+            ->where('name', $request->input('name'))
+            ->first();
+
+        if ($existingHabit) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['name' => 'A habit with this title already exists. Please choose a different name.']);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:habits_categories,id',
             'description' => 'nullable|string',
-            'enable_push_notifications' => 'boolean',
+            'enable_push_notifications' => 'nullable|boolean',
             'target_days' => 'required|array|min:1',
             'target_days.*' => 'in:Mon,Tue,Wed,Thu,Fri,Sat,Sun',
         ]);
 
         $validated['user_id'] = Auth::id();
-        $validated['enable_push_notifications'] = $request->has('enable_push_notifications');
+        // Handle checkbox: if not present in request, set to false
+        $validated['enable_push_notifications'] = $request->has('enable_push_notifications') ? true : false;
         // target_days is already an array from validation, model will handle JSON encoding via cast
 
         $habit = Habit::create($validated);
@@ -98,7 +93,21 @@ class HabitController extends Controller
             'read' => false,
         ]);
 
-        // Redirect based on where user came from or default to habits
+        // Save temporary notes if any
+        $tempNotes = $request->input('temp_notes', []);
+        if (is_array($tempNotes) && count($tempNotes) > 0) {
+            foreach ($tempNotes as $noteMessage) {
+                if (!empty(trim($noteMessage))) {
+                    Note::create([
+                        'user_id' => Auth::id(),
+                        'habit_id' => $habit->id,
+                        'message' => trim($noteMessage),
+                    ]);
+                }
+            }
+        }
+
+        // Redirect based on where user came from or default to habits list
         $redirectTo = $request->input('redirect_to', 'habits');
         
         if ($redirectTo === 'calendar') {
@@ -120,7 +129,13 @@ class HabitController extends Controller
         $streak = $this->calculateHabitStreak($habit);
         $totalDays = $logs->count();
 
-        return view('user.layouts.habits_view', compact('habit', 'logs', 'streak', 'totalDays'));
+        // Load notes for this habit
+        $notes = Note::where('habit_id', $habit->id)
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('user.layouts.habits_view', compact('habit', 'logs', 'streak', 'totalDays', 'notes'));
     }
 
     public function edit($id)
@@ -129,24 +144,48 @@ class HabitController extends Controller
         $categories = HabitsCategory::where('status', 'active')->get();
         // target_days is already an array due to model cast
         $targetDays = $habit->target_days ?? [];
+        
+        // Load notes for this habit
+        $notes = Note::where('habit_id', $habit->id)
+            ->where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        return view('user.layouts.habits_edit', compact('habit', 'categories', 'targetDays'));
+        return view('user.layouts.habits_edit', compact('habit', 'categories', 'targetDays', 'notes'));
     }
 
     public function update(Request $request, $id)
     {
         $habit = Habit::where('user_id', Auth::id())->findOrFail($id);
 
+        // Convert empty category_id to null
+        $request->merge([
+            'category_id' => $request->input('category_id') ?: null
+        ]);
+
+        // Check if habit name already exists for this user (excluding current habit)
+        $existingHabit = Habit::where('user_id', Auth::id())
+            ->where('name', $request->input('name'))
+            ->where('id', '!=', $habit->id)
+            ->first();
+
+        if ($existingHabit) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['name' => 'A habit with this title already exists. Please choose a different name.']);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'nullable|exists:habits_categories,id',
             'description' => 'nullable|string',
-            'enable_push_notifications' => 'boolean',
+            'enable_push_notifications' => 'nullable|boolean',
             'target_days' => 'required|array|min:1',
             'target_days.*' => 'in:Mon,Tue,Wed,Thu,Fri,Sat,Sun',
         ]);
 
-        $validated['enable_push_notifications'] = $request->has('enable_push_notifications');
+        // Handle checkbox: if not present in request, set to false
+        $validated['enable_push_notifications'] = $request->has('enable_push_notifications') ? true : false;
         // target_days is already an array from validation, model will handle JSON encoding via cast
 
         $habit->update($validated);
@@ -210,36 +249,41 @@ class HabitController extends Controller
 
         // Check if already completed today
         $exists = HabitLog::where('habit_id', $habit->id)
-            ->where('completed_at', $today)
+            ->whereDate('completed_at', $today)
             ->exists();
 
-        if (!$exists) {
-            HabitLog::create([
-                'habit_id' => $habit->id,
-                'completed_at' => $today,
-            ]);
-
-            // Create notification for habit completed
-            Notification::create([
-                'user_id' => Auth::id(),
-                'type' => 'habit_completed',
-                'title' => 'Habit Completed!',
-                'message' => "Great job! You completed: {$habit->name}",
-                'icon' => 'fas fa-check-circle',
-                'color' => '#10b981',
-                'link' => route('user.habits.view', $habit->id),
-                'read' => false,
-            ]);
-
+        if ($exists) {
             return response()->json([
-                'success' => true,
-                'message' => 'Habit marked as done!'
+                'success' => false,
+                'message' => 'Habit already marked as done today!'
             ]);
         }
 
+        // Create habit log entry
+        HabitLog::create([
+            'habit_id' => $habit->id,
+            'completed_at' => now(),
+        ]);
+
+        // Calculate new streak
+        $newStreak = $this->calculateHabitStreak($habit);
+
+        // Create notification for habit completed
+        Notification::create([
+            'user_id' => Auth::id(),
+            'type' => 'habit_completed',
+            'title' => 'Habit Completed!',
+            'message' => "Great job! You completed: {$habit->name}. Current streak: {$newStreak} days!",
+            'icon' => 'fas fa-check-circle',
+            'color' => '#10b981',
+            'link' => route('user.habits.view', $habit->id),
+            'read' => false,
+        ]);
+
         return response()->json([
-            'success' => false,
-            'message' => 'Habit already marked as done today!'
+            'success' => true,
+            'message' => 'Habit marked as done! Streak: ' . $newStreak . ' days',
+            'streak' => $newStreak
         ]);
     }
 
@@ -374,18 +418,52 @@ class HabitController extends Controller
 
         return $streak;
     }
-}
 
-=======
-        $incoming_data = $request->validate([
-            'habit_name' => 'required|string|max:50',
-            'description' => 'string|nullable',
-            'enable_push_notifications' => 'boolean|required',
-            'target_days' => 'json'
+    /**
+     * Store a note for a habit
+     */
+    public function storeNote(Request $request, $id)
+    {
+        $habit = Habit::where('user_id', Auth::id())->findOrFail($id);
+
+        $validated = $request->validate([
+            'message' => 'required|string|max:1000',
         ]);
 
-        Habit::create($incoming_data);
-        return redirect(route('user.habits'), 201)->with('success', 'Habit Added');
+        $note = Note::create([
+            'user_id' => Auth::id(),
+            'habit_id' => $habit->id,
+            'message' => $validated['message'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'note' => [
+                'id' => $note->id,
+                'message' => $note->message,
+                'created_at' => $note->created_at->format('M j, Y \a\t g:i A'),
+                'created_at_iso' => $note->created_at->toISOString(),
+            ]
+        ]);
+    }
+
+    /**
+     * Delete a note
+     */
+    public function deleteNote($habitId, $noteId)
+    {
+        $habit = Habit::where('user_id', Auth::id())->findOrFail($habitId);
+        
+        $note = Note::where('id', $noteId)
+            ->where('habit_id', $habit->id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $note->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Note deleted successfully'
+        ]);
     }
 }
->>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8

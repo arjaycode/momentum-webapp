@@ -129,6 +129,37 @@
   background-color: #f8f9fa;
 }
 
+/* Habit Title Cell */
+.habit-title-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.habit-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #2d2d2d;
+  line-height: 1.4;
+}
+
+.habit-description {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.habit-description.no-description {
+  color: #999;
+  font-style: italic;
+}
+
 /* Category Badges */
 .badge {
   padding: 5px 10px;
@@ -195,6 +226,18 @@
 .btn-done {
   background-color: #d4f4dd;
   color: #203626;
+}
+
+.btn-completed {
+  background-color: #10b981 !important;
+  color: white !important;
+  cursor: default !important;
+  opacity: 0.9;
+}
+
+.btn-completed:hover {
+  background-color: #10b981 !important;
+  opacity: 1;
 }
 
 .btn-delete:hover {
@@ -517,7 +560,7 @@
 }
 
 .days-selector {
-  margin-top: 40px;
+  margin-top: 0;
   margin-bottom: 24px;
 }
 
@@ -562,8 +605,15 @@
 }
 
 .day-label {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
   font-size: 10px;
   margin-top: 8px;
+  color: #999;
+}
+
+.day-label span {
   text-align: center;
 }
 
@@ -756,17 +806,22 @@
   gap: 8px;
 }
 
-.note-actions button {
+.note-actions button,
+.delete-note-btn {
   background: none;
   border: none;
   cursor: pointer;
   color: #999;
   font-size: 13px;
-  padding: 4px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
 }
 
-.note-actions button:hover {
-  color: #666;
+.note-actions button:hover,
+.delete-note-btn:hover {
+  color: #f44336;
+  background: #ffebee;
 }
 
 .save-changes-btn {

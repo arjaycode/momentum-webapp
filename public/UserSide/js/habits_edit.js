@@ -18,9 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Render Notes Helper
+// Render Notes Helper (legacy function - kept for compatibility)
 function renderNotes(notes = []) {
   const notesList = document.getElementById('notesList');
+  if (!notesList) return;
+  
   notesList.innerHTML = '';
 
   notes.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sort by newest first
@@ -29,26 +31,78 @@ function renderNotes(notes = []) {
     const noteItem = document.createElement('div');
     noteItem.className = 'note-item';
     noteItem.setAttribute('data-timestamp', note.timestamp);
-    noteItem.innerHTML = `
-                    <div class="note-text">${note.text}</div>
-                    <div class="note-footer">
-                        <div class="note-time">${note.time}</div>
-                        <div class="note-actions">
-                            <button class="delete-note-btn" onclick="deleteNoteFromDOM(this)">🗑️</button>
-                        </div>
-                    </div>
-                `;
+    
+    // Create elements safely to prevent XSS
+    const noteTextDiv = document.createElement('div');
+    noteTextDiv.className = 'note-text';
+    noteTextDiv.textContent = note.text; // Use textContent to prevent XSS
+    
+    const noteFooter = document.createElement('div');
+    noteFooter.className = 'note-footer';
+    
+    const noteTime = document.createElement('div');
+    noteTime.className = 'note-time';
+    noteTime.textContent = note.time;
+    
+    const noteActions = document.createElement('div');
+    noteActions.className = 'note-actions';
+    
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-note-btn';
+    deleteBtn.textContent = '🗑️';
+    deleteBtn.onclick = function() { 
+      if (confirm('Delete this note? This will be permanent once you save changes.')) {
+        noteItem.remove();
+      }
+    };
+    
+    noteActions.appendChild(deleteBtn);
+    noteFooter.appendChild(noteTime);
+    noteFooter.appendChild(noteActions);
+    noteItem.appendChild(noteTextDiv);
+    noteItem.appendChild(noteFooter);
+    
     notesList.appendChild(noteItem);
   });
 }
 
-// Delete note function (from DOM)
-function deleteNoteFromDOM(btn) {
-  if (
-    confirm('Delete this note? This will be permanent once you save changes.')
-  ) {
-    btn.closest('.note-item').remove();
+// Delete note function (from database)
+async function deleteNote(habitId, noteId, btn) {
+  if (!confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
+    return false;
   }
+
+  try {
+    const response = await fetch(`/user/habits/${habitId}/notes/${noteId}`, {
+      method: 'DELETE',
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      // Remove note from DOM
+      const noteItem = btn.closest('.note-item');
+      if (noteItem) {
+        noteItem.style.transition = 'opacity 0.3s ease';
+        noteItem.style.opacity = '0';
+        setTimeout(() => {
+          noteItem.remove();
+        }, 300);
+      }
+    } else {
+      alert(data.message || 'Failed to delete note');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert('An error occurred while deleting the note. Please try again.');
+  }
+  
   return false; // Prevent any form submission
 }
 
@@ -70,45 +124,131 @@ if (addNoteBtn) {
   });
 }
 
+const saveNoteBtn = document.getElementById('saveNoteBtn');
+
 if (saveNoteBtn) {
-  saveNoteBtn.addEventListener('click', function (e) {
+  saveNoteBtn.addEventListener('click', async function (e) {
     e.preventDefault();
     e.stopPropagation();
     const noteText = noteInput.value.trim();
-    if (noteText) {
-      const now = new Date();
-      const timeStr =
-        now.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        }) +
-        ' at ' +
-        now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-      const timestamp = now.toISOString();
+    
+    if (!noteText) {
+      alert('Please enter a note before saving.');
+      return;
+    }
 
-      const newNoteItem = document.createElement('div');
-      newNoteItem.className = 'note-item';
-      newNoteItem.setAttribute('data-timestamp', timestamp);
-      newNoteItem.innerHTML = `
-                      <div class="note-text">${noteText}</div>
-                      <div class="note-footer">
-                          <div class="note-time">${timeStr}</div>
-                          <div class="note-actions">
-                              <button type="button" class="delete-note-btn" onclick="deleteNoteFromDOM(this)">🗑️</button>
-                          </div>
-                      </div>
-                  `;
-
-      const notesList = document.getElementById('notesList');
-      if (notesList) {
-        notesList.insertBefore(
-          newNoteItem,
-          notesList.firstChild
-        );
+    // Get habit ID from the form action, URL, or data attribute
+    let habitId = null;
+    const form = document.getElementById('habitForm');
+    if (form) {
+      // Try to get from form action
+      const actionMatch = form.action.match(/\/habits\/edit\/(\d+)/);
+      if (actionMatch) {
+        habitId = actionMatch[1];
       }
-      noteInput.value = '';
-      noteInputArea.style.display = 'none';
+      // Try to get from data attribute
+      if (!habitId && form.dataset.habitId) {
+        habitId = form.dataset.habitId;
+      }
+    }
+    // Try to get from URL as fallback
+    if (!habitId) {
+      const urlMatch = window.location.pathname.match(/\/habits\/edit\/(\d+)/);
+      if (urlMatch) {
+        habitId = urlMatch[1];
+      }
+    }
+    
+    if (!habitId) {
+      alert('Unable to determine habit ID. Please refresh the page and try again.');
+      return;
+    }
+
+    // Disable button during request
+    const originalText = this.innerHTML;
+    this.disabled = true;
+    this.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+
+    try {
+      const response = await fetch(`/user/habits/${habitId}/notes`, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify({
+          message: noteText
+        })
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Server error:', response.status, errorText);
+        throw new Error(`Server error: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (data.success && data.note) {
+        // Create new note item
+        const newNoteItem = document.createElement('div');
+        newNoteItem.className = 'note-item';
+        newNoteItem.setAttribute('data-note-id', data.note.id);
+        
+        // Create elements safely to prevent XSS
+        const noteTextDiv = document.createElement('div');
+        noteTextDiv.className = 'note-text';
+        noteTextDiv.textContent = data.note.message; // Use textContent to prevent XSS
+        
+        const noteFooter = document.createElement('div');
+        noteFooter.className = 'note-footer';
+        
+        const noteTime = document.createElement('div');
+        noteTime.className = 'note-time';
+        noteTime.textContent = data.note.created_at;
+        
+        const noteActions = document.createElement('div');
+        noteActions.className = 'note-actions';
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'delete-note-btn';
+        deleteBtn.textContent = '🗑️';
+        deleteBtn.onclick = function() { deleteNote(habitId, data.note.id, this); };
+        
+        noteActions.appendChild(deleteBtn);
+        noteFooter.appendChild(noteTime);
+        noteFooter.appendChild(noteActions);
+        newNoteItem.appendChild(noteTextDiv);
+        newNoteItem.appendChild(noteFooter);
+
+        const notesList = document.getElementById('notesList');
+        if (notesList) {
+          // Insert at the beginning
+          notesList.insertBefore(newNoteItem, notesList.firstChild);
+          
+          // Add fade-in animation
+          newNoteItem.style.opacity = '0';
+          setTimeout(() => {
+            newNoteItem.style.transition = 'opacity 0.3s ease';
+            newNoteItem.style.opacity = '1';
+          }, 10);
+        }
+        
+        noteInput.value = '';
+        noteInputArea.style.display = 'none';
+      } else {
+        alert(data.message || 'Failed to save note');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while saving the note. Please try again.');
+    } finally {
+      // Re-enable button
+      this.disabled = false;
+      this.innerHTML = originalText;
     }
   });
 }
@@ -144,7 +284,6 @@ document.querySelectorAll('.day-circle').forEach((day) => {
   });
 });
 
-<<<<<<< HEAD
 function updateDaysCount() {
   const activeDays = document.querySelectorAll('.day-circle.active').length;
   const daysInfo = document.querySelector('.days-info');
@@ -212,64 +351,6 @@ if (saveBtn && saveBtn.type !== 'submit') {
 }
 
 // Function to set the current date in the header (only if element exists)
-=======
-// saveNoteBtn.addEventListener('click', function () {
-//   const noteText = noteInput.value.trim();
-//   if (noteText) {
-//     const now = new Date();
-//     const timeStr =
-//       now.toLocaleDateString('en-US', {
-//         year: 'numeric',
-//         month: 'short',
-//         day: 'numeric',
-//       }) +
-//       ' at ' +
-//       now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-//     const timestamp = now.toISOString();
-
-//     const newNoteItem = document.createElement('div');
-//     newNoteItem.className = 'note-item';
-//     newNoteItem.setAttribute('data-timestamp', timestamp);
-//     newNoteItem.innerHTML = `
-//                     <div class="note-text">${noteText}</div>
-//                     <div class="note-footer">
-//                         <div class="note-time">${timeStr}</div>
-//                         <div class="note-actions">
-//                             <button class="delete-note-btn" onclick="deleteNoteFromDOM(this)">🗑️</button>
-//                         </div>
-//                     </div>
-//                 `;
-
-//     document
-//       .getElementById('notesList')
-//       .insertBefore(
-//         newNoteItem,
-//         document.getElementById('notesList').firstChild
-//       );
-//     noteInput.value = '';
-//     noteInputArea.style.display = 'none';
-//   }
-// });
-
-// Delete Habit Functionality (Fulfills implicit requirement for a delete button)
-document.getElementById('deleteBtn').addEventListener('click', function () {
-  if (
-    confirm(
-      'Are you sure you want to delete this habit? This action cannot be undone.'
-    )
-  ) {
-    const habits = JSON.parse(localStorage.getItem('habits') || '[]');
-    const newHabits = habits.filter((h) => h.id !== currentHabitId);
-
-    localStorage.setItem('habits', JSON.stringify(newHabits));
-    alert('Habit deleted successfully!');
-    // Redirect back to myhabit dashboard
-    window.location.href = 'myhabit.html';
-  }
-});
-
-// Function to set the current date in the header
->>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
 function setCurrentDate() {
   const currentDateEl = document.getElementById('currentDate');
   if (currentDateEl) {

@@ -5,60 +5,64 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Habit;
 use App\Models\HabitLog;
+use App\Models\Note; // <--- ADD THIS LINE (or correct it if it's there)
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
+    // app/Http/Controllers/User/DashboardController.php (index method only)
+
     public function index()
     {
         $user = Auth::user();
-        
+
         // Get user's habits
         $habits = Habit::where('user_id', $user->id)
             ->with('category')
             ->withCount('logs')
             ->get();
 
+        // This is the line where the error likely occurs (Line 26)
+        $notes = Note::where('user_id', $user->id) 
+                      ->orderBy('created_at', 'desc')
+                      ->get();
+        // ------------------------------
+
         // Calculate stats
         $activeHabits = $habits->count();
         $currentStreak = $this->calculateCurrentStreak($habits);
-        
-        // Calculate completion rate
         $totalPossible = 0;
         $totalCompleted = 0;
         $today = now()->toDateString();
-        
+        $currentDayShort = now()->format('D');
+
         foreach ($habits as $habit) {
-            // target_days is already an array due to model cast
             $targetDays = $habit->target_days ?? [];
-            $dayName = now()->format('D');
-            $dayShort = substr($dayName, 0, 3);
-            
-            if (in_array($dayShort, $targetDays)) {
+
+            if (in_array($currentDayShort, $targetDays)) {
                 $totalPossible++;
                 $isCompleted = HabitLog::where('habit_id', $habit->id)
-                    ->where('completed_at', $today)
+                    ->whereDate('completed_at', $today)
                     ->exists();
                 if ($isCompleted) {
                     $totalCompleted++;
                 }
             }
         }
-        
-        $completionRate = $totalPossible > 0 
-            ? round(($totalCompleted / $totalPossible) * 100) 
+
+        $completionRate = $totalPossible > 0
+            ? round(($totalCompleted / $totalPossible) * 100)
             : 0;
 
         // Get today's habits
         $todayHabits = $habits->filter(function($habit) {
-            // target_days is already an array due to model cast
             $targetDays = $habit->target_days ?? [];
-            $dayName = now()->format('D');
-            $dayShort = substr($dayName, 0, 3);
-            return in_array($dayShort, $targetDays);
+            $currentDayShort = now()->format('D');
+            return in_array($currentDayShort, $targetDays);
         })->map(function($habit) use ($today) {
             $isCompleted = HabitLog::where('habit_id', $habit->id)
-                ->where('completed_at', $today)
+                ->whereDate('completed_at', $today)
                 ->exists();
             return [
                 'habit' => $habit,
@@ -71,7 +75,10 @@ class DashboardController extends Controller
         $month = now()->month;
         $calendarData = $this->getCalendarData($habits, $year, $month);
 
+        // --- PASS ALL REQUIRED VARIABLES TO THE VIEW ---
         return view('user.layouts.dashboard', compact(
+            'habits',            // Required for line 29 fix
+            'notes',             // Required for line 67 fix
             'activeHabits',
             'currentStreak',
             'completionRate',
@@ -79,6 +86,7 @@ class DashboardController extends Controller
             'calendarData'
         ));
     }
+    // ... rest of the controller methods
 
     private function calculateCurrentStreak($habits)
     {

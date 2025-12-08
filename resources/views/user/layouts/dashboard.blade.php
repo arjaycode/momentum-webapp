@@ -23,11 +23,9 @@
         <i class="fas fa-list"></i>
       </div>
     </div>
-<<<<<<< HEAD
+
     <div class="stat-value">{{ $activeHabits ?? 0 }}</div>
-=======
-    <div class="stat-value">{{ $habits->count() }}</div>
->>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
+
   </div>
 
   <div class="stat-card">
@@ -47,11 +45,9 @@
         <i class="fas fa-fire"></i>
       </div>
     </div>
-<<<<<<< HEAD
+
     <div class="stat-value">{{ $currentStreak ?? 0 }} days</div>
-=======
-    <div class="stat-value">{{ $withHighest->streak_days ?? 0 }} days</div>
->>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
+
   </div>
 
   <div class="stat-card">
@@ -61,11 +57,9 @@
         <i class="fas fa-calendar-check"></i>
       </div>
     </div>
-<<<<<<< HEAD
+
     <div class="stat-value">{{ isset($todayHabits) ? $todayHabits->where('completed', true)->count() . '/' . $todayHabits->count() : '0/0' }}</div>
-=======
-    <div class="stat-value">{{ $notes->count() }}</div>
->>>>>>> 7919d9eff6e3c7786d104ba820173a4c9e55a1b8
+
   </div>
 </div>
 

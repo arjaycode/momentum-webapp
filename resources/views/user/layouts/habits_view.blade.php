@@ -15,7 +15,7 @@
 </div>
 @endif
 
-<div class="content-area">
+<div class="content-area" data-habit-id="{{ $habit->id }}">
   <div class="details-section">
     <div class="form-group">
       <label class="form-label">Habit Title</label>
@@ -73,6 +73,41 @@
       @endif
     </div>
 
+    <div class="notes-section" style="margin-top: 30px;">
+      <div class="notes-header">
+        <h2 class="notes-title">Quick Notes</h2>
+        <button type="button" class="add-note-btn" id="addNoteBtn">+</button>
+      </div>
+
+      <div class="note-input-area" id="noteInputArea" style="display: none">
+        <textarea class="note-textarea" id="noteInput" placeholder="What's on your mind?"></textarea>
+        <div class="note-toolbar">
+          <div class="toolbar-buttons">
+            <button type="button" class="toolbar-btn">B</button>
+            <button type="button" class="toolbar-btn">I</button>
+            <button type="button" class="toolbar-btn">≡</button>
+          </div>
+          <button type="button" class="save-note-btn" id="saveNoteBtn">Save</button>
+        </div>
+      </div>
+
+      <div class="notes-list" id="notesList">
+        @if(isset($notes) && $notes->count() > 0)
+          @foreach($notes as $note)
+          <div class="note-item" data-note-id="{{ $note->id }}">
+            <div class="note-text">{{ $note->message }}</div>
+            <div class="note-footer">
+              <div class="note-time">{{ $note->created_at->format('M j, Y \a\t g:i A') }}</div>
+              <div class="note-actions">
+                <button type="button" class="delete-note-btn" onclick="deleteNote({{ $habit->id }}, {{ $note->id }}, this)">🗑️</button>
+              </div>
+            </div>
+          </div>
+          @endforeach
+        @endif
+      </div>
+    </div>
+
     <div class="action-buttons-section" style="margin-top: 30px; display: flex; gap: 12px; flex-wrap: wrap;">
       <a href="{{ route('user.habits.edit', $habit->id) }}" class="btn btn-edit" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 6px;">
         <i class="fa-regular fa-pen-to-square"></i> Edit Habit
@@ -111,20 +146,14 @@
         </div>
         @endforeach
       </div>
-      <div class="day-label" style="
-                  display: grid;
-                  grid-template-columns: repeat(7, 1fr);
-                  gap: 8px;
-                  font-size: 10px;
-                  color: #999;
-                ">
-        <span style="text-align: center">Mon</span>
-        <span style="text-align: center">Tue</span>
-        <span style="text-align: center">Wed</span>
-        <span style="text-align: center">Thu</span>
-        <span style="text-align: center">Fri</span>
-        <span style="text-align: center">Sat</span>
-        <span style="text-align: center">Sun</span>
+      <div class="day-label">
+        <span>Mon</span>
+        <span>Tue</span>
+        <span>Wed</span>
+        <span>Thu</span>
+        <span>Fri</span>
+        <span>Sat</span>
+        <span>Sun</span>
       </div>
       <div class="days-info">{{ count($targetDays) }} {{ count($targetDays) == 1 ? 'day' : 'days' }} per week</div>
     </div>

@@ -7,14 +7,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Note extends Model
 {
-    //
     protected $fillable = [
+        'user_id',
         'habit_id',
         'message',
-        'color', // Added
-        'icon',  // Added
     ];
 
+    /**
+     * Define the relationship to the User model.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+    
+    /**
+     * Define the relationship to the Habit model.
+     */
     public function habit(): BelongsTo
     {
         return $this->belongsTo(Habit::class);

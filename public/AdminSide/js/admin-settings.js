@@ -16,40 +16,33 @@ tabButtons.forEach((button) => {
   });
 });
 
-// Profile Form Submit
+// Profile Form Submit - Allow form to submit normally
 const profileForm = document.querySelector('.profile-form');
-profileForm.addEventListener('submit', function (e) {
-  e.preventDefault();
+if (profileForm) {
+  profileForm.addEventListener('submit', function (e) {
+    // Let the form submit normally - don't prevent default
+    // The server will handle validation and redirect
+    console.log('Submitting profile form...');
+  });
+}
 
-  const firstName = document.getElementById('firstName').value;
-  const lastName = document.getElementById('lastName').value;
-  const email = document.getElementById('email').value;
-
-  console.log('Profile Updated:', { firstName, lastName, email });
-
-  // Show success message
-  showNotification('Profile updated successfully!', 'success');
+// Cancel Buttons - reload page to reset form
+document.querySelectorAll('.btn-cancel').forEach(cancelButton => {
+  cancelButton.addEventListener('click', function (e) {
+    if (this.type === 'button') {
+      if (
+        confirm(
+          'Are you sure you want to cancel? Any unsaved changes will be lost.'
+        )
+      ) {
+        window.location.reload();
+      }
+    }
+  });
 });
 
-// Cancel Button
-const cancelButton = document.querySelector('.btn-cancel');
-cancelButton.addEventListener('click', function () {
-  if (
-    confirm(
-      'Are you sure you want to cancel? Any unsaved changes will be lost.'
-    )
-  ) {
-    profileForm.reset();
-    showNotification('Changes cancelled', 'info');
-  }
-});
-
-// Change Photo Button
-const changePhotoBtn = document.querySelector('.link-btn');
-changePhotoBtn.addEventListener('click', function () {
-  // In a real app, this would open a file picker
-  alert('File picker would open here to select a new profile photo');
-});
+// Change Photo Button - handled in blade template via onclick
+// The avatar upload is handled by handleAvatarUpload function in the blade template
 
 // Toggle Switches
 const toggleSwitches = document.querySelectorAll('.toggle-switch input');

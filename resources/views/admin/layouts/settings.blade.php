@@ -56,7 +56,7 @@
           </div>
         </div>
 
-        <form class="profile-form" action="{{ route('admin.settings.update') }}" method="POST">
+        <form class="profile-form" action="{{ route('admin.settings.update') }}" method="POST" id="profileForm">
           @csrf
           @method('PUT')
           <div class="form-row">
@@ -264,7 +264,7 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" class="btn-save-full">
+          <button type="button" class="btn-save-full" onclick="saveSystemSettings()">
             Save Changes
           </button>
         </div>
@@ -346,12 +346,14 @@ function handleAvatarUpload(event) {
   // Validate file size (2MB max)
   if (file.size > 2048 * 1024) {
     alert('File size must be less than 2MB');
+    event.target.value = ''; // Clear the input
     return;
   }
 
   // Validate file type
   if (!file.type.match('image.*')) {
     alert('Please select an image file');
+    event.target.value = ''; // Clear the input
     return;
   }
 
@@ -367,33 +369,97 @@ function handleAvatarUpload(event) {
   formData.append('avatar', file);
   formData.append('_token', '{{ csrf_token() }}');
 
+  // Show loading state
+  const avatarImg = document.getElementById('profileAvatar');
+  const originalSrc = avatarImg.src;
+  avatarImg.style.opacity = '0.5';
+
   fetch('{{ route("admin.settings.avatar") }}', {
     method: 'POST',
     body: formData,
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
     credentials: 'same-origin'
   })
-  .then(response => response.json())
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    return response.json();
+  })
   .then(data => {
+    avatarImg.style.opacity = '1';
     if (data.success) {
       document.getElementById('profileAvatar').src = data.avatar_url;
       // Show success message
-      const alert = document.createElement('div');
-      alert.className = 'success-alert';
-      alert.style.cssText = 'margin: 20px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; display: flex; align-items: center; position: fixed; top: 20px; right: 20px; z-index: 10000;';
-      alert.innerHTML = '<span style="font-weight: bold; font-size: 1.2em; margin-right: 10px;">✓</span>' + data.message;
-      document.body.appendChild(alert);
-      setTimeout(() => alert.remove(), 3000);
+      showSuccessMessage(data.message || 'Avatar updated successfully!');
     } else {
+      avatarImg.src = originalSrc; // Revert on error
       alert('Failed to upload avatar. Please try again.');
     }
   })
   .catch(error => {
     console.error('Error:', error);
+    avatarImg.src = originalSrc; // Revert on error
+    avatarImg.style.opacity = '1';
     alert('An error occurred while uploading the avatar.');
   });
+}
+
+// Show success message
+function showSuccessMessage(message) {
+  const alert = document.createElement('div');
+  alert.className = 'success-alert';
+  alert.style.cssText = 'margin: 20px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; display: flex; align-items: center; position: fixed; top: 20px; right: 20px; z-index: 10000;';
+  alert.innerHTML = '<span style="font-weight: bold; font-size: 1.2em; margin-right: 10px;">✓</span>' + message;
+  document.body.appendChild(alert);
+  setTimeout(() => {
+    alert.style.transition = 'opacity 0.3s';
+    alert.style.opacity = '0';
+    setTimeout(() => alert.remove(), 300);
+  }, 3000);
+}
+
+// Save system settings (password policy, session management, user registration)
+function saveSystemSettings() {
+  const settings = {
+    passwordPolicy: {
+      minLength: document.getElementById('minLength')?.value || 8,
+      expiry: document.getElementById('expiry')?.value || 90,
+      requireUppercase: document.querySelectorAll('.toggle-switch input')[0]?.checked || false,
+      requireSpecialChars: document.querySelectorAll('.toggle-switch input')[1]?.checked || false,
+      requireNumbers: document.querySelectorAll('.toggle-switch input')[2]?.checked || false,
+      preventReuse: document.querySelectorAll('.toggle-switch input')[3]?.checked || false,
+    },
+    sessionManagement: {
+      timeout: document.getElementById('sessionTimeout')?.value || 30,
+      maxSessions: document.getElementById('maxSessions')?.value || 3,
+      rememberDuration: document.getElementById('rememberDuration')?.value || 30,
+      forceLogout: document.querySelectorAll('.toggle-switch input')[4]?.checked || false,
+      trackActivity: document.querySelectorAll('.toggle-switch input')[5]?.checked || false,
+    },
+    userRegistration: {
+      defaultRole: document.getElementById('defaultRole')?.value || 'user',
+      allowSelfRegistration: document.querySelectorAll('.toggle-switch input')[6]?.checked || false,
+      emailVerification: document.querySelectorAll('.toggle-switch input')[7]?.checked || false,
+    },
+  };
+
+  // For now, just show a message - these settings would need backend implementation
+  console.log('System settings:', settings);
+  showSuccessMessage('System settings saved successfully! (Note: Backend implementation needed for full functionality)');
+  
+  // In a real implementation, you would send this to the server:
+  // fetch('/admin/settings/system', {
+  //   method: 'POST',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'X-CSRF-TOKEN': '{{ csrf_token() }}'
+  //   },
+  //   body: JSON.stringify(settings)
+  // });
 }
 </script>
 @endsection

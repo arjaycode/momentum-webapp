@@ -5,13 +5,12 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\Habit;
 use App\Models\HabitLog;
-use App\Models\Note; // <--- ADD THIS LINE (or correct it if it's there)
+use App\Models\Note;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    // app/Http/Controllers/User/DashboardController.php (index method only)
 
     public function index()
     {
@@ -75,8 +74,8 @@ class DashboardController extends Controller
         $calendarData = $this->getCalendarData($habits, $year, $month);
 
         return view('user.layouts.dashboard', compact(
-            'habits',            // Required for line 29 fix
-            'notes',             // Required for line 67 fix
+            'habits',
+            'notes',
             'activeHabits',
             'currentStreak',
             'completionRate',
@@ -84,7 +83,6 @@ class DashboardController extends Controller
             'calendarData'
         ));
     }
-    // ... rest of the controller methods
 
     private function calculateCurrentStreak($habits)
     {
@@ -174,9 +172,6 @@ class DashboardController extends Controller
         return $calendarData;
     }
 
-    /**
-     * Get today's habits for live updates
-     */
     public function getTodayHabits()
     {
         $user = Auth::user();

@@ -154,7 +154,7 @@
 
 <script>
   // Dashboard Calendar Data
-  const dashboardCalendarData = @json($calendarData ? ? []);
+  const dashboardCalendarData = @json($calendarData ?? []);
   let dashboardCurrentDate = new Date();
   dashboardCurrentDate.setDate(1);
 

@@ -13,28 +13,18 @@ use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Habit\HabitCategoryController;
 use App\Http\Controllers\Admin\AdminHabitController;
 use App\Http\Controllers\Notes\NoteController;
-use App\Http\Controllers\User\CalendarController; // Not used in the final user block, but kept for clarity
-use App\Http\Controllers\User\DashboardController; // Not used in the final user block, but kept for clarity
-use App\Http\Controllers\User\HabitController; // Not used in the final user block, but kept for clarity
-use App\Http\Controllers\User\SettingsController; // Not used in the final user block, but kept for clarity
 
 Route::get('/', function () {
-    // If user is not authenticated, redirect to sign-in
     if (!Auth::check()) {
         return redirect()->route('user.signin');
     }
-    
-    // If authenticated, redirect based on role
     $user = Auth::user();
     $role = $user->role ?? null;
-    
-    // Handle null or unexpected role values
     if ($role === 'admin') {
         return redirect()->route('admin.dashboard');
     } elseif ($role === 'user') {
         return redirect()->route('user.dashboard');
     } else {
-        // Fallback for unexpected role values - redirect to signin
         Auth::logout();
         return redirect()->route('user.signin')
             ->withErrors(['email' => 'Invalid user role. Please contact support.']);
@@ -100,11 +90,11 @@ Route::middleware('auth')->group(function () {
 
     //User
     Route::prefix('user')->name('user.')->middleware(['role:user'])->group(function () {
-        // --- DASHBOARD & GENERAL ---
+        // Dashboard
         Route::get('/dashboard', [\App\Http\Controllers\User\DashboardController::class, 'index'])->name('dashboard');
         Route::get('/today-habits', [\App\Http\Controllers\User\DashboardController::class, 'getTodayHabits'])->name('today-habits');
-        
-        // --- HABITS MANAGEMENT (Original Block - Keeping these) ---
+
+        // Habits
         Route::get('/habits', [\App\Http\Controllers\User\HabitController::class, 'index'])->name('habits');
         Route::get('/habits/add', [\App\Http\Controllers\User\HabitController::class, 'create'])->name('habits.add');
         Route::post('/habits/add', [\App\Http\Controllers\User\HabitController::class, 'store'])->name('habits.store');
@@ -115,24 +105,22 @@ Route::middleware('auth')->group(function () {
         Route::get('/habits/view/{id}', [\App\Http\Controllers\User\HabitController::class, 'show'])->name('habits.view');
         Route::delete('/habits/delete/{id}', [\App\Http\Controllers\User\HabitController::class, 'destroy'])->name('habits.delete');
         Route::post('/habits/{id}/mark-done', [\App\Http\Controllers\User\HabitController::class, 'markAsDone'])->name('habits.mark-done');
-        // Notes routes - placed after specific routes to avoid conflicts
+        // note for habit
         Route::post('/habits/{id}/notes', [\App\Http\Controllers\User\HabitController::class, 'storeNote'])->name('habits.notes.store');
         Route::delete('/habits/{habitId}/notes/{noteId}', [\App\Http\Controllers\User\HabitController::class, 'deleteNote'])->name('habits.notes.delete');
 
         // --- OTHER USER PAGES ---
         Route::get('/notifications', [\App\Http\Controllers\User\NotificationController::class, 'index'])->name('notifications');
         Route::post('/notifications/clear', [\App\Http\Controllers\User\NotificationController::class, 'clear'])->name('notifications.clear');
-        Route::view('/calendar', 'user.layouts.calendar')->name('calendar'); // Changed from controller to view to match your original
+        Route::view('/calendar', 'user.layouts.calendar')->name('calendar');
 
         // --- PROFILE MANAGEMENT ---
-        Route::get('/settings', [ProfileController::class, 'show'])->name('settings'); // ProfileController::show is the canonical settings route
+        Route::get('/settings', [ProfileController::class, 'show'])->name('settings');
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
         Route::delete('/profile/delete', [ProfileController::class, 'destroy'])->name('profile.delete');
         Route::get('/profile/export', [ProfileController::class, 'exportData'])->name('profile.export');
-
-        // --- DUPLICATE BLOCK REMOVED HERE ---
     });
 });
 

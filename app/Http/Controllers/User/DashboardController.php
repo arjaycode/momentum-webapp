@@ -17,17 +17,16 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Get user's habits
         $habits = Habit::where('user_id', $user->id)
             ->with('category')
             ->withCount('logs')
             ->get();
 
-        // This is the line where the error likely occurs (Line 26)
-        $notes = Note::where('user_id', $user->id) 
-                      ->orderBy('created_at', 'desc')
-                      ->get();
-        // ------------------------------
+
+        $notes = Note::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
 
         // Calculate stats
         $activeHabits = $habits->count();
@@ -56,11 +55,11 @@ class DashboardController extends Controller
             : 0;
 
         // Get today's habits
-        $todayHabits = $habits->filter(function($habit) {
+        $todayHabits = $habits->filter(function ($habit) {
             $targetDays = $habit->target_days ?? [];
             $currentDayShort = now()->format('D');
             return in_array($currentDayShort, $targetDays);
-        })->map(function($habit) use ($today) {
+        })->map(function ($habit) use ($today) {
             $isCompleted = HabitLog::where('habit_id', $habit->id)
                 ->whereDate('completed_at', $today)
                 ->exists();
@@ -75,7 +74,6 @@ class DashboardController extends Controller
         $month = now()->month;
         $calendarData = $this->getCalendarData($habits, $year, $month);
 
-        // --- PASS ALL REQUIRED VARIABLES TO THE VIEW ---
         return view('user.layouts.dashboard', compact(
             'habits',            // Required for line 29 fix
             'notes',             // Required for line 67 fix
@@ -105,7 +103,7 @@ class DashboardController extends Controller
         $logs = HabitLog::where('habit_id', $habit->id)
             ->orderBy('completed_at', 'desc')
             ->pluck('completed_at')
-            ->map(function($date) {
+            ->map(function ($date) {
                 return \Carbon\Carbon::parse($date)->format('Y-m-d');
             })
             ->toArray();
@@ -135,35 +133,35 @@ class DashboardController extends Controller
     {
         $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $calendarData = [];
-        
-        $logs = HabitLog::whereHas('habit', function($query) use ($habits) {
+
+        $logs = HabitLog::whereHas('habit', function ($query) use ($habits) {
             $query->whereIn('id', $habits->pluck('id'));
         })
-        ->whereYear('completed_at', $year)
-        ->whereMonth('completed_at', $month)
-        ->get()
-        ->groupBy(function($log) {
-            return date('j', strtotime($log->completed_at));
-        });
+            ->whereYear('completed_at', $year)
+            ->whereMonth('completed_at', $month)
+            ->get()
+            ->groupBy(function ($log) {
+                return date('j', strtotime($log->completed_at));
+            });
 
         foreach ($habits as $habit) {
             // target_days is already an array due to model cast
             $targetDays = $habit->target_days ?? [];
-            
+
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 $date = \Carbon\Carbon::create($year, $month, $day);
                 $dayName = $date->format('D');
                 $dayShort = substr($dayName, 0, 3);
-                
+
                 if (in_array($dayShort, $targetDays)) {
                     if (!isset($calendarData[$day])) {
                         $calendarData[$day] = [];
                     }
-                    
-                    $isCompleted = $logs->has($day) && $logs[$day]->contains(function($log) use ($habit) {
+
+                    $isCompleted = $logs->has($day) && $logs[$day]->contains(function ($log) use ($habit) {
                         return $log->habit_id === $habit->id;
                     });
-                    
+
                     $calendarData[$day][] = [
                         'id' => $habit->id,
                         'name' => $habit->name,
@@ -183,17 +181,17 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $today = now()->toDateString();
-        
+
         $habits = Habit::where('user_id', $user->id)
             ->with('category')
             ->get();
 
-        $todayHabits = $habits->filter(function($habit) {
+        $todayHabits = $habits->filter(function ($habit) {
             $targetDays = $habit->target_days ?? [];
             $dayName = now()->format('D');
             $dayShort = substr($dayName, 0, 3);
             return in_array($dayShort, $targetDays);
-        })->map(function($habit) use ($today) {
+        })->map(function ($habit) use ($today) {
             $isCompleted = HabitLog::where('habit_id', $habit->id)
                 ->where('completed_at', $today)
                 ->exists();
@@ -209,15 +207,15 @@ class DashboardController extends Controller
         // Calculate stats
         $activeHabits = $habits->count();
         $currentStreak = $this->calculateCurrentStreak($habits);
-        
+
         $totalPossible = 0;
         $totalCompleted = 0;
-        
+
         foreach ($habits as $habit) {
             $targetDays = $habit->target_days ?? [];
             $dayName = now()->format('D');
             $dayShort = substr($dayName, 0, 3);
-            
+
             if (in_array($dayShort, $targetDays)) {
                 $totalPossible++;
                 $isCompleted = HabitLog::where('habit_id', $habit->id)
@@ -228,9 +226,9 @@ class DashboardController extends Controller
                 }
             }
         }
-        
-        $completionRate = $totalPossible > 0 
-            ? round(($totalCompleted / $totalPossible) * 100) 
+
+        $completionRate = $totalPossible > 0
+            ? round(($totalCompleted / $totalPossible) * 100)
             : 0;
 
         return response()->json([
@@ -245,4 +243,3 @@ class DashboardController extends Controller
         ]);
     }
 }
-

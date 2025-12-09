@@ -151,10 +151,10 @@
     </div>
   </div>
 </div>
-
 <script>
   // Dashboard Calendar Data
-  const dashboardCalendarData = @json($calendarData ?? []);
+  const dashboardCalendarData = @json($calendarData);
+  console.log(dashboardCalendarData);
   let dashboardCurrentDate = new Date();
   dashboardCurrentDate.setDate(1);
 
@@ -206,10 +206,6 @@
 
       if (hasCompleted) {
         dayElement.classList.add('completed');
-      } else if (hasHabits) {
-        // Show that day has habits scheduled (even if not completed)
-        dayElement.style.border = '2px solid #007bff';
-        dayElement.style.borderRadius = '50%';
       }
 
       // Add click handler - make all days with habits clickable
@@ -300,12 +296,12 @@
   }
 
   // Month navigation
-  document.getElementById('dashboardPrevMonth') ? .addEventListener('click', function() {
+  document.getElementById('dashboardPrevMonth').addEventListener('click', function() {
     dashboardCurrentDate.setMonth(dashboardCurrentDate.getMonth() - 1);
     fetchDashboardCalendarData();
   });
 
-  document.getElementById('dashboardNextMonth') ? .addEventListener('click', function() {
+  document.getElementById('dashboardNextMonth').addEventListener('click', function() {
     dashboardCurrentDate.setMonth(dashboardCurrentDate.getMonth() + 1);
     fetchDashboardCalendarData();
   });

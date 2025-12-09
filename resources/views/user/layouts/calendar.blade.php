@@ -31,11 +31,6 @@
           ›
         </button>
       </div>
-      <div class="view-toggle">
-        <button class="view-btn" data-view="week">Week</button>
-        <button class="view-btn active" data-view="month">Month</button>
-        <button class="view-btn" data-view="year">Year</button>
-      </div>
     </div>
 
     <div class="calendar-grid" id="calendarGrid">

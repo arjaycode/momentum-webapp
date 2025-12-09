@@ -54,6 +54,7 @@
         <option value="active">Active</option>
         <option value="inactive">Inactive</option>
       </select>
+      <a class="btn-secondary" href="{{ route('admin.habits.index') }}"><i class="fas fa-list"></i> Manage Habits</a>
       <a class="btn-primary" href="{{ route('admin.habit-management.create') }}"><i class="fas fa-plus"></i> Add Category</a>
     </div>
   </div>
@@ -77,7 +78,7 @@
         {{ $category->description }}
       </p>
       <div class="category-footer">
-        <span class="habit-count">0 habits</span>
+        <span class="habit-count">{{ $category->habits_count }} {{ $category->habits_count == 1 ? 'habit' : 'habits' }}</span>
         <span class="status-badge {{ $category->status }}">{{ $category->status }}</span>
       </div>
     </div>

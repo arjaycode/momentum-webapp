@@ -56,7 +56,7 @@ class HabitController extends Controller
 
         // Check if habit name already exists for this user
         $existingHabit = Habit::where('user_id', Auth::id())
-            ->where('name', $request->input('name'))
+            ->where('habit_name', $request->input('name'))
             ->first();
 
         if ($existingHabit) {
@@ -77,6 +77,9 @@ class HabitController extends Controller
         $validated['user_id'] = Auth::id();
         // Handle checkbox: if not present in request, set to false
         $validated['enable_push_notifications'] = $request->has('enable_push_notifications') ? true : false;
+        // Map 'name' to 'habit_name' for database column
+        $validated['habit_name'] = $validated['name'];
+        unset($validated['name']);
         // target_days is already an array from validation, model will handle JSON encoding via cast
 
         $habit = Habit::create($validated);
@@ -165,7 +168,7 @@ class HabitController extends Controller
 
         // Check if habit name already exists for this user (excluding current habit)
         $existingHabit = Habit::where('user_id', Auth::id())
-            ->where('name', $request->input('name'))
+            ->where('habit_name', $request->input('name'))
             ->where('id', '!=', $habit->id)
             ->first();
 
@@ -186,6 +189,9 @@ class HabitController extends Controller
 
         // Handle checkbox: if not present in request, set to false
         $validated['enable_push_notifications'] = $request->has('enable_push_notifications') ? true : false;
+        // Map 'name' to 'habit_name' for database column
+        $validated['habit_name'] = $validated['name'];
+        unset($validated['name']);
         // target_days is already an array from validation, model will handle JSON encoding via cast
 
         $habit->update($validated);
@@ -301,7 +307,7 @@ class HabitController extends Controller
 
         $habits = Habit::where('user_id', $user->id)
             ->where(function($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
+                $q->where('habit_name', 'like', "%{$query}%")
                   ->orWhere('description', 'like', "%{$query}%");
             })
             ->with('category')

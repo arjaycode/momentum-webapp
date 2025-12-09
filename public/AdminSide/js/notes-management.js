@@ -40,113 +40,8 @@ searchInput.addEventListener('keydown', function (e) {
   }
 });
 
-// delete functionality
-document.addEventListener('DOMContentLoaded', function () {
-  // Global variable to store the note being deleted
-  let noteToDelete = null;
-
-  // Get references to modal elements
-  const modalBackdrop = document.getElementById('deleteModal');
-  const modalConfirmButton = document.getElementById('modalConfirm');
-  const modalCancelButton = document.getElementById('modalCancel');
-  // We will inject the HTML into this container
-  const modalNotePreview = modalBackdrop.querySelector('.note-preview');
-
-  // --- Functions ---
-
-  // Function to open the modal
-  function openDeleteModal(noteElement) {
-    // 1. Store the note element for later use
-    noteToDelete = noteElement;
-
-    // 2. Extract data from the note item
-    const userName = noteElement.querySelector('.user-name').textContent;
-    const userId = noteElement.querySelector('.user-id').textContent;
-    const userAvatar = noteElement.querySelector('.user-avatar').src;
-    const habitName = noteElement.querySelector('.category-name').textContent;
-    // Get the icon HTML (the <i> tag)
-    const habitIconInner =
-      noteElement.querySelector('.category-icon').innerHTML;
-    const noteDescription =
-      noteElement.querySelector('.note-description').textContent;
-
-    // 3. Populate the modal preview using Template Literal
-    // We rebuild the structure inside .note-preview
-    modalNotePreview.innerHTML = `
-      <div class="preview-header">
-        <img src="${userAvatar}" alt="User" class="user-avatar" />
-        <div>
-          <div class="preview-user">${userName}</div>
-          <div class="preview-id">${userId}</div>
-        </div>
-      </div>
-
-      <div class="preview-habit">
-        <span class="habit-icon">${habitIconInner}</span>
-        <span class="habit-name">${habitName}</span>
-      </div>
-
-      <div class="preview-note">
-        <span class="note-label">Note:</span>
-        <span>${noteDescription}</span>
-      </div>
-    `;
-
-    // 4. Show the modal
-    modalBackdrop.classList.add('show');
-  }
-
-  // Function to close the modal
-  function closeDeleteModal() {
-    modalBackdrop.classList.remove('show');
-    // Clear the stored reference after a short delay to allow fade out
-    setTimeout(() => {
-      noteToDelete = null;
-    }, 200);
-  }
-
-  // --- Event Listeners ---
-
-  // 1. Listeners for the Note Delete button clicks
-  document.querySelectorAll('.delete-btn').forEach((btn) => {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault(); // Stop link navigation
-      e.stopPropagation(); // Stop bubbling
-      const noteItem = this.closest('.note-item');
-      openDeleteModal(noteItem);
-    });
-  });
-
-  // 2. Listener for the Modal Confirm button
-  // --- FIX 2: Added 'e' parameter and preventDefault() ---
-  modalConfirmButton.addEventListener('click', function (e) {
-    e.preventDefault(); // <--- THIS STOPS THE RELOAD
-
-    if (noteToDelete) {
-      // Apply fade-out animation
-      noteToDelete.style.transition = 'all 0.3s ease';
-      noteToDelete.style.opacity = '0';
-      noteToDelete.style.transform = 'translateX(20px)';
-
-      // Remove the item after the animation
-      setTimeout(() => {
-        noteToDelete.remove();
-        closeDeleteModal();
-      }, 300);
-    }
-  });
-
-  // 3. Listener for the Modal Cancel button
-  modalCancelButton.addEventListener('click', closeDeleteModal);
-
-  // 4. Listener for Backdrop click to close
-  window.addEventListener('click', function (e) {
-    // Only close if the click is directly on the backdrop container
-    if (e.target === modalBackdrop) {
-      closeDeleteModal();
-    }
-  });
-});
+// Delete functionality is handled in the blade template via showDeleteModal function
+// This section is kept for any additional modal-related functionality if needed
 
 // Update stats dynamically
 function updateStats() {
@@ -161,13 +56,19 @@ function updateStats() {
 // Note item click (expand/view details)
 noteItems.forEach((note) => {
   note.addEventListener('click', function (e) {
-    // Don't trigger if clicking on action buttons
-    if (e.target.closest('.action-btn')) return;
+    // Don't trigger if clicking on action buttons or their children
+    if (e.target.closest('.action-btn') || e.target.closest('.note-actions')) {
+      e.stopPropagation();
+      return;
+    }
 
     // Toggle expanded state
     this.classList.toggle('expanded');
   });
 });
+
+// Delete button click handlers are now handled in the blade template
+// This ensures proper access to showDeleteModal function and form handling
 
 // Status badge toggle
 document.querySelectorAll('.status-badge').forEach((badge) => {

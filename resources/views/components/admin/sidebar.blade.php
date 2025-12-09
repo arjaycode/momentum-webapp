@@ -23,7 +23,13 @@
       <span>Users</span>
     </a>
 
-    {{-- Habits --}}
+    {{-- Habits Management --}}
+    <a href="{{ route('admin.habits.index') }}" class="nav-item {{ $active === 'habits-management' ? 'active' : '' }}">
+      <i class="fas fa-list-check"></i>
+      <span>Habits Management</span>
+    </a>
+
+    {{-- Habit Categories --}}
     <a href="{{ route('admin.habit-management') }}" class="nav-item {{ $active === 'habits' ? 'active' : '' }}">
       <i class="fas fa-heart"></i>
       <span>Habit Categories</span>

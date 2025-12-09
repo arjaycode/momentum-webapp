@@ -12,7 +12,7 @@ class HabitCategoryController extends Controller
     //
     public function index()
     {
-        $categories = HabitsCategory::all();
+        $categories = HabitsCategory::withCount('habits')->get();
 
         return view('admin.layouts.habit_management', compact('categories'));
     }
@@ -31,9 +31,11 @@ class HabitCategoryController extends Controller
 
             HabitsCategory::create($data);
 
-            return redirect(route('admin.habit-management.create'), 201)->with('success', 'Category Created.');
+            return redirect()->route('admin.habit-management.create')->with('success', 'Category Created.');
         } catch (Exception $e) {
-            dd($e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to create category: ' . $e->getMessage()]);
         }
     }
 
@@ -46,21 +48,36 @@ class HabitCategoryController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            $category = HabitsCategory::findOrFail($id);
 
-            $category = HabitsCategory::find($id);
+            $validated = $request->validate([
+                'title' => 'required|string|max:50',
+                'description' => 'string|nullable',
+                'status' => 'required|string|in:active,inactive',
+                'color' => 'required|string',
+                'icon' => 'required|string|nullable'
+            ]);
 
-            $newData = $request->all();
-            $category->update($newData);
+            $category->update($validated);
 
-            return redirect(route('admin.habit-management.edit', $category->id), 201)->with('success', 'Category Updated.');
+            return redirect()->route('admin.habit-management.edit', $category->id)->with('success', 'Category Updated.');
         } catch (Exception $e) {
-            dd($e->getMessage());
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to update category: ' . $e->getMessage()]);
         }
     }
 
     public function delete($id)
     {
-        $category = HabitsCategory::find($id);
-        $category->delete();
+        try {
+            $category = HabitsCategory::findOrFail($id);
+            $categoryName = $category->title;
+            $category->delete();
+
+            return redirect()->route('admin.habit-management')->with('success', 'Category "' . $categoryName . '" deleted successfully.');
+        } catch (Exception $e) {
+            return redirect()->back()->withErrors(['error' => 'Failed to delete category: ' . $e->getMessage()]);
+        }
     }
 }

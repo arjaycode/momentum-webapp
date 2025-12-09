@@ -38,6 +38,7 @@ body {
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-header {
@@ -93,6 +94,7 @@ body {
   font-weight: 700;
   color: #1a1a1a;
   margin-bottom: 8px;
+  transition: all 0.3s ease;
 }
 
 .stat-change {
@@ -375,10 +377,12 @@ body {
 /* Chart Canvas */
 canvas {
   max-height: 240px;
+  height: 240px !important;
 }
 
 .chart-card.large canvas {
   max-height: 280px;
+  height: 280px !important;
 }
 
 .main-container {

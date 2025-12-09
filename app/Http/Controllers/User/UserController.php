@@ -36,7 +36,7 @@ class UserController extends Controller
 
         $createdUser = User::create($user);
 
-        return redirect(route('admin.user-management.create'), 201)->with('success', 'Account Succesfully Created. Account can now be used for logging in');
+        return redirect()->route('admin.user-management.create')->with('success', 'Account Succesfully Created. Account can now be used for logging in');
     }
 
     public function edit($id)
@@ -63,7 +63,7 @@ class UserController extends Controller
         }
 
         $user->update($newCredentials);
-        return redirect(route('admin.user-management.edit', $user->id), 201)->with('success', 'Account Succesfully Updated.');
+        return redirect()->route('admin.user-management.edit', $user->id)->with('success', 'Account Succesfully Updated.');
     }
 
     public function delete($id)

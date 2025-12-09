@@ -28,9 +28,26 @@ class LoginController extends Controller
 
         // 2. Attempt Login
         if (Auth::attempt($credentials, $request->filled('remember'))) {
+            $user = Auth::user();
+            
+            // Check user status - prevent blocked/inactive users from logging in
+            if ($user->status === 'blocked') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account has been blocked. Please contact support.',
+                ])->onlyInput('email');
+            }
+            
+            if ($user->status === 'inactive') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account is inactive. Please contact support.',
+                ])->onlyInput('email');
+            }
+            
             $request->session()->regenerate();
             // 3. Role-Based Redirect
-            $role = Auth::user()->role;
+            $role = $user->role;
             if ($role === 'admin') {
                 return redirect()->route('admin.dashboard')->with('success', 'Welcome back!');
             }
@@ -45,9 +62,18 @@ class LoginController extends Controller
 
     public function logout(Request $request)
     {
+        $user = Auth::user();
+        $role = $user ? $user->role : null;
+        
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        
+        // Redirect based on user role
+        if ($role === 'admin') {
+            return redirect()->route('admin.signin');
+        }
+        
         return redirect()->route('user.signin');
     }
 }

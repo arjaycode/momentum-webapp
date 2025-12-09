@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Habit\HabitCategoryController;
+use App\Http\Controllers\Admin\AdminHabitController;
 use App\Http\Controllers\Notes\NoteController;
 use App\Http\Controllers\User\CalendarController; // Not used in the final user block, but kept for clarity
 use App\Http\Controllers\User\DashboardController; // Not used in the final user block, but kept for clarity
@@ -25,11 +26,19 @@ Route::get('/', function () {
     
     // If authenticated, redirect based on role
     $user = Auth::user();
-    if ($user->role === 'admin') {
-        return redirect()->route('admin.dashboard');
-    }
+    $role = $user->role ?? null;
     
-    return redirect()->route('user.dashboard');
+    // Handle null or unexpected role values
+    if ($role === 'admin') {
+        return redirect()->route('admin.dashboard');
+    } elseif ($role === 'user') {
+        return redirect()->route('user.dashboard');
+    } else {
+        // Fallback for unexpected role values - redirect to signin
+        Auth::logout();
+        return redirect()->route('user.signin')
+            ->withErrors(['email' => 'Invalid user role. Please contact support.']);
+    }
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
@@ -51,6 +60,8 @@ Route::middleware('auth')->group(function () {
     //Admin
     Route::prefix('admin')->name('admin.')->middleware(['role:admin'])->group(function () {
         Route::get('/dashboard', [AdminDashboardController::class, 'view_dashboard'])->name('dashboard');
+        Route::get('/dashboard/stats', [AdminDashboardController::class, 'getStats'])->name('dashboard.stats');
+        Route::get('/dashboard/chart-data', [AdminDashboardController::class, 'getChartData'])->name('dashboard.chart-data');
         //User Management
         Route::get('/user-management', [UserController::class, 'index'])->name('user-management');
         Route::view('/user-management/create', 'admin.layouts.user_addnew')->name('user-management.create');
@@ -67,10 +78,24 @@ Route::middleware('auth')->group(function () {
         Route::patch('/habit-management/edit/{id}', [HabitCategoryController::class, 'update'])->name('habit-management.edit.submit');
         Route::delete('/habit-management/delete/{id}', [HabitCategoryController::class, 'delete'])->name('habit-management.delete');
 
+        //Habits Management
+        Route::get('/habits', [AdminHabitController::class, 'index'])->name('habits.index');
+        Route::get('/habits/create', [AdminHabitController::class, 'create'])->name('habits.create');
+        Route::post('/habits', [AdminHabitController::class, 'store'])->name('habits.store');
+        Route::get('/habits/edit/{id}', [AdminHabitController::class, 'edit'])->name('habits.edit');
+        Route::put('/habits/{id}', [AdminHabitController::class, 'update'])->name('habits.update');
+        Route::delete('/habits/{id}', [AdminHabitController::class, 'destroy'])->name('habits.destroy');
+
         Route::get('/note-management', [NoteController::class, 'index'])->name('note-management');
         Route::get('/note-management/create', [NoteController::class, 'create'])->name('note-management.create');
-        Route::get('/note-management/edit', [NoteController::class, 'edit'])->name('note-management.edit');
-        Route::view('/settings', 'admin.layouts.settings')->name('settings');
+        Route::post('/note-management', [NoteController::class, 'store'])->name('note-management.store');
+        Route::get('/note-management/edit/{id}', [NoteController::class, 'edit'])->name('note-management.edit');
+        Route::put('/note-management/{id}', [NoteController::class, 'update'])->name('note-management.update');
+        Route::delete('/note-management/{id}', [NoteController::class, 'destroy'])->name('note-management.destroy');
+        Route::get('/settings', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'show'])->name('settings');
+        Route::put('/settings/profile', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'update'])->name('settings.update');
+        Route::post('/settings/avatar', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'updateAvatar'])->name('settings.avatar');
+        Route::put('/settings/password', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'updatePassword'])->name('settings.password');
     });
 
     //User

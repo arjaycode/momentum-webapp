@@ -16,58 +16,63 @@
       Back to Notes Management</a>
   </div>
   <div class="form-container">
-    <div class="form-row">
-      <div class="form-group">
-        <label>For User</label>
-        <select id="userSelect" class="select-input">
-          <option value="">Select User</option>
-          <option value="johnson">Johnson (ID: 4001)</option>
-          <option value="smith">Smith (ID: 4002)</option>
-          <option value="davis">Davis (ID: 4003)</option>
-        </select>
+    <form action="{{ route('admin.note-management.store') }}" method="POST">
+      @csrf
+      @if (session('success'))
+      <div class="success-alert">
+        <span class="success-icon">✓</span>
+        {{ session('success') }}
+      </div>
+      @endif
+      @if ($errors->any())
+      <div>
+        <ul class="msg">
+          @foreach ($errors->all() as $error)
+          <li class="msg error">{{ $error }}</li>
+          @endforeach
+        </ul>
+      </div>
+      @endif
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>For User <span class="required">*</span></label>
+          <select name="user_id" id="userSelect" class="select-input" required>
+            <option value="">Select User</option>
+            @foreach($users as $user)
+            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+              {{ $user->firstname }} {{ $user->lastname }} ({{ $user->email }})
+            </option>
+            @endforeach
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>For Habit (Optional)</label>
+          <select name="habit_id" id="habitSelect" class="select-input">
+            <option value="">Select Habit (Optional)</option>
+            @foreach($habits as $habit)
+            <option value="{{ $habit->id }}" {{ old('habit_id') == $habit->id ? 'selected' : '' }}>
+              {{ $habit->name }} - {{ $habit->user->firstname }} {{ $habit->user->lastname }}
+              @if($habit->category)
+                ({{ $habit->category->title }})
+              @endif
+            </option>
+            @endforeach
+          </select>
+        </div>
       </div>
 
       <div class="form-group">
-        <label>For Habit</label>
-        <select id="habitSelect" class="select-input">
-          <option value="">Select Habit</option>
-          <option value="fitness">Fitness</option>
-          <option value="reading">Reading</option>
-          <option value="meditation">Meditation</option>
-        </select>
+        <label>Note <span class="required">*</span></label>
+        <textarea name="message" id="noteText" class="textarea-input" placeholder="Put your note here..." required>{{ old('message') }}</textarea>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label>Note</label>
-      <textarea id="noteText" class="textarea-input" placeholder="Put your note here..."></textarea>
-    </div>
-
-    <div class="form-group">
-      <label>Color Theme</label>
-      <div class="color-options">
-        <button class="color-btn" data-color="blue" style="background-color: #3b82f6"></button>
-        <button class="color-btn" data-color="green" style="background-color: #10b981"></button>
-        <button class="color-btn" data-color="pink" style="background-color: #ec4899"></button>
-        <button class="color-btn" data-color="purple" style="background-color: #8b5cf6"></button>
-        <button class="color-btn" data-color="orange" style="background-color: #f97316"></button>
+      <div class="form-actions">
+        <a href="{{ route('admin.note-management') }}" class="btn btn-cancel">Cancel</a>
+        <button type="submit" class="btn btn-primary">Create Note</button>
       </div>
-    </div>
-
-    <div class="form-group">
-      <label>Icon</label>
-      <div class="icon-options">
-        <button class="note-icon-btn" data-icon="heart">❤️</button>
-        <button class="note-icon-btn" data-icon="dumbbell">💪</button>
-        <button class="note-icon-btn" data-icon="calendar">📅</button>
-        <button class="note-icon-btn" data-icon="star">⭐</button>
-      </div>
-    </div>
-
-    <div class="form-actions">
-      <button class="btn btn-cancel">Cancel</button>
-      <button class="btn btn-primary" id="saveBtn">Create Note</button>
-    </div>
+    </form>
   </div>
 </main>
 @endsection

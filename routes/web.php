@@ -86,6 +86,11 @@ Route::middleware('auth')->group(function () {
         Route::put('/settings/profile', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'update'])->name('settings.update');
         Route::post('/settings/avatar', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'updateAvatar'])->name('settings.avatar');
         Route::put('/settings/password', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'updatePassword'])->name('settings.password');
+        // API Routes
+        Route::get('/settings/system', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'getSystemSettings'])->name('settings.system.get');
+        Route::put('/settings/system', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'updateSystemSettings'])->name('settings.system.update');
+        Route::get('/settings/notifications', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'getNotificationSettings'])->name('settings.notifications.get');
+        Route::put('/settings/notifications', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'updateNotificationSettings'])->name('settings.notifications.update');
     });
 
     //User

@@ -23,320 +23,254 @@
   </ul>
 </div>
 @endif
-<!-- Main Content -->
-<main class="main-content">
-  <!-- Tabs -->
-  <div class="tabs">
-    <button class="tab-btn active" data-tab="profile">Profile</button>
-    <button class="tab-btn" data-tab="password">Password</button>
-    <button class="tab-btn" data-tab="notifications">
-      Notifications
+
+<div class="screen" id="password-screen">
+  <div class="content">
+    <button class="back-btn" onclick="showScreen('profile-screen', document.querySelector('.tabs .tab[data-screen=\'profile-screen\']'))">
+      ← Back
     </button>
-  </div>
 
-  <!-- Tab Content -->
-  <div class="tab-content active" id="profile-tab">
-    <div class="settings-grid">
-      <!-- Profile Information -->
-      <div class="settings-card">
-        <h3 class="card-title">Profile Information</h3>
-
-        <div class="profile-section">
-          <div class="avatar-section">
-            <img id="profileAvatar" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->firstname . ' ' . $user->lastname) . '&background=random' }}" alt="{{ $user->firstname }}" class="profile-avatar" />
-            <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)" />
-            <div class="avatar-badge" onclick="document.getElementById('avatarInput').click()" style="cursor: pointer;">
-              <i class="fas fa-camera"></i>
-            </div>
-          </div>
-          <div class="profile-details">
-            <h4 class="profile-name">{{ $user->firstname }} {{ $user->lastname }}</h4>
-            <p class="profile-since">Member since {{ $user->created_at->format('F Y') }}</p>
-            <button class="link-btn" onclick="document.getElementById('avatarInput').click()">Change photo</button>
-          </div>
-        </div>
-
-        <form class="profile-form" action="{{ route('admin.settings.update') }}" method="POST" id="profileForm">
-          @csrf
-          @method('PUT')
-          <div class="form-row">
-            <div class="form-group">
-              <label for="firstName">First Name</label>
-              <input type="text" id="firstName" name="firstname" value="{{ old('firstname', $user->firstname) }}" class="form-input" required />
-              @error('firstname')
-                <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
-              @enderror
-            </div>
-            <div class="form-group">
-              <label for="lastName">Last Name</label>
-              <input type="text" id="lastName" name="lastname" value="{{ old('lastname', $user->lastname) }}" class="form-input" required />
-              @error('lastname')
-                <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
-              @enderror
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" class="form-input" required />
-            @error('email')
-              <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
-            @enderror
-          </div>
-
-          <div class="form-actions">
-            <button type="button" class="btn-cancel" onclick="location.reload()">Cancel</button>
-            <button type="submit" class="btn-save">Save Changes</button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Password Policy -->
-      <div class="settings-card">
-        <h3 class="card-title">Password Policy</h3>
-        <p class="card-subtitle">
-          Set password requirements and security rules
-        </p>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="minLength">Minimum Password Length</label>
-            <input type="number" id="minLength" value="8" class="form-input" />
-          </div>
-          <div class="form-group">
-            <label for="expiry">Password Expiry (Days)</label>
-            <input type="number" id="expiry" value="90" class="form-input" />
-          </div>
-        </div>
-
-        <div class="toggle-group">
-          <div class="toggle-item">
-            <div class="toggle-info">
-              <div class="toggle-label">Require Uppercase Letters</div>
-              <div class="toggle-description">
-                At least one uppercase letter
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-item">
-            <div class="toggle-info">
-              <div class="toggle-label">Require Special Characters</div>
-              <div class="toggle-description">
-                At least one special character
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-item">
-            <div class="toggle-info">
-              <div class="toggle-label">Require Numbers</div>
-              <div class="toggle-description">
-                At least one numeric character
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-item">
-            <div class="toggle-info">
-              <div class="toggle-label">Prevent Password Reuse</div>
-              <div class="toggle-description">
-                Remember last 5 passwords
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Session Management -->
-      <div class="settings-card">
-        <h3 class="card-title">Session Management</h3>
-        <p class="card-subtitle">
-          Configure user session behavior and timeouts
-        </p>
-
-        <div class="form-row-three">
-          <div class="form-group">
-            <label for="sessionTimeout">Session Timeout (Minutes)</label>
-            <input type="number" id="sessionTimeout" value="30" class="form-input" />
-          </div>
-          <div class="form-group">
-            <label for="maxSessions">Max Concurrent Sessions</label>
-            <input type="number" id="maxSessions" value="3" class="form-input" />
-          </div>
-          <div class="form-group">
-            <label for="rememberDuration">Remember Me Duration (Days)</label>
-            <input type="number" id="rememberDuration" value="30" class="form-input" />
-          </div>
-        </div>
-
-        <div class="toggle-group">
-          <div class="toggle-item">
-            <div class="toggle-info">
-              <div class="toggle-label">
-                Force Logout on Password Change
-              </div>
-              <div class="toggle-description">
-                End all sessions when password is changed
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-item">
-            <div class="toggle-info">
-              <div class="toggle-label">Track User Activity</div>
-              <div class="toggle-description">
-                Log user login and activity times
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <!-- User Registration -->
-      <div class="settings-card">
-        <h3 class="card-title">User Registration</h3>
-        <p class="card-subtitle">
-          Configure how new users can register
-        </p>
-
-        <div class="form-group">
-          <label for="defaultRole">Default Role for New Users</label>
-          <select id="defaultRole" class="form-select">
-            <option value="user" selected>User</option>
-            <option value="moderator">Moderator</option>
-            <option value="admin">Admin</option>
-          </select>
-        </div>
-
-        <div class="toggle-group">
-          <div class="toggle-item">
-            <div class="toggle-info">
-              <div class="toggle-label">Allow Self Registration</div>
-              <div class="toggle-description">
-                Users can create their own accounts
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-item">
-            <div class="toggle-info">
-              <div class="toggle-label">
-                Email Verification Required
-              </div>
-              <div class="toggle-description">
-                Users must verify their email before access
-              </div>
-            </div>
-            <label class="toggle-switch">
-              <input type="checkbox" checked />
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn-save-full" onclick="saveSystemSettings()">
-            Save Changes
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="tab-content" id="password-tab">
-    <div class="settings-card">
-      <h3 class="card-title">Change Password</h3>
-      <p class="card-subtitle">Update your account password</p>
-      
+    <div class="section" style="max-width: 600px">
       <form action="{{ route('admin.settings.password') }}" method="POST">
         @csrf
         @method('PUT')
         <div class="form-group">
-          <label for="current_password">Current Password</label>
-          <input type="password" id="current_password" name="current_password" class="form-input" placeholder="Enter current password" required />
+          <label class="form-label">Current Password</label>
+          <input type="password" name="current_password" class="form-input" placeholder="Enter current password" required />
           @error('current_password')
             <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
           @enderror
         </div>
 
         <div class="form-group">
-          <label for="password">New Password</label>
-          <input type="password" id="password" name="password" class="form-input" placeholder="Enter new password" required />
+          <label class="form-label">New Password</label>
+          <input type="password" name="password" class="form-input" placeholder="Enter new password" required />
           @error('password')
             <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
           @enderror
         </div>
 
         <div class="form-group">
-          <label for="password_confirmation">Confirm New Password</label>
-          <input type="password" id="password_confirmation" name="password_confirmation" class="form-input" placeholder="Confirm new password" required />
+          <label class="form-label">Confirm New Password</label>
+          <input type="password" name="password_confirmation" class="form-input" placeholder="Confirm new password" required />
         </div>
 
         <div class="form-actions">
-          <button type="button" class="btn-cancel" onclick="location.reload()">Cancel</button>
-          <button type="submit" class="btn-save">Change Password</button>
+          <button type="button" class="btn btn-secondary" onclick="showScreen('profile-screen', document.querySelector('.tabs .tab[data-screen=\'profile-screen\']'))">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Change Password
+          </button>
         </div>
       </form>
     </div>
   </div>
+</div>
 
-  <div class="tab-content" id="notifications-tab">
-    <div class="settings-card">
-      <h3 class="card-title">Notification Settings</h3>
-      <p class="card-subtitle">Manage your notification preferences</p>
-      <p style="padding: 40px; text-align: center; color: #999">
-        Notification settings coming soon...
-      </p>
+<div class="active screen" id="profile-screen">
+  <div class="tabs">
+    <div class="tab active" data-screen="profile-screen" onclick="showScreen('profile-screen', this)">
+      Profile
+    </div>
+    <div class="tab" data-screen="notifications-screen" onclick="showScreen('notifications-screen', this)">
+      Notifications
     </div>
   </div>
-</main>
+
+  <div class="profile-content">
+    <div class="profile-section">
+      <div class="profile-left">
+        <div class="section">
+          <h2 style="margin-bottom: 24px; font-size: 16px; font-weight: 600;">
+            Profile Information
+          </h2>
+
+          <div class="profile-header">
+            <div class="profile-avatar">
+              <img id="profileAvatar" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->firstname . ' ' . $user->lastname) . '&background=random' }}" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;" />
+              <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)" />
+            </div>
+            <div>
+              <div class="profile-name">{{ $user->firstname }} {{ $user->lastname }}</div>
+              <div class="profile-member">Member since {{ $user->created_at->format('F Y') }}</div>
+              <label for="avatarInput" class="btn btn-secondary" style="margin-top: 8px; padding: 6px 12px; font-size: 12px; cursor: pointer; display: inline-block;">
+                Change photo
+              </label>
+            </div>
+          </div>
+
+          <form action="{{ route('admin.settings.update') }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" name="firstname" class="form-input" value="{{ old('firstname', $user->firstname) }}" required />
+                @error('firstname')
+                  <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
+                @enderror
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="lastname" class="form-input" value="{{ old('lastname', $user->lastname) }}" required />
+                @error('lastname')
+                  <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
+                @enderror
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input type="email" name="email" class="form-input" value="{{ old('email', $user->email) }}" required />
+              @error('email')
+                <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
+              @enderror
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-secondary" onclick="location.reload()">Cancel</button>
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="profile-right">
+        <div class="section">
+          <h2 style="margin-bottom: 24px; font-size: 16px; font-weight: 600;">
+            Account Statistics
+          </h2>
+          
+          @php
+            $totalUsers = \App\Models\User::where('role', 'user')->count();
+            $totalHabits = \App\Models\Habit::count();
+            $totalNotes = \App\Models\Note::count();
+            $accountAge = $user->created_at->diffInDays(now());
+          @endphp
+          
+          <div style="display: grid; gap: 16px; margin-bottom: 24px;">
+            <div style="padding: 16px; background: #f8f9fa; border-radius: 8px;">
+              <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total Users</div>
+              <div style="font-size: 24px; font-weight: 600; color: #333;">{{ number_format($totalUsers) }}</div>
+            </div>
+            <div style="padding: 16px; background: #f8f9fa; border-radius: 8px;">
+              <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total Habits</div>
+              <div style="font-size: 24px; font-weight: 600; color: #333;">{{ number_format($totalHabits) }}</div>
+            </div>
+            <div style="padding: 16px; background: #f8f9fa; border-radius: 8px;">
+              <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total Notes</div>
+              <div style="font-size: 24px; font-weight: 600; color: #333;">{{ number_format($totalNotes) }}</div>
+            </div>
+            <div style="padding: 16px; background: #f8f9fa; border-radius: 8px;">
+              <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Account Age</div>
+              <div style="font-size: 24px; font-weight: 600; color: #333;">
+                {{ number_format($accountAge) }}
+                <span style="font-size: 14px; color: #666; font-weight: 500;">days</span>
+              </div>
+              <div style="font-size: 11px; color: #888; margin-top: 4px;">
+                Member since {{ $user->created_at->format('M j, Y') }}
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <h2 style="margin-bottom: 24px; font-size: 16px; font-weight: 600;">
+            Preferences
+          </h2>
+
+          <div class="preference-item">
+            <div>
+              <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 4px;">
+                Change Password
+              </h3>
+              <p style="font-size: 12px; color: #666">
+                You can change your password here
+              </p>
+            </div>
+            <button class="btn btn-secondary" onclick="showScreen('password-screen', document.querySelector('.tabs .tab[data-screen=\'profile-screen\']'))">
+              Change Password
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="notifications-screen">
+  <div class="tabs">
+    <div class="tab" data-screen="profile-screen" onclick="showScreen('profile-screen', this)">
+      Profile
+    </div>
+    <div class="tab active" data-screen="notifications-screen" onclick="showScreen('notifications-screen', this)">
+      Notifications
+    </div>
+  </div>
+
+  <div class="notification-content">
+    <div class="notification-settings">
+      <div class="notification-list">
+        <div class="section">
+          <h2 style="margin-bottom: 24px; font-size: 16px; font-weight: 600;">
+            Notification Timing
+          </h2>
+
+          <form id="notificationForm" onsubmit="saveNotificationSettings(event)">
+            @csrf
+            <div class="form-group">
+              <label class="form-label">Global Reminder Time (Daily Reminders)</label>
+              <input type="time" id="globalReminderTime" name="global_reminder_time" class="form-input" value="09:00" />
+              <p style="font-size: 12px; color: #666; margin-top: 8px">
+                Habits without a specific time will use this.
+              </p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Quiet Hours</label>
+              <div class="time-range" style="display: flex; align-items: center; gap: 12px;">
+                <input type="time" id="quietHoursStart" name="quiet_hours_start" class="form-input" style="width: 120px" value="22:00" />
+                <span>to</span>
+                <input type="time" id="quietHoursEnd" name="quiet_hours_end" class="form-input" style="width: 120px" value="07:00" />
+              </div>
+              <p style="font-size: 12px; color: #666; margin-top: 8px">
+                Silence all notifications during this period.
+              </p>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Changes</button>
+              <button type="button" class="btn btn-secondary" onclick="resetNotificationForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
-// Tab switching functionality
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
-    const tabName = this.getAttribute('data-tab');
-    
-    // Remove active class from all tabs and content
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    
-    // Add active class to clicked tab and corresponding content
-    this.classList.add('active');
-    document.getElementById(tabName + '-tab').classList.add('active');
+// Screen switching functionality (similar to user settings)
+function showScreen(screenId, tabElement) {
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
   });
-});
+  
+  // Show selected screen
+  document.getElementById(screenId).classList.add('active');
+  
+  // Update tab active states
+  if (tabElement) {
+    document.querySelectorAll('.tabs .tab').forEach(tab => {
+      tab.classList.remove('active');
+    });
+    tabElement.classList.add('active');
+  }
+}
 
 // Handle avatar upload
 function handleAvatarUpload(event) {
@@ -346,14 +280,14 @@ function handleAvatarUpload(event) {
   // Validate file size (2MB max)
   if (file.size > 2048 * 1024) {
     alert('File size must be less than 2MB');
-    event.target.value = ''; // Clear the input
+    event.target.value = '';
     return;
   }
 
   // Validate file type
   if (!file.type.match('image.*')) {
     alert('Please select an image file');
-    event.target.value = ''; // Clear the input
+    event.target.value = '';
     return;
   }
 
@@ -393,16 +327,15 @@ function handleAvatarUpload(event) {
     avatarImg.style.opacity = '1';
     if (data.success) {
       document.getElementById('profileAvatar').src = data.avatar_url;
-      // Show success message
       showSuccessMessage(data.message || 'Avatar updated successfully!');
     } else {
-      avatarImg.src = originalSrc; // Revert on error
+      avatarImg.src = originalSrc;
       alert('Failed to upload avatar. Please try again.');
     }
   })
   .catch(error => {
     console.error('Error:', error);
-    avatarImg.src = originalSrc; // Revert on error
+    avatarImg.src = originalSrc;
     avatarImg.style.opacity = '1';
     alert('An error occurred while uploading the avatar.');
   });
@@ -422,44 +355,78 @@ function showSuccessMessage(message) {
   }, 3000);
 }
 
-// Save system settings (password policy, session management, user registration)
-function saveSystemSettings() {
-  const settings = {
-    passwordPolicy: {
-      minLength: document.getElementById('minLength')?.value || 8,
-      expiry: document.getElementById('expiry')?.value || 90,
-      requireUppercase: document.querySelectorAll('.toggle-switch input')[0]?.checked || false,
-      requireSpecialChars: document.querySelectorAll('.toggle-switch input')[1]?.checked || false,
-      requireNumbers: document.querySelectorAll('.toggle-switch input')[2]?.checked || false,
-      preventReuse: document.querySelectorAll('.toggle-switch input')[3]?.checked || false,
+// Load notification settings on page load
+document.addEventListener('DOMContentLoaded', function() {
+  loadNotificationSettings();
+});
+
+// Load notification settings from API
+function loadNotificationSettings() {
+  fetch('{{ route("admin.settings.notifications.get") }}', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': '{{ csrf_token() }}'
     },
-    sessionManagement: {
-      timeout: document.getElementById('sessionTimeout')?.value || 30,
-      maxSessions: document.getElementById('maxSessions')?.value || 3,
-      rememberDuration: document.getElementById('rememberDuration')?.value || 30,
-      forceLogout: document.querySelectorAll('.toggle-switch input')[4]?.checked || false,
-      trackActivity: document.querySelectorAll('.toggle-switch input')[5]?.checked || false,
-    },
-    userRegistration: {
-      defaultRole: document.getElementById('defaultRole')?.value || 'user',
-      allowSelfRegistration: document.querySelectorAll('.toggle-switch input')[6]?.checked || false,
-      emailVerification: document.querySelectorAll('.toggle-switch input')[7]?.checked || false,
-    },
+    credentials: 'same-origin'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success && data.settings) {
+      if (data.settings.global_reminder_time) {
+        document.getElementById('globalReminderTime').value = data.settings.global_reminder_time;
+      }
+      if (data.settings.quiet_hours_start) {
+        document.getElementById('quietHoursStart').value = data.settings.quiet_hours_start;
+      }
+      if (data.settings.quiet_hours_end) {
+        document.getElementById('quietHoursEnd').value = data.settings.quiet_hours_end;
+      }
+    }
+  })
+  .catch(error => {
+    console.error('Error loading notification settings:', error);
+  });
+}
+
+// Save notification settings
+function saveNotificationSettings(event) {
+  event.preventDefault();
+  
+  const formData = {
+    global_reminder_time: document.getElementById('globalReminderTime').value,
+    quiet_hours_start: document.getElementById('quietHoursStart').value,
+    quiet_hours_end: document.getElementById('quietHoursEnd').value,
   };
 
-  // For now, just show a message - these settings would need backend implementation
-  console.log('System settings:', settings);
-  showSuccessMessage('System settings saved successfully! (Note: Backend implementation needed for full functionality)');
-  
-  // In a real implementation, you would send this to the server:
-  // fetch('/admin/settings/system', {
-  //   method: 'POST',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     'X-CSRF-TOKEN': '{{ csrf_token() }}'
-  //   },
-  //   body: JSON.stringify(settings)
-  // });
+  fetch('{{ route("admin.settings.notifications.update") }}', {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+      'X-CSRF-TOKEN': '{{ csrf_token() }}'
+    },
+    body: JSON.stringify(formData),
+    credentials: 'same-origin'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      showSuccessMessage(data.message || 'Notification settings saved successfully!');
+    } else {
+      alert('Failed to save notification settings: ' + (data.message || 'Unknown error'));
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred while saving notification settings.');
+  });
+}
+
+// Reset notification form
+function resetNotificationForm() {
+  loadNotificationSettings();
 }
 </script>
 @endsection

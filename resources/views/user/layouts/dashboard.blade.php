@@ -170,6 +170,10 @@
     const firstDayIndex = new Date(year, month, 1).getDay();
     const today = new Date();
     const isCurrentMonth = year === today.getFullYear() && month === today.getMonth();
+    
+    // Helper function to compare dates (only date part, not time)
+    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const daysInPrevMonth = new Date(year, month, 0).getDate();
 
     // Update title
     if (title) {
@@ -181,10 +185,37 @@
 
     container.innerHTML = '';
 
-    // Add empty cells for days before month starts
+    // Add empty cells for days before month starts (previous month days)
     for (let i = 0; i < firstDayIndex; i++) {
+      const day = daysInPrevMonth - firstDayIndex + i + 1;
       const emptyDay = document.createElement('div');
       emptyDay.className = 'day';
+      
+      // Check if this date is in the past
+      const prevMonthDate = new Date(year, month - 1, day);
+      const prevMonthDateOnly = new Date(prevMonthDate.getFullYear(), prevMonthDate.getMonth(), prevMonthDate.getDate());
+      const isPastDate = prevMonthDateOnly < todayDateOnly;
+      
+      // Check if day has habits (filter out pending habits on past dates)
+      const dayHabits = dashboardCalendarData[day] || [];
+      if (dayHabits.length > 0) {
+        // Filter: on past dates, only show completed habits; on today/future, show all
+        const visibleHabits = dayHabits.filter(h => !isPastDate || h.completed);
+        const hasCompleted = visibleHabits.some(h => h.completed);
+        const hasHabits = visibleHabits.length > 0;
+        
+        if (hasCompleted) {
+          emptyDay.classList.add('completed');
+        }
+        
+        if (hasHabits) {
+          emptyDay.style.cursor = 'pointer';
+          emptyDay.addEventListener('click', function() {
+            showDayHabits(day, visibleHabits);
+          });
+        }
+      }
+      
       container.appendChild(emptyDay);
     }
 
@@ -199,20 +230,27 @@
         dayElement.classList.add('today');
       }
 
-      // Check if day has habits
+      // Check if this date is in the past
+      const currentDateObj = new Date(year, month, day);
+      const currentDateOnly = new Date(currentDateObj.getFullYear(), currentDateObj.getMonth(), currentDateObj.getDate());
+      const isPastDate = currentDateOnly < todayDateOnly;
+
+      // Check if day has habits (filter out pending habits on past dates)
       const dayHabits = dashboardCalendarData[day] || [];
-      const hasCompleted = dayHabits.some(h => h.completed);
-      const hasHabits = dayHabits.length > 0;
+      // Filter: on past dates, only show completed habits; on today/future, show all
+      const visibleHabits = dayHabits.filter(h => !isPastDate || h.completed);
+      const hasCompleted = visibleHabits.some(h => h.completed);
+      const hasHabits = visibleHabits.length > 0;
 
       if (hasCompleted) {
         dayElement.classList.add('completed');
       }
 
-      // Add click handler - make all days with habits clickable
+      // Add click handler - make all days with visible habits clickable
       if (hasHabits) {
         dayElement.style.cursor = 'pointer';
         dayElement.addEventListener('click', function() {
-          showDayHabits(day, dayHabits);
+          showDayHabits(day, visibleHabits);
         });
       }
 
@@ -231,7 +269,10 @@
     // Update title to show selected date
     const selectedDate = new Date(dashboardCurrentDate.getFullYear(), dashboardCurrentDate.getMonth(), day);
     const today = new Date();
-    const isToday = selectedDate.toDateString() === today.toDateString();
+    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const selectedDateOnly = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+    const isToday = selectedDateOnly.getTime() === todayDateOnly.getTime();
+    const isPastDate = selectedDateOnly < todayDateOnly;
 
     if (habitsTitle) {
       if (isToday) {
@@ -246,20 +287,28 @@
       }
     }
 
+    // Filter out pending habits on past dates
+    const visibleHabits = habits.filter(habit => {
+      // Show all habits on today and future dates
+      if (!isPastDate) return true;
+      // On past dates, only show completed habits
+      return habit.completed;
+    });
+
     // Clear existing habits
     habitsList.innerHTML = '';
 
-    if (habits.length === 0) {
+    if (visibleHabits.length === 0) {
       habitsList.innerHTML = '<div style="text-align: center; padding: 40px 20px; color: #999;"><p>No habits scheduled for this day.</p><a href="{{ route("user.habits.add") }}?redirect_to=dashboard" style="display: inline-block; margin-top: 10px; color: #007bff; text-decoration: none;"><i class="fas fa-plus"></i> Add a habit</a></div>';
       habitsHeader.textContent = '0 of 0 completed';
       return;
     }
 
-    const completedCount = habits.filter(h => h.completed).length;
-    habitsHeader.textContent = `${completedCount} of ${habits.length} completed`;
+    const completedCount = visibleHabits.filter(h => h.completed).length;
+    habitsHeader.textContent = `${completedCount} of ${visibleHabits.length} completed`;
 
     // Add habits to list
-    habits.forEach(habit => {
+    visibleHabits.forEach(habit => {
       const habitItem = document.createElement('div');
       habitItem.className = `habit-item ${habit.completed ? 'completed' : ''}`;
       habitItem.setAttribute('data-habit-id', habit.id);

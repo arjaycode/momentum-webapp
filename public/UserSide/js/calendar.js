@@ -1,5 +1,8 @@
-// Use the current date for initialization for a truly dynamic feel
+// Use the current date for initialization - always start with current month
 let currentDate = new Date();
+// Always set to current month and year, then set to 1st day
+currentDate.setFullYear(new Date().getFullYear());
+currentDate.setMonth(new Date().getMonth());
 currentDate.setDate(1); // Set to the 1st to ensure proper month calculation
 
 // Real habit data from database
@@ -92,6 +95,17 @@ function updateLegend(habitData) {
 
 async function renderCalendar() {
   const grid = document.getElementById('calendarGrid');
+  const today = new Date();
+  
+  // Ensure we're not showing a past month
+  if (currentDate.getFullYear() < today.getFullYear() || 
+      (currentDate.getFullYear() === today.getFullYear() && currentDate.getMonth() < today.getMonth())) {
+    // If showing past month, reset to current month
+    currentDate.setFullYear(today.getFullYear());
+    currentDate.setMonth(today.getMonth());
+    currentDate.setDate(1);
+  }
+  
   const month = currentDate.getMonth() + 1; // JavaScript months are 0-indexed, but API expects 1-indexed
   const year = currentDate.getFullYear();
 
@@ -109,7 +123,6 @@ async function renderCalendar() {
   const firstDayIndex = new Date(year, jsMonth, 1).getDay();
   const daysInMonth = new Date(year, jsMonth + 1, 0).getDate();
   const daysInPrevMonth = new Date(year, jsMonth, 0).getDate();
-  const today = new Date();
   const isCurrentMonth =
     year === today.getFullYear() && jsMonth === today.getMonth();
 
@@ -118,29 +131,31 @@ async function renderCalendar() {
   grid.innerHTML = '';
   headers.forEach((header) => grid.appendChild(header));
 
+  // Helper function to compare dates (only date part, not time)
+  const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  
   // 1. Add previous month days
   for (let i = 0; i < firstDayIndex; i++) {
     const day = daysInPrevMonth - firstDayIndex + i + 1;
     const dayElement = createDayElement(day, true);
-    grid.appendChild(dayElement);
-  }
-
-  // 2. Add current month days
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dayElement = createDayElement(day, false);
-
-    // Highlight today
-    if (isCurrentMonth && day === today.getDate()) {
-      dayElement.classList.add('today');
-    }
-
-    // Add habit dots
+    
+    // Check if this date is in the past
+    const prevMonthDate = new Date(year, jsMonth - 1, day);
+    const prevMonthDateOnly = new Date(prevMonthDate.getFullYear(), prevMonthDate.getMonth(), prevMonthDate.getDate());
+    const isPastDate = prevMonthDateOnly < todayDateOnly;
+    
+    // Add habit dots (but hide pending habits on past dates)
     const habits = currentHabitData[day] || [];
     if (habits.length > 0) {
       const dots = document.createElement('div');
       dots.className = 'habit-dots';
 
       habits.forEach((habit) => {
+        // Hide pending (incomplete) habits on past dates, but show completed ones
+        if (isPastDate && !habit.completed) {
+          return; // Skip this habit dot
+        }
+        
         const dot = document.createElement('div');
         const colorClass = habit.color || 'blue';
         dot.className = `habit-dot ${colorClass}`;
@@ -150,8 +165,56 @@ async function renderCalendar() {
         }
         dots.appendChild(dot);
       });
+      
+      // Only append dots if there are any visible dots
+      if (dots.children.length > 0) {
+        dayElement.appendChild(dots);
+      }
+    }
+    
+    grid.appendChild(dayElement);
+  }
 
-      dayElement.appendChild(dots);
+  // 2. Add current month days
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dayElement = createDayElement(day, false);
+    
+    // Check if this date is in the past
+    const currentDateObj = new Date(year, jsMonth, day);
+    const currentDateOnly = new Date(currentDateObj.getFullYear(), currentDateObj.getMonth(), currentDateObj.getDate());
+    const isPastDate = currentDateOnly < todayDateOnly;
+
+    // Highlight today
+    if (isCurrentMonth && day === today.getDate()) {
+      dayElement.classList.add('today');
+    }
+
+    // Add habit dots (but hide pending habits on past dates)
+    const habits = currentHabitData[day] || [];
+    if (habits.length > 0) {
+      const dots = document.createElement('div');
+      dots.className = 'habit-dots';
+
+      habits.forEach((habit) => {
+        // Hide pending (incomplete) habits on past dates, but show completed ones
+        if (isPastDate && !habit.completed) {
+          return; // Skip this habit dot
+        }
+        
+        const dot = document.createElement('div');
+        const colorClass = habit.color || 'blue';
+        dot.className = `habit-dot ${colorClass}`;
+        dot.title = habit.name;
+        if (habit.completed) {
+          dot.classList.add('completed');
+        }
+        dots.appendChild(dot);
+      });
+      
+      // Only append dots if there are any visible dots
+      if (dots.children.length > 0) {
+        dayElement.appendChild(dots);
+      }
     }
 
     // Add click listener - fetch habits for this specific day
@@ -163,12 +226,13 @@ async function renderCalendar() {
     grid.appendChild(dayElement);
   }
 
-  // 3. Add next month days (to fill the grid)
+  // 3. Add next month days (to fill the grid) - these are future dates, so show them
   const totalCells = grid.children.length - 7;
   const remainingCells = 42 - totalCells; // Max 6 rows * 7 days = 42
 
   for (let day = 1; day <= remainingCells; day++) {
     const dayElement = createDayElement(day, true);
+    // Next month days are future dates, so always show them
     grid.appendChild(dayElement);
   }
 }
@@ -202,11 +266,25 @@ function showDayDetail(day, habits) {
   title.textContent = dateStr;
   habitsContainer.innerHTML = '';
 
-  if (habits.length === 0) {
+  // Check if this date is in the past
+  const today = new Date();
+  const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const isPastDate = dateOnly < todayDateOnly;
+
+  // Filter out pending habits on past dates
+  const visibleHabits = habits.filter(habit => {
+    // Show all habits on today and future dates
+    if (!isPastDate) return true;
+    // On past dates, only show completed habits
+    return habit.completed;
+  });
+
+  if (visibleHabits.length === 0) {
     habitsContainer.innerHTML =
       '<p class="empty-habits">No habits scheduled for this day.</p>';
   } else {
-    habits.forEach((habit) => {
+    visibleHabits.forEach((habit) => {
       const habitItem = document.createElement('div');
       habitItem.className = 'popup-habit-item';
       const colorClass = habit.color || 'blue';
@@ -331,7 +409,20 @@ function closeDayDetail() {
 
 // Month Navigation
 document.getElementById('prevMonth').addEventListener('click', async () => {
-  currentDate.setMonth(currentDate.getMonth() - 1);
+  const today = new Date();
+  const newDate = new Date(currentDate);
+  newDate.setMonth(newDate.getMonth() - 1);
+  
+  // Prevent navigating to past months - stay at current month minimum
+  if (newDate.getFullYear() < today.getFullYear() || 
+      (newDate.getFullYear() === today.getFullYear() && newDate.getMonth() < today.getMonth())) {
+    // If trying to go to past month, reset to current month
+    currentDate.setFullYear(today.getFullYear());
+    currentDate.setMonth(today.getMonth());
+    currentDate.setDate(1);
+  } else {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+  }
   await renderCalendar();
 });
 
@@ -386,18 +477,63 @@ document.querySelectorAll('.view-btn').forEach((btn) => {
 //   }
 // });
 
+// Function to ensure calendar shows current month and scrolls to today
+function focusOnToday() {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+  
+  // Reset currentDate to current month if it's showing a past month
+  if (currentDate.getFullYear() < currentYear || 
+      (currentDate.getFullYear() === currentYear && currentDate.getMonth() < currentMonth)) {
+    currentDate.setFullYear(currentYear);
+    currentDate.setMonth(currentMonth);
+    currentDate.setDate(1);
+  }
+  
+  // Scroll to today's date after rendering
+  setTimeout(() => {
+    const todayElement = document.querySelector('.calendar-day.today');
+    if (todayElement) {
+      todayElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Also highlight it briefly
+      todayElement.style.transform = 'scale(1.1)';
+      todayElement.style.transition = 'transform 0.3s ease';
+      setTimeout(() => {
+        todayElement.style.transform = '';
+      }, 500);
+    }
+  }, 100);
+}
+
 // Initialize App
 document.addEventListener('DOMContentLoaded', function() {
+  // Ensure we're showing current month
+  const today = new Date();
+  currentDate.setFullYear(today.getFullYear());
+  currentDate.setMonth(today.getMonth());
+  currentDate.setDate(1);
+  
   // Initial render
-  renderCalendar();
+  renderCalendar().then(() => {
+    focusOnToday();
+  });
   
   // Check for success message and refresh if habit was just added
   if (document.querySelector('.success-alert') || window.location.search.includes('success')) {
     setTimeout(function() {
+      // Reset to current month when habit is created
+      const today = new Date();
+      currentDate.setFullYear(today.getFullYear());
+      currentDate.setMonth(today.getMonth());
+      currentDate.setDate(1);
+      
       const month = currentDate.getMonth() + 1;
       const year = currentDate.getFullYear();
       fetchHabitData(year, month).then(() => {
-        renderCalendar();
+        renderCalendar().then(() => {
+          focusOnToday();
+        });
       });
     }, 1000);
   }
@@ -406,10 +542,21 @@ document.addEventListener('DOMContentLoaded', function() {
 // Auto-refresh calendar when page becomes visible (e.g., after adding a habit)
 document.addEventListener('visibilitychange', function() {
   if (!document.hidden) {
+    // Reset to current month if showing past month
+    const today = new Date();
+    if (currentDate.getFullYear() < today.getFullYear() || 
+        (currentDate.getFullYear() === today.getFullYear() && currentDate.getMonth() < today.getMonth())) {
+      currentDate.setFullYear(today.getFullYear());
+      currentDate.setMonth(today.getMonth());
+      currentDate.setDate(1);
+    }
+    
     const month = currentDate.getMonth() + 1;
     const year = currentDate.getFullYear();
     fetchHabitData(year, month).then(() => {
-      renderCalendar();
+      renderCalendar().then(() => {
+        focusOnToday();
+      });
     });
   }
 });
@@ -417,6 +564,7 @@ document.addEventListener('visibilitychange', function() {
 // Refresh calendar data periodically (every 30 seconds) to catch new habits
 setInterval(function() {
   if (!document.hidden) {
+    // Don't reset to current month on auto-refresh, just refresh current view
     const month = currentDate.getMonth() + 1;
     const year = currentDate.getFullYear();
     fetchHabitData(year, month).then(() => {

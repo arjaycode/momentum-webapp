@@ -36,3 +36,4 @@ Route::middleware('auth')->group(function () {
         Route::post('/{id}/mark-done', [HabitApiController::class, 'markAsDone'])->name('mark-done');
     });
 });
+

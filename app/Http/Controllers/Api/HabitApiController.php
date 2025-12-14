@@ -258,3 +258,4 @@ class HabitApiController extends Controller
         return $streak;
     }
 }
+

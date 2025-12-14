@@ -180,3 +180,4 @@ function clearNotifications() {
     console.error('Error clearing notifications:', error);
   });
 }
+

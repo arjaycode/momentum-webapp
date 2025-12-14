@@ -9,16 +9,21 @@
 
 @section('content')
 @if (session('success'))
-<div class="success-alert" style="margin: 20px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; display: flex; align-items: center;">
-  <span class="success-icon" style="font-weight: bold; font-size: 1.2em; margin-right: 10px;">✓</span>
-  {{ session('success') }}
+<div id="toast-notification" class="toast-notification toast-success">
+  <div class="toast-content">
+    <i class="fas fa-check-circle toast-icon"></i>
+    <span class="toast-message">{{ session('success') }}</span>
+  </div>
+  <button class="toast-close" onclick="closeToast()">
+    <i class="fas fa-times"></i>
+  </button>
 </div>
 @endif
 @if ($errors->any())
-<div style="margin: 20px;">
-  <ul class="msg" style="list-style-type: none; padding: 0;">
+<div class="error-container">
+  <ul class="error-list">
     @foreach ($errors->all() as $error)
-    <li class="msg error" style="display: block; padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 13px; background: #fff0f0; color: #9b2b2b;">{{ $error }}</li>
+    <li class="error-item">{{ $error }}</li>
     @endforeach
   </ul>
 </div>
@@ -30,7 +35,8 @@
       ← Back
     </button>
 
-    <div class="section" style="max-width: 600px">
+    <div class="section password-section">
+      <h2>Change Password</h2>
       <form action="{{ route('admin.settings.password') }}" method="POST">
         @csrf
         @method('PUT')
@@ -38,7 +44,7 @@
           <label class="form-label">Current Password</label>
           <input type="password" name="current_password" class="form-input" placeholder="Enter current password" required />
           @error('current_password')
-            <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
+            <span class="error-text">{{ $message }}</span>
           @enderror
         </div>
 
@@ -46,7 +52,7 @@
           <label class="form-label">New Password</label>
           <input type="password" name="password" class="form-input" placeholder="Enter new password" required />
           @error('password')
-            <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
+            <span class="error-text">{{ $message }}</span>
           @enderror
         </div>
 
@@ -82,19 +88,19 @@
     <div class="profile-section">
       <div class="profile-left">
         <div class="section">
-          <h2 style="margin-bottom: 24px; font-size: 16px; font-weight: 600;">
+          <h2>
             Profile Information
           </h2>
 
           <div class="profile-header">
             <div class="profile-avatar">
-              <img id="profileAvatar" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->firstname . ' ' . $user->lastname) . '&background=random' }}" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover;" />
+              <img id="profileAvatar" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->firstname . ' ' . $user->lastname) . '&background=random' }}" alt="Profile" class="avatar-image" />
               <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)" />
             </div>
             <div>
               <div class="profile-name">{{ $user->firstname }} {{ $user->lastname }}</div>
               <div class="profile-member">Member since {{ $user->created_at->format('F Y') }}</div>
-              <label for="avatarInput" class="btn btn-secondary" style="margin-top: 8px; padding: 6px 12px; font-size: 12px; cursor: pointer; display: inline-block;">
+              <label for="avatarInput" class="btn btn-secondary btn-change-photo">
                 Change photo
               </label>
             </div>
@@ -114,9 +120,9 @@
               <div class="form-group">
                 <label class="form-label">Last Name</label>
                 <input type="text" name="lastname" class="form-input" value="{{ old('lastname', $user->lastname) }}" required />
-                @error('lastname')
-                  <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
-                @enderror
+              @error('lastname')
+                  <span class="error-text">{{ $message }}</span>
+              @enderror
               </div>
             </div>
 
@@ -138,7 +144,7 @@
 
       <div class="profile-right">
         <div class="section">
-          <h2 style="margin-bottom: 24px; font-size: 16px; font-weight: 600;">
+          <h2>
             Account Statistics
           </h2>
           
@@ -149,26 +155,26 @@
             $accountAge = $user->created_at->diffInDays(now());
           @endphp
           
-          <div style="display: grid; gap: 16px; margin-bottom: 24px;">
-            <div style="padding: 16px; background: #f8f9fa; border-radius: 8px;">
-              <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total Users</div>
-              <div style="font-size: 24px; font-weight: 600; color: #333;">{{ number_format($totalUsers) }}</div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Total Users</div>
+              <div class="stat-value">{{ number_format($totalUsers) }}</div>
             </div>
-            <div style="padding: 16px; background: #f8f9fa; border-radius: 8px;">
-              <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total Habits</div>
-              <div style="font-size: 24px; font-weight: 600; color: #333;">{{ number_format($totalHabits) }}</div>
+            <div class="stat-card">
+              <div class="stat-label">Total Habits</div>
+              <div class="stat-value">{{ number_format($totalHabits) }}</div>
             </div>
-            <div style="padding: 16px; background: #f8f9fa; border-radius: 8px;">
-              <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Total Notes</div>
-              <div style="font-size: 24px; font-weight: 600; color: #333;">{{ number_format($totalNotes) }}</div>
+            <div class="stat-card">
+              <div class="stat-label">Total Notes</div>
+              <div class="stat-value">{{ number_format($totalNotes) }}</div>
             </div>
-            <div style="padding: 16px; background: #f8f9fa; border-radius: 8px;">
-              <div style="font-size: 12px; color: #666; margin-bottom: 4px;">Account Age</div>
-              <div style="font-size: 24px; font-weight: 600; color: #333;">
+            <div class="stat-card">
+              <div class="stat-label">Account Age</div>
+              <div class="stat-value">
                 {{ number_format($accountAge) }}
-                <span style="font-size: 14px; color: #666; font-weight: 500;">days</span>
+                <span class="stat-unit">days</span>
               </div>
-              <div style="font-size: 11px; color: #888; margin-top: 4px;">
+              <div class="stat-subtitle">
                 Member since {{ $user->created_at->format('M j, Y') }}
               </div>
             </div>
@@ -176,16 +182,16 @@
         </div>
         
         <div class="section">
-          <h2 style="margin-bottom: 24px; font-size: 16px; font-weight: 600;">
+          <h2>
             Preferences
           </h2>
 
           <div class="preference-item">
             <div>
-              <h3 style="font-size: 14px; font-weight: 500; margin-bottom: 4px;">
+              <h3>
                 Change Password
               </h3>
-              <p style="font-size: 12px; color: #666">
+              <p>
                 You can change your password here
               </p>
             </div>
@@ -213,7 +219,7 @@
     <div class="notification-settings">
       <div class="notification-list">
         <div class="section">
-          <h2 style="margin-bottom: 24px; font-size: 16px; font-weight: 600;">
+          <h2>
             Notification Timing
           </h2>
 
@@ -222,19 +228,19 @@
             <div class="form-group">
               <label class="form-label">Global Reminder Time (Daily Reminders)</label>
               <input type="time" id="globalReminderTime" name="global_reminder_time" class="form-input" value="09:00" />
-              <p style="font-size: 12px; color: #666; margin-top: 8px">
+              <p>
                 Habits without a specific time will use this.
               </p>
             </div>
 
             <div class="form-group">
               <label class="form-label">Quiet Hours</label>
-              <div class="time-range" style="display: flex; align-items: center; gap: 12px;">
+              <div class="time-range">
                 <input type="time" id="quietHoursStart" name="quiet_hours_start" class="form-input" style="width: 120px" value="22:00" />
                 <span>to</span>
                 <input type="time" id="quietHoursEnd" name="quiet_hours_end" class="form-input" style="width: 120px" value="07:00" />
               </div>
-              <p style="font-size: 12px; color: #666; margin-top: 8px">
+              <p>
                 Silence all notifications during this period.
               </p>
             </div>
@@ -253,7 +259,13 @@
 
 @section('scripts')
 <script>
-// Screen switching functionality (similar to user settings)
+/* ============================================
+   ADMIN SETTINGS JAVASCRIPT
+   ============================================ */
+
+// ============================================
+// 1. SCREEN NAVIGATION
+// ============================================
 function showScreen(screenId, tabElement) {
   // Hide all screens
   document.querySelectorAll('.screen').forEach(screen => {
@@ -272,7 +284,9 @@ function showScreen(screenId, tabElement) {
   }
 }
 
-// Handle avatar upload
+// ============================================
+// 2. AVATAR UPLOAD
+// ============================================
 function handleAvatarUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -327,7 +341,7 @@ function handleAvatarUpload(event) {
     avatarImg.style.opacity = '1';
     if (data.success) {
       document.getElementById('profileAvatar').src = data.avatar_url;
-      showSuccessMessage(data.message || 'Avatar updated successfully!');
+      showToastMessage(data.message || 'Avatar updated successfully!');
     } else {
       avatarImg.src = originalSrc;
       alert('Failed to upload avatar. Please try again.');
@@ -341,26 +355,9 @@ function handleAvatarUpload(event) {
   });
 }
 
-// Show success message
-function showSuccessMessage(message) {
-  const alert = document.createElement('div');
-  alert.className = 'success-alert';
-  alert.style.cssText = 'margin: 20px; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; padding: 15px; border-radius: 5px; display: flex; align-items: center; position: fixed; top: 20px; right: 20px; z-index: 10000;';
-  alert.innerHTML = '<span style="font-weight: bold; font-size: 1.2em; margin-right: 10px;">✓</span>' + message;
-  document.body.appendChild(alert);
-  setTimeout(() => {
-    alert.style.transition = 'opacity 0.3s';
-    alert.style.opacity = '0';
-    setTimeout(() => alert.remove(), 300);
-  }, 3000);
-}
-
-// Load notification settings on page load
-document.addEventListener('DOMContentLoaded', function() {
-  loadNotificationSettings();
-});
-
-// Load notification settings from API
+// ============================================
+// 3. NOTIFICATION SETTINGS
+// ============================================
 function loadNotificationSettings() {
   fetch('{{ route("admin.settings.notifications.get") }}', {
     method: 'GET',
@@ -390,7 +387,6 @@ function loadNotificationSettings() {
   });
 }
 
-// Save notification settings
 function saveNotificationSettings(event) {
   event.preventDefault();
   
@@ -413,7 +409,7 @@ function saveNotificationSettings(event) {
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      showSuccessMessage(data.message || 'Notification settings saved successfully!');
+      showToastMessage(data.message || 'Notification settings saved successfully!');
     } else {
       alert('Failed to save notification settings: ' + (data.message || 'Unknown error'));
     }
@@ -424,9 +420,68 @@ function saveNotificationSettings(event) {
   });
 }
 
-// Reset notification form
 function resetNotificationForm() {
   loadNotificationSettings();
 }
+
+// ============================================
+// 4. TOAST NOTIFICATIONS
+// ============================================
+function showToastMessage(message) {
+  // Create toast element
+  const toast = document.createElement('div');
+  toast.id = 'toast-notification';
+  toast.className = 'toast-notification toast-success';
+  toast.innerHTML = `
+    <div class="toast-content">
+      <i class="fas fa-check-circle toast-icon"></i>
+      <span class="toast-message">${message}</span>
+    </div>
+    <button class="toast-close" onclick="closeToast()">
+      <i class="fas fa-times"></i>
+    </button>
+  `;
+  document.body.appendChild(toast);
+  
+  // Show toast
+  setTimeout(() => {
+    toast.classList.add('show');
+  }, 100);
+  
+  // Auto hide after 5 seconds
+  setTimeout(() => {
+    closeToast();
+  }, 5000);
+}
+
+function closeToast() {
+  const toast = document.getElementById('toast-notification');
+  if (toast) {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }
+}
+
+// ============================================
+// 5. INITIALIZE ON PAGE LOAD
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+  // Load notification settings
+  loadNotificationSettings();
+  
+  // Show toast if exists (from session success message)
+  const toast = document.getElementById('toast-notification');
+  if (toast) {
+    setTimeout(() => {
+      toast.classList.add('show');
+    }, 100);
+    
+    setTimeout(() => {
+      closeToast();
+    }, 5000);
+  }
+});
 </script>
 @endsection

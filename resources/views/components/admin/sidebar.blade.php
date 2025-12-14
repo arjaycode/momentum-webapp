@@ -57,11 +57,12 @@
     </form>
   </nav>
 
-  <div class="user-profile">
-    <img src="https://i.pravatar.cc/40?img=12" alt="John Admin" class="profile-img" />
+  <a href="{{ route('admin.settings') }}" class="user-profile" title="Go to Settings">
+    <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->firstname . ' ' . Auth::user()->lastname) . '&background=random' }}" alt="{{ Auth::user()->firstname }}" class="profile-img" />
     <div class="profile-info">
-      <div class="profile-name">{{ Auth::user()->firstname }}</div>
-      <div class="profile-role">{{ Auth::user()->role }}</div>
+      <div class="profile-name">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</div>
+      <div class="profile-role">{{ ucfirst(Auth::user()->role) }}</div>
     </div>
-  </div>
+    <i class="fas fa-chevron-right profile-arrow"></i>
+  </a>
 </aside>

@@ -91,6 +91,11 @@ Route::middleware('auth')->group(function () {
         Route::put('/settings/system', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'updateSystemSettings'])->name('settings.system.update');
         Route::get('/settings/notifications', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'getNotificationSettings'])->name('settings.notifications.get');
         Route::put('/settings/notifications', [\App\Http\Controllers\Admin\AdminSettingsController::class, 'updateNotificationSettings'])->name('settings.notifications.update');
+        
+        // Notifications
+        Route::get('/notifications', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'index'])->name('notifications');
+        Route::post('/notifications/clear', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'clear'])->name('notifications.clear');
+        Route::post('/notifications/{id}/read', [\App\Http\Controllers\Admin\AdminNotificationController::class, 'markAsRead'])->name('notifications.read');
     });
 
     //User

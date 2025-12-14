@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="notifications-route" content="{{ route('admin.notifications') }}">
+  <meta name="notifications-clear-route" content="{{ route('admin.notifications.clear') }}">
   <title>@yield('title')</title>
   @php
   $cssfile = trim($__env->yieldContent('css-file'));
@@ -30,6 +32,7 @@
   </div>
   @yield('modals')
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+  <script src="{{ asset('AdminSide/js/admin-notifications.js') }}"></script>
   <script src="{{ asset('AdminSide/js/'.$jsfile) }}"></script>
   @yield('scripts')
 </body>

@@ -44,11 +44,14 @@
   </ul>
 
   <div class="user-profile">
-    <img src="https://i.pravatar.cc/150?img=12" alt="User Avatar" class="avatar" />
-    <div class="user-info">
-      <div class="user-name">{{ Auth::user()->firstname." ".Auth::user()->lastname}}</div>
-      <div class="user-role">{{ Auth::user()->role }}</div>
-    </div>
+    <a href="{{ route('user.settings') }}" class="user-profile-link" title="Go to Settings">
+      <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->firstname . ' ' . Auth::user()->lastname) . '&background=random' }}" alt="User Avatar" class="avatar" />
+      <div class="user-info">
+        <div class="user-name">{{ Auth::user()->firstname." ".Auth::user()->lastname}}</div>
+        <div class="user-role">{{ ucfirst(Auth::user()->role) }}</div>
+      </div>
+      <i class="fas fa-chevron-right profile-arrow"></i>
+    </a>
     <form method="POST" action="{{ route('logout') }}">
       @csrf
       <button type="submit" title="logout" class="logout-btn"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>

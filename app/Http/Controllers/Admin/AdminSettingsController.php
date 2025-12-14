@@ -136,30 +136,30 @@ class AdminSettingsController extends Controller
             // Update password policy
             if (isset($validated['password_policy'])) {
                 $pp = $validated['password_policy'];
-                if (isset($pp['min_length'])) SystemSetting::setValue('password_min_length', $pp['min_length'], 'integer');
-                if (isset($pp['expiry_days'])) SystemSetting::setValue('password_expiry_days', $pp['expiry_days'], 'integer');
-                if (isset($pp['require_uppercase'])) SystemSetting::setValue('password_require_uppercase', $pp['require_uppercase'], 'boolean');
-                if (isset($pp['require_special_chars'])) SystemSetting::setValue('password_require_special_chars', $pp['require_special_chars'], 'boolean');
-                if (isset($pp['require_numbers'])) SystemSetting::setValue('password_require_numbers', $pp['require_numbers'], 'boolean');
-                if (isset($pp['prevent_reuse'])) SystemSetting::setValue('password_prevent_reuse', $pp['prevent_reuse'], 'boolean');
+                if (isset($pp['min_length'])) SystemSetting::setValue('password_min_length', (int)$pp['min_length'], 'integer');
+                if (isset($pp['expiry_days'])) SystemSetting::setValue('password_expiry_days', (int)$pp['expiry_days'], 'integer');
+                if (isset($pp['require_uppercase'])) SystemSetting::setValue('password_require_uppercase', (bool)$pp['require_uppercase'], 'boolean');
+                if (isset($pp['require_special_chars'])) SystemSetting::setValue('password_require_special_chars', (bool)$pp['require_special_chars'], 'boolean');
+                if (isset($pp['require_numbers'])) SystemSetting::setValue('password_require_numbers', (bool)$pp['require_numbers'], 'boolean');
+                if (isset($pp['prevent_reuse'])) SystemSetting::setValue('password_prevent_reuse', (bool)$pp['prevent_reuse'], 'boolean');
             }
 
             // Update session management
             if (isset($validated['session_management'])) {
                 $sm = $validated['session_management'];
-                if (isset($sm['timeout_minutes'])) SystemSetting::setValue('session_timeout_minutes', $sm['timeout_minutes'], 'integer');
-                if (isset($sm['max_concurrent_sessions'])) SystemSetting::setValue('session_max_concurrent', $sm['max_concurrent_sessions'], 'integer');
-                if (isset($sm['remember_duration_days'])) SystemSetting::setValue('session_remember_duration_days', $sm['remember_duration_days'], 'integer');
-                if (isset($sm['force_logout_on_password_change'])) SystemSetting::setValue('session_force_logout_on_password_change', $sm['force_logout_on_password_change'], 'boolean');
-                if (isset($sm['track_activity'])) SystemSetting::setValue('session_track_activity', $sm['track_activity'], 'boolean');
+                if (isset($sm['timeout_minutes'])) SystemSetting::setValue('session_timeout_minutes', (int)$sm['timeout_minutes'], 'integer');
+                if (isset($sm['max_concurrent_sessions'])) SystemSetting::setValue('session_max_concurrent', (int)$sm['max_concurrent_sessions'], 'integer');
+                if (isset($sm['remember_duration_days'])) SystemSetting::setValue('session_remember_duration_days', (int)$sm['remember_duration_days'], 'integer');
+                if (isset($sm['force_logout_on_password_change'])) SystemSetting::setValue('session_force_logout_on_password_change', (bool)$sm['force_logout_on_password_change'], 'boolean');
+                if (isset($sm['track_activity'])) SystemSetting::setValue('session_track_activity', (bool)$sm['track_activity'], 'boolean');
             }
 
             // Update user registration
             if (isset($validated['user_registration'])) {
                 $ur = $validated['user_registration'];
-                if (isset($ur['default_role'])) SystemSetting::setValue('registration_default_role', $ur['default_role'], 'string');
-                if (isset($ur['allow_self_registration'])) SystemSetting::setValue('registration_allow_self_registration', $ur['allow_self_registration'], 'boolean');
-                if (isset($ur['email_verification_required'])) SystemSetting::setValue('registration_email_verification_required', $ur['email_verification_required'], 'boolean');
+                if (isset($ur['default_role'])) SystemSetting::setValue('registration_default_role', (string)$ur['default_role'], 'string');
+                if (isset($ur['allow_self_registration'])) SystemSetting::setValue('registration_allow_self_registration', (bool)$ur['allow_self_registration'], 'boolean');
+                if (isset($ur['email_verification_required'])) SystemSetting::setValue('registration_email_verification_required', (bool)$ur['email_verification_required'], 'boolean');
             }
 
             return response()->json([

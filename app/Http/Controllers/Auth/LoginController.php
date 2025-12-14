@@ -76,4 +76,44 @@ class LoginController extends Controller
         
         return redirect()->route('user.signin');
     }
+
+    /**
+     * API Login endpoint
+     */
+    public function apiLogin(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            
+            // Check user status
+            if ($user->status === 'blocked' || $user->status === 'inactive') {
+                Auth::logout();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Your account has been ' . $user->status . '. Please contact support.'
+                ], 403);
+            }
+
+            $request->session()->regenerate();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Login successful',
+                'data' => [
+                    'user' => $user,
+                    'token' => $request->session()->token() // For API token-based auth, consider using Sanctum
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'The provided credentials do not match our records.'
+        ], 401);
+    }
 }

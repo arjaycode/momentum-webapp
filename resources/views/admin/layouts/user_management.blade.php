@@ -112,7 +112,7 @@
           <tr>
             <td>
               <div class="user-cell">
-                <img src="https://i.pravatar.cc/40?img=1" alt="Sarah Johnson" class="user-avatar" />
+                <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->firstname . ' ' . $user->lastname) . '&background=random' }}" alt="Profile" class="avatar-image" alt="Sarah Johnson" class="user-avatar" width="44" height="44" style="border-radius: 22px; object-fit: cover; object-position: center;" />
                 <div class="user-details">
                   <div class="user-name">{{$user->firstname." ".$user->lastname}}</div>
                   <div class="user-id">ID: #<span class="user-id1">{{$user->id}}</span></div>

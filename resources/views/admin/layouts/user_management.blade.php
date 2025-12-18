@@ -126,12 +126,15 @@
             <td>
               <div class="action-buttons">
                 <a class="btn-action btn-edit" href="{{ route('admin.user-management.edit', $user->id)}}"><i class="fas fa-edit"></i> Edit User</a>
-                <button class="btn-action btn-delete">
+                @if ($user->role != 'admin')
+                  <button class="btn-action btn-delete">
                   <i class="fas fa-trash"></i> Delete User
                 </button>
                 <button class="btn-action btn-ban">
                   <i class="fas fa-ban"></i> Ban User
                 </button>
+                @endif
+                
               </div>
             </td>
           </tr>
@@ -187,13 +190,7 @@
     <div class="ban-user-email" id="banUserEmail"></div>
   </div>
 
-  <div class="ban-reason-group">
-    <label class="ban-reason-label" for="banReason">Reason</label>
-    <textarea class="ban-reason-textarea" id="banReason" placeholder="Enter reason..." rows="4"></textarea>
-    <div class="ban-error-message" id="banReasonError">
-      Please provide a reason for banning this user.
-    </div>
-  </div>
+  
 
   <div class="ban-modal-actions">
     <button class="ban-modal-btn ban-modal-cancel" id="banModalCancel">

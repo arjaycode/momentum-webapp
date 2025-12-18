@@ -162,8 +162,6 @@ const banModal = document.getElementById('banModal');
 const banModalOverlay = document.getElementById('banModalOverlay');
 const banModalCancel = document.getElementById('banModalCancel');
 const banModalConfirm = document.getElementById('banModalConfirm');
-const banReasonTextarea = document.getElementById('banReason');
-const banReasonError = document.getElementById('banReasonError');
 let currentRowToBan = null;
 let currentUserName = null;
 let banId = null;
@@ -178,14 +176,9 @@ function openBanModal(userData) {
   currentUserName = userData.name;
   banId = userData.id;
 
-  banReasonTextarea.value = '';
-  banReasonTextarea.classList.remove('error');
-  banReasonError.classList.remove('show');
-
   banModal.classList.add('active');
   banModalOverlay.classList.add('active');
   document.body.style.overflow = 'hidden';
-  setTimeout(() => banReasonTextarea.focus(), 100);
 }
 
 // Close Ban Modal
@@ -200,45 +193,19 @@ function closeBanModal() {
   }, 200);
 }
 
-// Validate reason
-function validateReason() {
-  const reason = banReasonTextarea.value.trim();
-  if (!reason) {
-    banReasonTextarea.classList.add('error');
-    banReasonError.classList.add('show');
-    return false;
-  }
-  banReasonTextarea.classList.remove('error');
-  banReasonError.classList.remove('show');
-  return true;
-}
-
 // Cancel button
 banModalCancel.addEventListener('click', closeBanModal);
 banModalOverlay.addEventListener('click', closeBanModal);
 
-// Clear error on input
-banReasonTextarea.addEventListener('input', function () {
-  if (this.value.trim()) {
-    this.classList.remove('error');
-    banReasonError.classList.remove('show');
-  }
-});
-
 // Confirm ban
 banModalConfirm.addEventListener('click', function () {
-  if (!validateReason()) {
-    return;
-  }
 
   if (currentRowToBan) {
     const statusBadge = currentRowToBan.querySelector('.status-badge');
-    const reason = banReasonTextarea.value.trim();
 
     statusBadge.textContent = 'Blocked';
     statusBadge.className = 'status-badge blocked';
 
-    console.log('Ban reason:', reason);
     closeBanModal();
   }
 

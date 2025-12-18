@@ -63,16 +63,10 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $user = Auth::user();
-        $role = $user ? $user->role : null;
         
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
-        // Redirect based on user role
-        if ($role === 'admin') {
-            return redirect()->route('admin.signin');
-        }
         
         return redirect()->route('user.signin');
     }

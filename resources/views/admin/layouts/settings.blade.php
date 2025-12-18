@@ -128,7 +128,7 @@
 
             <div class="form-group">
               <label class="form-label">Email</label>
-              <input type="email" name="email" class="form-input" value="{{ old('email', $user->email) }}" required />
+              <input id="email" type="email" name="email" class="form-input" value="{{ old('email', $user->email) }}" required />
               @error('email')
                 <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
               @enderror

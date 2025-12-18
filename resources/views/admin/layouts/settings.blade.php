@@ -8,253 +8,257 @@
 @section('js-file', 'admin-settings.js')
 
 @section('content')
-@if (session('success'))
-<div id="toast-notification" class="toast-notification toast-success">
-  <div class="toast-content">
-    <i class="fas fa-check-circle toast-icon"></i>
-    <span class="toast-message">{{ session('success') }}</span>
-  </div>
-  <button class="toast-close" onclick="closeToast()">
-    <i class="fas fa-times"></i>
-  </button>
-</div>
-@endif
-@if ($errors->any())
-<div class="error-container">
-  <ul class="error-list">
-    @foreach ($errors->all() as $error)
-    <li class="error-item">{{ $error }}</li>
-    @endforeach
-  </ul>
-</div>
-@endif
-
-<div class="screen" id="password-screen">
-  <div class="content">
-    <button class="back-btn" onclick="showScreen('profile-screen', document.querySelector('.tabs .tab[data-screen=\'profile-screen\']'))">
-      ← Back
+<!-- Main Content -->
+<main class="main-content">
+  @if (session('success'))
+  <div id="toast-notification" class="toast-notification toast-success">
+    <div class="toast-content">
+      <i class="fas fa-check-circle toast-icon"></i>
+      <span class="toast-message">{{ session('success') }}</span>
+    </div>
+    <button class="toast-close" onclick="closeToast()">
+      <i class="fas fa-times"></i>
     </button>
-
-    <div class="section password-section">
-      <h2>Change Password</h2>
-      <form action="{{ route('admin.settings.password') }}" method="POST">
-        @csrf
-        @method('PUT')
-        <div class="form-group">
-          <label class="form-label">Current Password</label>
-          <input type="password" name="current_password" class="form-input" placeholder="Enter current password" required />
-          @error('current_password')
-            <span class="error-text">{{ $message }}</span>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">New Password</label>
-          <input type="password" name="password" class="form-input" placeholder="Enter new password" required />
-          @error('password')
-            <span class="error-text">{{ $message }}</span>
-          @enderror
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">Confirm New Password</label>
-          <input type="password" name="password_confirmation" class="form-input" placeholder="Confirm new password" required />
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn btn-secondary" onclick="showScreen('profile-screen', document.querySelector('.tabs .tab[data-screen=\'profile-screen\']'))">
-            Cancel
-          </button>
-          <button type="submit" class="btn btn-primary">
-            Change Password
-          </button>
-        </div>
-      </form>
-    </div>
   </div>
-</div>
+  @endif
 
-<div class="active screen" id="profile-screen">
-  <div class="tabs">
-    <div class="tab active" data-screen="profile-screen" onclick="showScreen('profile-screen', this)">
-      Profile
-    </div>
-    <div class="tab" data-screen="notifications-screen" onclick="showScreen('notifications-screen', this)">
-      Notifications
-    </div>
+  @if ($errors->any())
+  <div class="error-container">
+    <ul class="error-list">
+      @foreach ($errors->all() as $error)
+      <li class="error-item">{{ $error }}</li>
+      @endforeach
+    </ul>
   </div>
+  @endif
 
-  <div class="profile-content">
-    <div class="profile-section">
-      <div class="profile-left">
-        <div class="section">
-          <h2>
-            Profile Information
-          </h2>
+  <div class="screen" id="password-screen">
+    <div class="content">
+      <button class="back-btn" onclick="showScreen('profile-screen', document.querySelector('.tabs .tab[data-screen=\'profile-screen\']'))">
+        ← Back
+      </button>
 
-          <div class="profile-header">
-            <div class="profile-avatar">
-              <img id="profileAvatar" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->firstname . ' ' . $user->lastname) . '&background=random' }}" alt="Profile" class="avatar-image" />
-              <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)" />
-            </div>
-            <div>
-              <div class="profile-name">{{ $user->firstname }} {{ $user->lastname }}</div>
-              <div class="profile-member">Member since {{ $user->created_at->format('F Y') }}</div>
-              <label for="avatarInput" class="btn btn-secondary btn-change-photo">
-                Change photo
-              </label>
-            </div>
+      <div class="section password-section">
+        <h2>Change Password</h2>
+        <form action="{{ route('admin.settings.password') }}" method="POST">
+          @csrf
+          @method('PUT')
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" name="current_password" class="form-input" placeholder="Enter current password" required />
+            @error('current_password')
+              <span class="error-text">{{ $message }}</span>
+            @enderror
           </div>
 
-          <form action="{{ route('admin.settings.update') }}" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">First Name</label>
-                <input type="text" name="firstname" class="form-input" value="{{ old('firstname', $user->firstname) }}" required />
-                @error('firstname')
-                  <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
-                @enderror
-              </div>
-              <div class="form-group">
-                <label class="form-label">Last Name</label>
-                <input type="text" name="lastname" class="form-input" value="{{ old('lastname', $user->lastname) }}" required />
-              @error('lastname')
-                  <span class="error-text">{{ $message }}</span>
-              @enderror
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Email</label>
-              <input id="email" type="email" name="email" class="form-input" value="{{ old('email', $user->email) }}" required />
-              @error('email')
-                <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
-              @enderror
-            </div>
-
-            <div class="form-actions">
-              <button type="button" class="btn btn-secondary" onclick="location.reload()">Cancel</button>
-              <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div class="profile-right">
-        <div class="section">
-          <h2>
-            Account Statistics
-          </h2>
-          
-          @php
-            $totalUsers = \App\Models\User::where('role', 'user')->count();
-            $totalHabits = \App\Models\Habit::count();
-            $totalNotes = \App\Models\Note::count();
-            $accountAge = $user->created_at->diffInDays(now());
-          @endphp
-          
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-label">Total Users</div>
-              <div class="stat-value">{{ number_format($totalUsers) }}</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Total Habits</div>
-              <div class="stat-value">{{ number_format($totalHabits) }}</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Total Notes</div>
-              <div class="stat-value">{{ number_format($totalNotes) }}</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-label">Account Age</div>
-              <div class="stat-value">
-                {{ number_format($accountAge) }}
-                <span class="stat-unit">days</span>
-              </div>
-              <div class="stat-subtitle">
-                Member since {{ $user->created_at->format('M j, Y') }}
-              </div>
-            </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" name="password" class="form-input" placeholder="Enter new password" required />
+            @error('password')
+              <span class="error-text">{{ $message }}</span>
+            @enderror
           </div>
-        </div>
-        
-        <div class="section">
-          <h2>
-            Preferences
-          </h2>
 
-          <div class="preference-item">
-            <div>
-              <h3>
-                Change Password
-              </h3>
-              <p>
-                You can change your password here
-              </p>
-            </div>
-            <button class="btn btn-secondary" onclick="showScreen('password-screen', document.querySelector('.tabs .tab[data-screen=\'profile-screen\']'))">
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" name="password_confirmation" class="form-input" placeholder="Confirm new password" required />
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" onclick="showScreen('profile-screen', document.querySelector('.tabs .tab[data-screen=\'profile-screen\']'))">
+              Cancel
+            </button>
+            <button type="submit" class="btn btn-primary">
               Change Password
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
-</div>
 
-<div class="screen" id="notifications-screen">
-  <div class="tabs">
-    <div class="tab" data-screen="profile-screen" onclick="showScreen('profile-screen', this)">
-      Profile
+  <div class="active screen" id="profile-screen">
+    <div class="tabs">
+      <div class="tab active" data-screen="profile-screen" onclick="showScreen('profile-screen', this)">
+        Profile
+      </div>
+      <div class="tab" data-screen="notifications-screen" onclick="showScreen('notifications-screen', this)">
+        Notifications
+      </div>
     </div>
-    <div class="tab active" data-screen="notifications-screen" onclick="showScreen('notifications-screen', this)">
-      Notifications
-    </div>
-  </div>
 
-  <div class="notification-content">
-    <div class="notification-settings">
-      <div class="notification-list">
-        <div class="section">
-          <h2>
-            Notification Timing
-          </h2>
+    <div class="profile-content">
+      <div class="profile-section">
+        <div class="profile-left">
+          <div class="section">
+            <h2>
+              Profile Information
+            </h2>
 
-          <form id="notificationForm" onsubmit="saveNotificationSettings(event)">
-            @csrf
-            <div class="form-group">
-              <label class="form-label">Global Reminder Time (Daily Reminders)</label>
-              <input type="time" id="globalReminderTime" name="global_reminder_time" class="form-input" value="09:00" />
-              <p>
-                Habits without a specific time will use this.
-              </p>
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">Quiet Hours</label>
-              <div class="time-range">
-                <input type="time" id="quietHoursStart" name="quiet_hours_start" class="form-input" style="width: 120px" value="22:00" />
-                <span>to</span>
-                <input type="time" id="quietHoursEnd" name="quiet_hours_end" class="form-input" style="width: 120px" value="07:00" />
+            <div class="profile-header">
+              <div class="profile-avatar">
+                <img id="profileAvatar" src="{{ $user->avatar ? asset('storage/' . $user->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode($user->firstname . ' ' . $user->lastname) . '&background=random' }}" alt="Profile" class="avatar-image" />
+                <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="handleAvatarUpload(event)" />
               </div>
-              <p>
-                Silence all notifications during this period.
-              </p>
+              <div>
+                <div class="profile-name">{{ $user->firstname }} {{ $user->lastname }}</div>
+                <div class="profile-member">Member since {{ $user->created_at->format('F Y') }}</div>
+                <label for="avatarInput" class="btn btn-secondary btn-change-photo">
+                  Change photo
+                </label>
+              </div>
             </div>
 
-            <div class="form-actions">
-              <button type="submit" class="btn btn-primary">Save Changes</button>
-              <button type="button" class="btn btn-secondary" onclick="resetNotificationForm()">Cancel</button>
+            <form action="{{ route('admin.settings.update') }}" method="POST">
+              @csrf
+              @method('PUT')
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">First Name</label>
+                  <input type="text" name="firstname" class="form-input" value="{{ old('firstname', $user->firstname) }}" required />
+                  @error('firstname')
+                    <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
+                  @enderror
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Last Name</label>
+                  <input type="text" name="lastname" class="form-input" value="{{ old('lastname', $user->lastname) }}" required />
+                @error('lastname')
+                    <span class="error-text">{{ $message }}</span>
+                @enderror
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input id="email" type="email" name="email" class="form-input" value="{{ old('email', $user->email) }}" required />
+                @error('email')
+                  <span style="color: #ef4444; font-size: 12px; margin-top: 4px; display: block;">{{ $message }}</span>
+                @enderror
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="location.reload()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="profile-right">
+          <div class="section">
+            <h2>
+              Account Statistics
+            </h2>
+            
+            @php
+              $totalUsers = \App\Models\User::where('role', 'user')->count();
+              $totalHabits = \App\Models\Habit::count();
+              $totalNotes = \App\Models\Note::count();
+              $accountAge = $user->created_at->diffInDays(now());
+            @endphp
+            
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-label">Total Users</div>
+                <div class="stat-value">{{ number_format($totalUsers) }}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Total Habits</div>
+                <div class="stat-value">{{ number_format($totalHabits) }}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Total Notes</div>
+                <div class="stat-value">{{ number_format($totalNotes) }}</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Account Age</div>
+                <div class="stat-value">
+                  {{ number_format($accountAge) }}
+                  <span class="stat-unit">days</span>
+                </div>
+                <div class="stat-subtitle">
+                  Member since {{ $user->created_at->format('M j, Y') }}
+                </div>
+              </div>
             </div>
-          </form>
+          </div>
+          
+          <div class="section">
+            <h2>
+              Preferences
+            </h2>
+
+            <div class="preference-item">
+              <div>
+                <h3>
+                  Change Password
+                </h3>
+                <p>
+                  You can change your password here
+                </p>
+              </div>
+              <button class="btn btn-secondary" onclick="showScreen('password-screen', document.querySelector('.tabs .tab[data-screen=\'profile-screen\']'))">
+                Change Password
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+
+  <div class="screen" id="notifications-screen">
+    <div class="tabs">
+      <div class="tab" data-screen="profile-screen" onclick="showScreen('profile-screen', this)">
+        Profile
+      </div>
+      <div class="tab active" data-screen="notifications-screen" onclick="showScreen('notifications-screen', this)">
+        Notifications
+      </div>
+    </div>
+
+    <div class="notification-content">
+      <div class="notification-settings">
+        <div class="notification-list">
+          <div class="section">
+            <h2>
+              Notification Timing
+            </h2>
+
+            <form id="notificationForm" onsubmit="saveNotificationSettings(event)">
+              @csrf
+              <div class="form-group">
+                <label class="form-label">Global Reminder Time (Daily Reminders)</label>
+                <input type="time" id="globalReminderTime" name="global_reminder_time" class="form-input" value="09:00" />
+                <p>
+                  Habits without a specific time will use this.
+                </p>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Quiet Hours</label>
+                <div class="time-range">
+                  <input type="time" id="quietHoursStart" name="quiet_hours_start" class="form-input" style="width: 120px" value="22:00" />
+                  <span>to</span>
+                  <input type="time" id="quietHoursEnd" name="quiet_hours_end" class="form-input" style="width: 120px" value="07:00" />
+                </div>
+                <p>
+                  Silence all notifications during this period.
+                </p>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-secondary" onclick="resetNotificationForm()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
 @endsection
 
 @section('scripts')

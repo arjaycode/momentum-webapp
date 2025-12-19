@@ -49,12 +49,11 @@ class HabitController extends Controller
 
     public function store(Request $request)
     {
-        // Convert empty category_id to null
+        
         $request->merge([
             'category_id' => $request->input('category_id') ?: null
         ]);
 
-        // Check if habit name already exists for this user
         $existingHabit = Habit::where('user_id', Auth::id())
             ->where('habit_name', $request->input('name'))
             ->first();

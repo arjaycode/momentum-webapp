@@ -12,13 +12,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use Inertia\Inertia;
 
 class AdminSettingsController extends Controller
 {
     public function show()
     {
         $user = Auth::user();
-        return view('admin.layouts.settings', compact('user'));
+        return Inertia::render('Admin/Settings', [
+            'user' => $user
+        ]);
     }
 
     public function update(Request $request)

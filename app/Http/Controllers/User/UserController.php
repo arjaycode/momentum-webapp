@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 use function Laravel\Prompts\error;
 
@@ -20,7 +21,13 @@ class UserController extends Controller
         $totalBlockedUsers = $users->where('status', 'blocked')->count();
         $totalInactiveUsers = $users->where('status', 'inactive')->count();
 
-        return view('admin.layouts.user_management', compact('totalActiveUsers', 'totalInactiveUsers', 'totalUsers', 'totalBlockedUsers', 'users'));
+        return Inertia::render('Admin/UserManagement/Index', [
+            'totalActiveUsers' => $totalActiveUsers,
+            'totalInactiveUsers' => $totalInactiveUsers,
+            'totalUsers' => $totalUsers,
+            'totalBlockedUsers' => $totalBlockedUsers,
+            'users' => $users
+        ]);
     }
 
     public function store(Request $request)
@@ -42,7 +49,9 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.layouts.user_edit', compact('user'));
+        return Inertia::render('Admin/UserManagement/Edit', [
+            'user' => $user
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -92,9 +101,7 @@ class UserController extends Controller
         $user->status = $update['status'];
         $user->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'User status updated.'
-        ]);
+        return redirect()->back()
+            ->with('success', 'User status updated.');
     }
 }

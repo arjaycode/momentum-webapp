@@ -12,7 +12,7 @@ use Carbon\Carbon;
 class DashboardController extends Controller
 {
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
         $user = Auth::user();
 
@@ -68,20 +68,20 @@ class DashboardController extends Controller
             ];
         });
 
-        // Get calendar data for current month
-        $year = now()->year;
-        $month = now()->month;
+        // Get calendar data for current month or requested month
+        $year = $request->input('year', now()->year);
+        $month = $request->input('month', now()->month);
         $calendarData = $this->getCalendarData($habits, $year, $month);
 
-        return view('user.layouts.dashboard', compact(
-            'habits',
-            'notes',
-            'activeHabits',
-            'currentStreak',
-            'completionRate',
-            'todayHabits',
-            'calendarData'
-        ));
+        return \Inertia\Inertia::render('User/Dashboard', [
+            'habits' => $habits,
+            'notes' => $notes,
+            'activeHabits' => $activeHabits,
+            'currentStreak' => $currentStreak,
+            'completionRate' => $completionRate,
+            'todayHabits' => $todayHabits,
+            'calendarData' => $calendarData
+        ]);
     }
 
     private function calculateCurrentStreak($habits)

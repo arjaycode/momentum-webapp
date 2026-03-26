@@ -37,14 +37,21 @@ class HabitController extends Controller
         $activeHabits = $habits->count();
         $currentStreak = $this->calculateCurrentStreak($habits);
 
-        return view('user.layouts.habits', compact('habits', 'activeHabits', 'currentStreak'));
+        return \Inertia\Inertia::render('User/Habits', [
+            'habits' => $habits,
+            'activeHabits' => $activeHabits,
+            'currentStreak' => $currentStreak
+        ]);
     }
 
     public function create()
     {
         $categories = HabitsCategory::where('status', 'active')->get();
         $user_id = Auth::id();
-        return view('user.layouts.habits_add', compact('categories', 'user_id'));
+        return \Inertia\Inertia::render('User/HabitsAdd', [
+            'categories' => $categories, 
+            'user_id' => $user_id
+        ]);
     }
 
     public function store(Request $request)
@@ -137,7 +144,13 @@ class HabitController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('user.layouts.habits_view', compact('habit', 'logs', 'streak', 'totalDays', 'notes'));
+        return \Inertia\Inertia::render('User/HabitsView', [
+            'habit' => $habit, 
+            'logs' => $logs, 
+            'streak' => $streak, 
+            'totalDays' => $totalDays, 
+            'notes' => $notes
+        ]);
     }
 
     public function edit($id)
@@ -153,7 +166,12 @@ class HabitController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('user.layouts.habits_edit', compact('habit', 'categories', 'targetDays', 'notes'));
+        return \Inertia\Inertia::render('User/HabitsEdit', [
+            'habit' => $habit, 
+            'categories' => $categories, 
+            'targetDays' => $targetDays, 
+            'notes' => $notes
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -235,15 +253,7 @@ class HabitController extends Controller
         // Delete the habit
         $habit->delete();
 
-        // Return JSON response for AJAX requests
-        if (request()->wantsJson() || request()->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Habit "' . $habitName . '" deleted successfully! It has been removed from your habits, calendar, and dashboard.'
-            ]);
-        }
-
-        // Fallback to redirect for non-AJAX requests
+        // Return redirect for Inertia
         return redirect()->route('user.habits')->with('success', 'Habit deleted successfully! It has been removed from your habits, calendar, and dashboard.');
     }
 
@@ -258,10 +268,7 @@ class HabitController extends Controller
             ->exists();
 
         if ($exists) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Habit already marked as done today!'
-            ]);
+            return redirect()->back()->with('error', 'Habit already marked as done today!');
         }
 
         // Create habit log entry
@@ -285,11 +292,8 @@ class HabitController extends Controller
             'read' => false,
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Habit marked as done! Streak: ' . $newStreak . ' days',
-            'streak' => $newStreak
-        ]);
+        return redirect()->back()
+            ->with('success', 'Habit marked as done! Streak: ' . $newStreak . ' days');
     }
 
     public function search(Request $request)
@@ -441,15 +445,7 @@ class HabitController extends Controller
             'message' => $validated['message'],
         ]);
 
-        return response()->json([
-            'success' => true,
-            'note' => [
-                'id' => $note->id,
-                'message' => $note->message,
-                'created_at' => $note->created_at->format('M j, Y \a\t g:i A'),
-                'created_at_iso' => $note->created_at->toISOString(),
-            ]
-        ]);
+        return redirect()->back()->with('success', 'Note added successfully.');
     }
 
     /**
@@ -466,9 +462,6 @@ class HabitController extends Controller
 
         $note->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Note deleted successfully'
-        ]);
+        return redirect()->back()->with('success', 'Note deleted successfully');
     }
 }

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use Inertia\Inertia;
 
 class AdminHabitController extends Controller
 {
@@ -21,7 +22,11 @@ class AdminHabitController extends Controller
         $categories = HabitsCategory::all();
         $users = User::where('role', 'user')->get();
 
-        return view('admin.layouts.habits_list', compact('habits', 'categories', 'users'));
+        return Inertia::render('Admin/HabitsManagement/Index', [
+            'habits' => $habits,
+            'categories' => $categories,
+            'users' => $users
+        ]);
     }
 
     public function create()
@@ -29,7 +34,10 @@ class AdminHabitController extends Controller
         $categories = HabitsCategory::where('status', 'active')->get();
         $users = User::where('role', 'user')->get();
         
-        return view('admin.layouts.habits_add', compact('categories', 'users'));
+        return Inertia::render('Admin/HabitsManagement/Create', [
+            'categories' => $categories,
+            'users' => $users
+        ]);
     }
 
     public function store(Request $request)
@@ -87,7 +95,12 @@ class AdminHabitController extends Controller
         $users = User::where('role', 'user')->get();
         $targetDays = $habit->target_days ?? [];
 
-        return view('admin.layouts.habits_edit', compact('habit', 'categories', 'users', 'targetDays'));
+        return Inertia::render('Admin/HabitsManagement/Edit', [
+            'habit' => $habit,
+            'categories' => $categories,
+            'users' => $users,
+            'targetDays' => $targetDays
+        ]);
     }
 
     public function update(Request $request, $id)

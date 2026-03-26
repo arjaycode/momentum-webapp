@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Habit;
 use Illuminate\Http\Request;
 use Exception;
+use Inertia\Inertia;
 
 class NoteController extends Controller
 {
@@ -17,7 +18,9 @@ class NoteController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         
-        return view('admin.layouts.note_management', compact('notes'));
+        return Inertia::render('Admin/NotesManagement/Index', [
+            'notes' => $notes
+        ]);
     }
 
     public function create()
@@ -25,7 +28,10 @@ class NoteController extends Controller
         $users = User::where('role', 'user')->get();
         $habits = Habit::with('category')->get();
         
-        return view('admin.layouts.note_add', compact('users', 'habits'));
+        return Inertia::render('Admin/NotesManagement/Create', [
+            'users' => $users,
+            'habits' => $habits
+        ]);
     }
 
     public function store(Request $request)
@@ -58,7 +64,11 @@ class NoteController extends Controller
         $users = User::where('role', 'user')->get();
         $habits = Habit::with('category')->get();
         
-        return view('admin.layouts.note_edit', compact('note', 'users', 'habits'));
+        return Inertia::render('Admin/NotesManagement/Edit', [
+            'note' => $note,
+            'users' => $users,
+            'habits' => $habits
+        ]);
     }
 
     public function update(Request $request, $id)

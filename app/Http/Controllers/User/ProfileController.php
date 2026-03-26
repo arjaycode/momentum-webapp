@@ -17,7 +17,7 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        return view('user.layouts.settings', compact('user'));
+        return \Inertia\Inertia::render('User/Settings', compact('user'));
     }
 
     public function update(Request $request)

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Models\User;
+use Inertia\Inertia;
 
 class ResetPasswordController extends Controller
 {
@@ -23,9 +24,9 @@ class ResetPasswordController extends Controller
                 ->withErrors(['email' => 'Invalid or missing reset token. Please request a new password reset link.']);
         }
 
-        return view('user.auth.resetpassword')->with(
-            ['token' => $token, 'email' => $request->email]
-        );
+        return Inertia::render('Auth/ResetPassword', [
+            'token' => $token, 'email' => $request->email
+        ]);
     }
 
     /**

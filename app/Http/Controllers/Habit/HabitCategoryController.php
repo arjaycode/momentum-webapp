@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\HabitsCategory;
 use Illuminate\Http\Request;
 use Exception;
+use Inertia\Inertia;
 
 class HabitCategoryController extends Controller
 {
@@ -14,7 +15,9 @@ class HabitCategoryController extends Controller
     {
         $categories = HabitsCategory::withCount('habits')->get();
 
-        return view('admin.layouts.habit_management', compact('categories'));
+        return Inertia::render('Admin/HabitCategoryManagement/Index', [
+            'categories' => $categories
+        ]);
     }
 
     public function store(Request $request)
@@ -42,7 +45,9 @@ class HabitCategoryController extends Controller
     public function edit($id)
     {
         $category = HabitsCategory::find($id);
-        return view('admin.layouts.habit_edit', compact('category'));
+        return Inertia::render('Admin/HabitCategoryManagement/Edit', [
+            'category' => $category
+        ]);
     }
 
     public function update(Request $request, $id)

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class ForgotPasswordController extends Controller
 {
@@ -14,7 +15,7 @@ class ForgotPasswordController extends Controller
      */
     public function showForgotPasswordForm()
     {
-        return view('user.auth.forgotpassword');
+        return Inertia::render('Auth/ForgotPassword');
     }
 
     /**

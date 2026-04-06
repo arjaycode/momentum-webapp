@@ -5,10 +5,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\User\CalendarController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Habit\HabitCategoryController;
 use App\Http\Controllers\Admin\AdminHabitController;
@@ -35,7 +37,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 
 // Guest Pages
 Route::middleware('guest')->group(function () {
-    Route::view('/admin/signin', 'admin.auth.signin')->name('admin.signin');
+    Route::get('/admin/signin', [AdminAuthController::class, 'show'])->name('admin.signin');
     Route::get('/signup', [SignupController::class, 'signup_view'])->name('user.signup');
     Route::post('/signup', [SignupController::class, 'signup'])->name('user.signup.submit');
     Route::get('/signin', [LoginController::class, 'index'])->name('user.signin');
@@ -54,7 +56,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/chart-data', [AdminDashboardController::class, 'getChartData'])->name('dashboard.chart-data');
         //User Management
         Route::get('/user-management', [UserController::class, 'index'])->name('user-management');
-        Route::view('/user-management/create', 'admin.layouts.user_addnew')->name('user-management.create');
+        Route::get('/user-management/create', [UserController::class, 'create'])->name('user-management.create');
         Route::post('/user-management/create', [UserController::class, 'store'])->name('user-management.create.submit');
         Route::get('/user-management/edit/{id}', [UserController::class, 'edit'])->name('user-management.edit');
         Route::put('/user-management/edit/{id}', [UserController::class, 'update'])->name('user-management.edit.submit');
@@ -62,7 +64,7 @@ Route::middleware('auth')->group(function () {
         Route::patch('/user-management/{id}/update-status', [UserController::class, 'update_status'])->name('user-management.update-status');
         //Habits Category Management
         Route::get('/habit-management', [HabitCategoryController::class, 'index'])->name('habit-management');
-        Route::view('/habit-management/create', 'admin.layouts.habit_add')->name('habit-management.create');
+        Route::get('/habit-management/create', [HabitCategoryController::class, 'create'])->name('habit-management.create');
         Route::post('/habit-management/create', [HabitCategoryController::class, 'store'])->name('habit-management.create.submit');
         Route::get('/habit-management/edit/{id}', [HabitCategoryController::class, 'edit'])->name('habit-management.edit');
         Route::patch('/habit-management/edit/{id}', [HabitCategoryController::class, 'update'])->name('habit-management.edit.submit');
@@ -122,7 +124,7 @@ Route::middleware('auth')->group(function () {
         // --- OTHER USER PAGES ---
         Route::get('/notifications', [\App\Http\Controllers\User\NotificationController::class, 'index'])->name('notifications');
         Route::post('/notifications/clear', [\App\Http\Controllers\User\NotificationController::class, 'clear'])->name('notifications.clear');
-        Route::view('/calendar', 'user.layouts.calendar')->name('calendar');
+        Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
 
         // --- PROFILE MANAGEMENT ---
         Route::get('/settings', [ProfileController::class, 'show'])->name('settings');

@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\Note;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class HabitController extends Controller
 {
@@ -37,14 +38,21 @@ class HabitController extends Controller
         $activeHabits = $habits->count();
         $currentStreak = $this->calculateCurrentStreak($habits);
 
-        return view('user.layouts.habits', compact('habits', 'activeHabits', 'currentStreak'));
+        return Inertia::render('User/HabitsIndex', [
+            'habits' => $habits,
+            'activeHabits' => $activeHabits,
+            'currentStreak' => $currentStreak,
+        ]);
     }
 
     public function create()
     {
         $categories = HabitsCategory::where('status', 'active')->get();
         $user_id = Auth::id();
-        return view('user.layouts.habits_add', compact('categories', 'user_id'));
+        return Inertia::render('User/HabitsCreate', [
+            'categories' => $categories,
+            'user_id' => $user_id,
+        ]);
     }
 
     public function store(Request $request)
@@ -137,7 +145,13 @@ class HabitController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('user.layouts.habits_view', compact('habit', 'logs', 'streak', 'totalDays', 'notes'));
+        return Inertia::render('User/HabitsShow', [
+            'habit' => $habit,
+            'logs' => $logs,
+            'streak' => $streak,
+            'totalDays' => $totalDays,
+            'notes' => $notes,
+        ]);
     }
 
     public function edit($id)
@@ -153,7 +167,12 @@ class HabitController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('user.layouts.habits_edit', compact('habit', 'categories', 'targetDays', 'notes'));
+        return Inertia::render('User/HabitsEdit', [
+            'habit' => $habit,
+            'categories' => $categories,
+            'targetDays' => $targetDays,
+            'notes' => $notes,
+        ]);
     }
 
     public function update(Request $request, $id)

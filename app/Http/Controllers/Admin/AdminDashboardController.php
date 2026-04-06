@@ -10,6 +10,7 @@ use App\Models\HabitLog;
 use App\Models\HabitsCategory;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Inertia\Inertia;
 
 class AdminDashboardController extends Controller
 {
@@ -109,21 +110,21 @@ class AdminDashboardController extends Controller
             $activityData[] = $activeUsers;
         }
         
-        return view('admin.layouts.dashboard', compact(
-            'users',
-            'habits',
-            'notes',
-            'popularHabits',
-            'recentUsers',
-            'notesWithHabitsPercent',
-            'dailyNotes',
-            'habitNotes',
-            'goalNotes',
-            'completionData',
-            'labels',
-            'activityData',
-            'activityLabels'
-        ));
+        return Inertia::render('Admin/Dashboard', [
+            'users' => $users,
+            'habits' => $habits,
+            'notes' => $notes,
+            'popularHabits' => $popularHabits,
+            'recentUsers' => $recentUsers,
+            'notesWithHabitsPercent' => $notesWithHabitsPercent,
+            'dailyNotes' => $dailyNotes,
+            'habitNotes' => $habitNotes,
+            'goalNotes' => $goalNotes,
+            'completionData' => $completionData,
+            'labels' => $labels,
+            'activityData' => $activityData,
+            'activityLabels' => $activityLabels,
+        ]);
     }
     
     private function getHabitIcon($habitName)

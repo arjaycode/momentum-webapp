@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Note;
 use App\Models\SystemSetting;
 use App\Models\Habit;
 use App\Models\HabitLog;
@@ -12,13 +13,21 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use Inertia\Inertia;
 
 class AdminSettingsController extends Controller
 {
     public function show()
     {
         $user = Auth::user();
-        return view('admin.layouts.settings', compact('user'));
+
+        return Inertia::render('Admin/Settings', [
+            'user' => $user,
+            'totalUsers' => User::where('role', 'user')->count(),
+            'totalHabits' => Habit::count(),
+            'totalNotes' => Note::count(),
+            'accountAgeDays' => $user->created_at->diffInDays(now()),
+        ]);
     }
 
     public function update(Request $request)

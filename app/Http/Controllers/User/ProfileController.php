@@ -11,13 +11,26 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use Inertia\Inertia;
 
 class ProfileController extends Controller
 {
     public function show()
     {
         $user = Auth::user();
-        return view('user.layouts.settings', compact('user'));
+
+        $totalHabits = Habit::where('user_id', $user->id)->count();
+        $totalCompletions = HabitLog::whereHas('habit', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->count();
+        $accountAge = $user->created_at->diffInDays(now());
+
+        return Inertia::render('User/Settings', [
+            'user' => $user,
+            'totalHabits' => $totalHabits,
+            'totalCompletions' => $totalCompletions,
+            'accountAge' => $accountAge,
+        ]);
     }
 
     public function update(Request $request)

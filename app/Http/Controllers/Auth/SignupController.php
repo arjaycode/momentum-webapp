@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Inertia\Inertia;
 
 class SignupController extends Controller
 {
     public function signup_view()
     {
-        return view('user.auth.signup');
+        return Inertia::render('Auth/UserSignUp');
     }
 
     public function signup(Request $request)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use Inertia\Inertia;
 use App\Models\Habit;
 use App\Models\HabitLog;
 use App\Models\Note;
@@ -73,15 +74,15 @@ class DashboardController extends Controller
         $month = now()->month;
         $calendarData = $this->getCalendarData($habits, $year, $month);
 
-        return view('user.layouts.dashboard', compact(
-            'habits',
-            'notes',
-            'activeHabits',
-            'currentStreak',
-            'completionRate',
-            'todayHabits',
-            'calendarData'
-        ));
+        return Inertia::render('User/Dashboard', [
+            'habits' => $habits,
+            'notes' => $notes,
+            'activeHabits' => $activeHabits,
+            'currentStreak' => $currentStreak,
+            'completionRate' => $completionRate,
+            'todayHabits' => $todayHabits,
+            'calendarData' => $calendarData,
+        ]);
     }
 
     private function calculateCurrentStreak($habits)

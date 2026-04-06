@@ -32,14 +32,12 @@ function submit() {
     >
         <div class="bg-rings" aria-hidden="true"></div>
         <section class="promo" aria-label="Marketing">
-            <div class="logo">
-                <div class="brand-square">
-                    <svg viewBox="0 0 24 24">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                    </svg>
-                </div>
-                <div style="color: rgba(255, 255, 255, 0.95); font-weight: 700">Momentum</div>
+            <div class="card-logo">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
             </div>
+            <h2>Momentum</h2>
 
             <h1>Build Better Habits, Track<br />Your Progress</h1>
             <p class="lead">
@@ -55,12 +53,10 @@ function submit() {
         </section>
 
         <aside class="card" aria-label="Create Account">
-            <div class="brand">
-                <div class="brand-square" style="width: 30px; height: 30px; font-size: 13px">
-                    <svg viewBox="0 0 24 24">
-                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-                    </svg>
-                </div>
+            <div class="card-logo">
+                <svg viewBox="0 0 24 24">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
             </div>
 
             <h2>Create Account</h2>

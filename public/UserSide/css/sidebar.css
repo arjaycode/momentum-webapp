@@ -20,7 +20,7 @@
 .logo {
   width: 48px;
   height: 48px;
-  background-color: #b85c4d;
+  background-color: transparent;
   border-radius: 8px;
   display: flex;
   align-items: center;

@@ -4,7 +4,7 @@ import { usePage } from '@inertiajs/vue3';
 import UserLayout from '@/Layouts/UserLayout.vue';
 import { useUserDashboard, type CalendarDayHabit } from '@/composables/useUserDashboard';
 import userRoutes from '@/routes/user';
-import { add as habitsAdd } from '@/routes/user/habits';
+import { add as habitsAdd, view } from '@/routes/user/habits';
 import type { SharedProps } from '@/types/global';
 import type { Habit } from '@/types/models';
 

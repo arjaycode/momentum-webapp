@@ -1,5 +1,20 @@
-// Use the current date for initialization - always start with current month
-let currentDate = new Date();
+(function () {
+  'use strict';
+
+  if (window.__momentumCalendarInterval) {
+    clearInterval(window.__momentumCalendarInterval);
+    window.__momentumCalendarInterval = null;
+  }
+  if (window.__momentumCalendarVisibilityHandler) {
+    document.removeEventListener(
+      'visibilitychange',
+      window.__momentumCalendarVisibilityHandler,
+    );
+    window.__momentumCalendarVisibilityHandler = null;
+  }
+
+  // Use the current date for initialization - always start with current month
+  let currentDate = new Date();
 // Always set to current month and year, then set to 1st day
 currentDate.setFullYear(new Date().getFullYear());
 currentDate.setMonth(new Date().getMonth());
@@ -506,28 +521,28 @@ function focusOnToday() {
   }, 100);
 }
 
-// Initialize App
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize App (runs on DOMContentLoaded or immediately if document already loaded — needed for Inertia-injected scripts)
+function momentumCalendarInit() {
   // Ensure we're showing current month
   const today = new Date();
   currentDate.setFullYear(today.getFullYear());
   currentDate.setMonth(today.getMonth());
   currentDate.setDate(1);
-  
+
   // Initial render
   renderCalendar().then(() => {
     focusOnToday();
   });
-  
+
   // Check for success message and refresh if habit was just added
   if (document.querySelector('.success-alert') || window.location.search.includes('success')) {
-    setTimeout(function() {
+    setTimeout(function () {
       // Reset to current month when habit is created
-      const today = new Date();
-      currentDate.setFullYear(today.getFullYear());
-      currentDate.setMonth(today.getMonth());
+      const todayInner = new Date();
+      currentDate.setFullYear(todayInner.getFullYear());
+      currentDate.setMonth(todayInner.getMonth());
       currentDate.setDate(1);
-      
+
       const month = currentDate.getMonth() + 1;
       const year = currentDate.getFullYear();
       fetchHabitData(year, month).then(() => {
@@ -537,20 +552,29 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }, 1000);
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', momentumCalendarInit);
+} else {
+  momentumCalendarInit();
+}
 
 // Auto-refresh calendar when page becomes visible (e.g., after adding a habit)
-document.addEventListener('visibilitychange', function() {
+window.__momentumCalendarVisibilityHandler = function () {
   if (!document.hidden) {
     // Reset to current month if showing past month
     const today = new Date();
-    if (currentDate.getFullYear() < today.getFullYear() || 
-        (currentDate.getFullYear() === today.getFullYear() && currentDate.getMonth() < today.getMonth())) {
+    if (
+      currentDate.getFullYear() < today.getFullYear() ||
+      (currentDate.getFullYear() === today.getFullYear() &&
+        currentDate.getMonth() < today.getMonth())
+    ) {
       currentDate.setFullYear(today.getFullYear());
       currentDate.setMonth(today.getMonth());
       currentDate.setDate(1);
     }
-    
+
     const month = currentDate.getMonth() + 1;
     const year = currentDate.getFullYear();
     fetchHabitData(year, month).then(() => {
@@ -559,10 +583,11 @@ document.addEventListener('visibilitychange', function() {
       });
     });
   }
-});
+};
+document.addEventListener('visibilitychange', window.__momentumCalendarVisibilityHandler);
 
 // Refresh calendar data periodically (every 30 seconds) to catch new habits
-setInterval(function() {
+window.__momentumCalendarInterval = setInterval(function () {
   if (!document.hidden) {
     // Don't reset to current month on auto-refresh, just refresh current view
     const month = currentDate.getMonth() + 1;
@@ -572,3 +597,4 @@ setInterval(function() {
     });
   }
 }, 30000); // 30 seconds
+})();

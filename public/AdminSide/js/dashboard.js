@@ -4,9 +4,16 @@ Chart.defaults.font.family =
 Chart.defaults.color = '#666';
 
 // Global chart variables
-let habitChart = null;
-let activityChart = null;
+// Use var so the browser doesn't crash on the second load
+var habitChart = habitChart || null;
+var activityChart = activityChart || null;
 
+// Wrap your initialization in a function that checks if it's already defined
+if (typeof window.initializeCharts !== 'function') {
+    window.initializeCharts = function() {
+        // ... all your existing initializeCharts code ...
+    }
+}
 // Initialize charts
 function initializeCharts() {
   // Habit Completion Rate Chart

@@ -135,7 +135,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\User\HabitController::calendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
 export const calendarData = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -150,7 +150,7 @@ calendarData.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::calendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
 calendarData.url = (options?: RouteQueryOptions) => {
@@ -159,7 +159,7 @@ calendarData.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::calendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
 calendarData.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -168,7 +168,7 @@ calendarData.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\User\HabitController::calendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
 calendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -178,7 +178,7 @@ calendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\User\HabitController::calendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
     const calendarDataForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -188,7 +188,7 @@ calendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\User\HabitController::calendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
         calendarDataForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -197,7 +197,7 @@ calendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\User\HabitController::calendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
         calendarDataForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -213,7 +213,7 @@ calendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     calendarData.form = calendarDataForm
 /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
 export const search = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -228,7 +228,7 @@ search.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
 search.url = (options?: RouteQueryOptions) => {
@@ -237,7 +237,7 @@ search.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
 search.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -246,7 +246,7 @@ search.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
 search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -256,7 +256,7 @@ search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
     const searchForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -266,7 +266,7 @@ search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
         searchForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -275,7 +275,7 @@ search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
         searchForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -653,7 +653,7 @@ deleteMethod.delete = (args: { id: string | number } | [id: string | number ] | 
     deleteMethod.form = deleteMethodForm
 /**
 * @see \App\Http\Controllers\User\HabitController::markDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
 export const markDone = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -668,7 +668,7 @@ markDone.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::markDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
 markDone.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -696,7 +696,7 @@ markDone.url = (args: { id: string | number } | [id: string | number ] | string 
 
 /**
 * @see \App\Http\Controllers\User\HabitController::markDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
 markDone.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -706,7 +706,7 @@ markDone.post = (args: { id: string | number } | [id: string | number ] | string
 
     /**
 * @see \App\Http\Controllers\User\HabitController::markDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
     const markDoneForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -716,7 +716,7 @@ markDone.post = (args: { id: string | number } | [id: string | number ] | string
 
             /**
 * @see \App\Http\Controllers\User\HabitController::markDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
         markDoneForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

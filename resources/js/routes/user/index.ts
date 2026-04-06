@@ -473,8 +473,8 @@ notifications.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => (
     
     notifications.form = notificationsForm
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\CalendarController::calendar
+ * @see app/Http/Controllers/User/CalendarController.php:12
  * @route '/user/calendar'
  */
 export const calendar = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -488,8 +488,8 @@ calendar.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\CalendarController::calendar
+ * @see app/Http/Controllers/User/CalendarController.php:12
  * @route '/user/calendar'
  */
 calendar.url = (options?: RouteQueryOptions) => {
@@ -497,8 +497,8 @@ calendar.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\CalendarController::calendar
+ * @see app/Http/Controllers/User/CalendarController.php:12
  * @route '/user/calendar'
  */
 calendar.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -506,8 +506,8 @@ calendar.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\CalendarController::calendar
+ * @see app/Http/Controllers/User/CalendarController.php:12
  * @route '/user/calendar'
  */
 calendar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -516,8 +516,8 @@ calendar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
     /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\CalendarController::calendar
+ * @see app/Http/Controllers/User/CalendarController.php:12
  * @route '/user/calendar'
  */
     const calendarForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -526,8 +526,8 @@ calendar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     })
 
             /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\CalendarController::calendar
+ * @see app/Http/Controllers/User/CalendarController.php:12
  * @route '/user/calendar'
  */
         calendarForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -535,8 +535,8 @@ calendar.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
             /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\CalendarController::calendar
+ * @see app/Http/Controllers/User/CalendarController.php:12
  * @route '/user/calendar'
  */
         calendarForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

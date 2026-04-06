@@ -2,8 +2,8 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 import create4f58d6 from './create'
 import edit055014 from './edit'
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
  * @route '/admin/user-management/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -17,8 +17,8 @@ create.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
  * @route '/admin/user-management/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -26,8 +26,8 @@ create.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
  * @route '/admin/user-management/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,8 +35,8 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
  * @route '/admin/user-management/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,8 +45,8 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
     /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
  * @route '/admin/user-management/create'
  */
     const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,8 +55,8 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     })
 
             /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
  * @route '/admin/user-management/create'
  */
         createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -64,8 +64,8 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
             /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
  * @route '/admin/user-management/create'
  */
         createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

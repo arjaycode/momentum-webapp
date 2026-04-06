@@ -212,7 +212,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\User\HabitController::getCalendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
 export const getCalendarData = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ getCalendarData.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::getCalendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
 getCalendarData.url = (options?: RouteQueryOptions) => {
@@ -236,7 +236,7 @@ getCalendarData.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::getCalendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
 getCalendarData.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -245,7 +245,7 @@ getCalendarData.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => (
 })
 /**
 * @see \App\Http\Controllers\User\HabitController::getCalendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
 getCalendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -255,7 +255,7 @@ getCalendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
 
     /**
 * @see \App\Http\Controllers\User\HabitController::getCalendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
     const getCalendarDataForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -265,7 +265,7 @@ getCalendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
 
             /**
 * @see \App\Http\Controllers\User\HabitController::getCalendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
         getCalendarDataForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -274,7 +274,7 @@ getCalendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
         })
             /**
 * @see \App\Http\Controllers\User\HabitController::getCalendarData
- * @see app/Http/Controllers/User/HabitController.php:349
+ * @see app/Http/Controllers/User/HabitController.php:339
  * @route '/user/habits/calendar-data'
  */
         getCalendarDataForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -290,7 +290,7 @@ getCalendarData.head = (options?: RouteQueryOptions): RouteDefinition<'head'> =>
     getCalendarData.form = getCalendarDataForm
 /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
 export const search = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -305,7 +305,7 @@ search.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
 search.url = (options?: RouteQueryOptions) => {
@@ -314,7 +314,7 @@ search.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
 search.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -323,7 +323,7 @@ search.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
 search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -333,7 +333,7 @@ search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
     const searchForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -343,7 +343,7 @@ search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
         searchForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -352,7 +352,7 @@ search.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\User\HabitController::search
- * @see app/Http/Controllers/User/HabitController.php:314
+ * @see app/Http/Controllers/User/HabitController.php:304
  * @route '/user/habits/search'
  */
         searchForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -730,7 +730,7 @@ destroy.delete = (args: { id: string | number } | [id: string | number ] | strin
     destroy.form = destroyForm
 /**
 * @see \App\Http\Controllers\User\HabitController::markAsDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
 export const markAsDone = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -745,7 +745,7 @@ markAsDone.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::markAsDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
 markAsDone.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -773,7 +773,7 @@ markAsDone.url = (args: { id: string | number } | [id: string | number ] | strin
 
 /**
 * @see \App\Http\Controllers\User\HabitController::markAsDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
 markAsDone.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -783,7 +783,7 @@ markAsDone.post = (args: { id: string | number } | [id: string | number ] | stri
 
     /**
 * @see \App\Http\Controllers\User\HabitController::markAsDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
     const markAsDoneForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -793,7 +793,7 @@ markAsDone.post = (args: { id: string | number } | [id: string | number ] | stri
 
             /**
 * @see \App\Http\Controllers\User\HabitController::markAsDone
- * @see app/Http/Controllers/User/HabitController.php:269
+ * @see app/Http/Controllers/User/HabitController.php:259
  * @route '/user/habits/{id}/mark-done'
  */
         markAsDoneForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -804,7 +804,7 @@ markAsDone.post = (args: { id: string | number } | [id: string | number ] | stri
     markAsDone.form = markAsDoneForm
 /**
 * @see \App\Http\Controllers\User\HabitController::storeNote
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
 export const storeNote = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -819,7 +819,7 @@ storeNote.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::storeNote
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
 storeNote.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -847,7 +847,7 @@ storeNote.url = (args: { id: string | number } | [id: string | number ] | string
 
 /**
 * @see \App\Http\Controllers\User\HabitController::storeNote
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
 storeNote.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -857,7 +857,7 @@ storeNote.post = (args: { id: string | number } | [id: string | number ] | strin
 
     /**
 * @see \App\Http\Controllers\User\HabitController::storeNote
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
     const storeNoteForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -867,7 +867,7 @@ storeNote.post = (args: { id: string | number } | [id: string | number ] | strin
 
             /**
 * @see \App\Http\Controllers\User\HabitController::storeNote
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
         storeNoteForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -878,7 +878,7 @@ storeNote.post = (args: { id: string | number } | [id: string | number ] | strin
     storeNote.form = storeNoteForm
 /**
 * @see \App\Http\Controllers\User\HabitController::deleteNote
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
 export const deleteNote = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -893,7 +893,7 @@ deleteNote.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::deleteNote
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
 deleteNote.url = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions) => {
@@ -919,7 +919,7 @@ deleteNote.url = (args: { habitId: string | number, noteId: string | number } | 
 
 /**
 * @see \App\Http\Controllers\User\HabitController::deleteNote
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
 deleteNote.delete = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -929,7 +929,7 @@ deleteNote.delete = (args: { habitId: string | number, noteId: string | number }
 
     /**
 * @see \App\Http\Controllers\User\HabitController::deleteNote
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
     const deleteNoteForm = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -944,7 +944,7 @@ deleteNote.delete = (args: { habitId: string | number, noteId: string | number }
 
             /**
 * @see \App\Http\Controllers\User\HabitController::deleteNote
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
         deleteNoteForm.delete = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

@@ -78,6 +78,84 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     index.form = indexForm
 /**
+* @see \App\Http\Controllers\Habit\HabitCategoryController::create
+ * @see app/Http/Controllers/Habit/HabitCategoryController.php:23
+ * @route '/admin/habit-management/create'
+ */
+export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+
+create.definition = {
+    methods: ["get","head"],
+    url: '/admin/habit-management/create',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\Habit\HabitCategoryController::create
+ * @see app/Http/Controllers/Habit/HabitCategoryController.php:23
+ * @route '/admin/habit-management/create'
+ */
+create.url = (options?: RouteQueryOptions) => {
+    return create.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Habit\HabitCategoryController::create
+ * @see app/Http/Controllers/Habit/HabitCategoryController.php:23
+ * @route '/admin/habit-management/create'
+ */
+create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\Habit\HabitCategoryController::create
+ * @see app/Http/Controllers/Habit/HabitCategoryController.php:23
+ * @route '/admin/habit-management/create'
+ */
+create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: create.url(options),
+    method: 'head',
+})
+
+    /**
+* @see \App\Http\Controllers\Habit\HabitCategoryController::create
+ * @see app/Http/Controllers/Habit/HabitCategoryController.php:23
+ * @route '/admin/habit-management/create'
+ */
+    const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: create.url(options),
+        method: 'get',
+    })
+
+            /**
+* @see \App\Http\Controllers\Habit\HabitCategoryController::create
+ * @see app/Http/Controllers/Habit/HabitCategoryController.php:23
+ * @route '/admin/habit-management/create'
+ */
+        createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: create.url(options),
+            method: 'get',
+        })
+            /**
+* @see \App\Http\Controllers\Habit\HabitCategoryController::create
+ * @see app/Http/Controllers/Habit/HabitCategoryController.php:23
+ * @route '/admin/habit-management/create'
+ */
+        createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: create.url({
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'HEAD',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'get',
+        })
+    
+    create.form = createForm
+/**
 * @see \App\Http\Controllers\Habit\HabitCategoryController::store
  * @see app/Http/Controllers/Habit/HabitCategoryController.php:28
  * @route '/admin/habit-management/create'
@@ -397,6 +475,6 @@ deleteMethod.delete = (args: { id: string | number } | [id: string | number ] | 
         })
     
     deleteMethod.form = deleteMethodForm
-const HabitCategoryController = { index, store, edit, update, deleteMethod, delete: deleteMethod }
+const HabitCategoryController = { index, create, store, edit, update, deleteMethod, delete: deleteMethod }
 
 export default HabitCategoryController

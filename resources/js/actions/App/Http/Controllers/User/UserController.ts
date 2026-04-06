@@ -78,6 +78,84 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     index.form = indexForm
 /**
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
+ * @route '/admin/user-management/create'
+ */
+export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+
+create.definition = {
+    methods: ["get","head"],
+    url: '/admin/user-management/create',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
+ * @route '/admin/user-management/create'
+ */
+create.url = (options?: RouteQueryOptions) => {
+    return create.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
+ * @route '/admin/user-management/create'
+ */
+create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: create.url(options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
+ * @route '/admin/user-management/create'
+ */
+create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: create.url(options),
+    method: 'head',
+})
+
+    /**
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
+ * @route '/admin/user-management/create'
+ */
+    const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: create.url(options),
+        method: 'get',
+    })
+
+            /**
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
+ * @route '/admin/user-management/create'
+ */
+        createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: create.url(options),
+            method: 'get',
+        })
+            /**
+* @see \App\Http\Controllers\User\UserController::create
+ * @see app/Http/Controllers/User/UserController.php:33
+ * @route '/admin/user-management/create'
+ */
+        createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: create.url({
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'HEAD',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'get',
+        })
+    
+    create.form = createForm
+/**
 * @see \App\Http\Controllers\User\UserController::store
  * @see app/Http/Controllers/User/UserController.php:38
  * @route '/admin/user-management/create'
@@ -481,6 +559,6 @@ update_status.patch = (args: { id: string | number } | [id: string | number ] | 
         })
     
     update_status.form = update_statusForm
-const UserController = { index, store, edit, update, deleteMethod, update_status, delete: deleteMethod }
+const UserController = { index, create, store, edit, update, deleteMethod, update_status, delete: deleteMethod }
 
 export default UserController

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\User\HabitController::store
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
 export const store = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -16,7 +16,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::store
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
 store.url = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -44,7 +44,7 @@ store.url = (args: { id: string | number } | [id: string | number ] | string | n
 
 /**
 * @see \App\Http\Controllers\User\HabitController::store
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
 store.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -54,7 +54,7 @@ store.post = (args: { id: string | number } | [id: string | number ] | string | 
 
     /**
 * @see \App\Http\Controllers\User\HabitController::store
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
     const storeForm = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -64,7 +64,7 @@ store.post = (args: { id: string | number } | [id: string | number ] | string | 
 
             /**
 * @see \App\Http\Controllers\User\HabitController::store
- * @see app/Http/Controllers/User/HabitController.php:449
+ * @see app/Http/Controllers/User/HabitController.php:439
  * @route '/user/habits/{id}/notes'
  */
         storeForm.post = (args: { id: string | number } | [id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -75,7 +75,7 @@ store.post = (args: { id: string | number } | [id: string | number ] | string | 
     store.form = storeForm
 /**
 * @see \App\Http\Controllers\User\HabitController::deleteMethod
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
 export const deleteMethod = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -90,7 +90,7 @@ deleteMethod.definition = {
 
 /**
 * @see \App\Http\Controllers\User\HabitController::deleteMethod
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
 deleteMethod.url = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions) => {
@@ -116,7 +116,7 @@ deleteMethod.url = (args: { habitId: string | number, noteId: string | number } 
 
 /**
 * @see \App\Http\Controllers\User\HabitController::deleteMethod
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
 deleteMethod.delete = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -126,7 +126,7 @@ deleteMethod.delete = (args: { habitId: string | number, noteId: string | number
 
     /**
 * @see \App\Http\Controllers\User\HabitController::deleteMethod
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
     const deleteMethodForm = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -141,7 +141,7 @@ deleteMethod.delete = (args: { habitId: string | number, noteId: string | number
 
             /**
 * @see \App\Http\Controllers\User\HabitController::deleteMethod
- * @see app/Http/Controllers/User/HabitController.php:477
+ * @see app/Http/Controllers/User/HabitController.php:467
  * @route '/user/habits/{habitId}/notes/{noteId}'
  */
         deleteMethodForm.delete = (args: { habitId: string | number, noteId: string | number } | [habitId: string | number, noteId: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

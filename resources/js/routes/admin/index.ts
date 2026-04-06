@@ -7,8 +7,8 @@ import noteManagement0aeb36 from './note-management'
 import settings69f00b from './settings'
 import notifications1ce82a from './notifications'
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\Auth\AdminAuthController::signin
+ * @see app/Http/Controllers/Auth/AdminAuthController.php:10
  * @route '/admin/signin'
  */
 export const signin = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -22,8 +22,8 @@ signin.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\Auth\AdminAuthController::signin
+ * @see app/Http/Controllers/Auth/AdminAuthController.php:10
  * @route '/admin/signin'
  */
 signin.url = (options?: RouteQueryOptions) => {
@@ -31,8 +31,8 @@ signin.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\Auth\AdminAuthController::signin
+ * @see app/Http/Controllers/Auth/AdminAuthController.php:10
  * @route '/admin/signin'
  */
 signin.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -40,8 +40,8 @@ signin.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\Auth\AdminAuthController::signin
+ * @see app/Http/Controllers/Auth/AdminAuthController.php:10
  * @route '/admin/signin'
  */
 signin.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -50,8 +50,8 @@ signin.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
     /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\Auth\AdminAuthController::signin
+ * @see app/Http/Controllers/Auth/AdminAuthController.php:10
  * @route '/admin/signin'
  */
     const signinForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -60,8 +60,8 @@ signin.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     })
 
             /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\Auth\AdminAuthController::signin
+ * @see app/Http/Controllers/Auth/AdminAuthController.php:10
  * @route '/admin/signin'
  */
         signinForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -69,8 +69,8 @@ signin.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
             /**
-* @see \Illuminate\Routing\ViewController::__invoke
- * @see vendor/laravel/framework/src/Illuminate/Routing/ViewController.php:32
+* @see \App\Http\Controllers\Auth\AdminAuthController::signin
+ * @see app/Http/Controllers/Auth/AdminAuthController.php:10
  * @route '/admin/signin'
  */
         signinForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

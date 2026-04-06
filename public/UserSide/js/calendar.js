@@ -98,16 +98,6 @@ function updateLegend(habitData) {
   }
 }
 
-// function updateHeaderDate() {
-//   const headerDateElement = document.getElementById('headerDate');
-//   headerDateElement.textContent = new Date().toLocaleDateString('en-US', {
-//     weekday: 'long',
-//     year: 'numeric',
-//     month: 'long',
-//     day: 'numeric',
-//   });
-// }
-
 async function renderCalendar() {
   const grid = document.getElementById('calendarGrid');
   const today = new Date();
@@ -328,100 +318,6 @@ function closeDayDetail() {
   document.getElementById('popupOverlay').classList.remove('active');
 }
 
-// // --- NEW INTERACTIVITY FUNCTIONS ---
-// const searchBtn = document.getElementById('searchBtn');
-// const searchPopover = document.getElementById('searchPopover');
-// // const notificationBtn = document.getElementById('notificationBtn');
-// const notificationPopover = document.getElementById('notificationPopover');
-
-// function togglePopover(popover, button) {
-//   const isActive = popover.classList.contains('active');
-
-//   // Close other popover if open
-//   if (
-//     popover === searchPopover &&
-//     notificationPopover.classList.contains('active')
-//   ) {
-//     notificationPopover.classList.remove('active');
-//     notificationBtn.classList.remove('active-btn');
-//   } else if (
-//     popover === notificationPopover &&
-//     searchPopover.classList.contains('active')
-//   ) {
-//     searchPopover.classList.remove('active');
-//     searchBtn.classList.remove('active-btn');
-//   }
-
-//   // Toggle current popover
-//   popover.classList.toggle('active');
-//   button.classList.toggle('active-btn');
-
-//   // Focus on search input when active
-//   if (popover === searchPopover && popover.classList.contains('active')) {
-//     document.getElementById('searchInput').focus();
-//   }
-// }
-
-// // Function to close popovers when clicking outside
-// function closePopovers(event) {
-//   const isClickInsideSearch =
-//     searchPopover.contains(event.target) || searchBtn.contains(event.target);
-//   const isClickInsideNotif =
-//     notificationPopover.contains(event.target) ||
-//     notificationBtn.contains(event.target);
-
-//   if (!isClickInsideSearch) {
-//     searchPopover.classList.remove('active');
-//     searchBtn.classList.remove('active-btn');
-//   }
-//   if (!isClickInsideNotif) {
-//     notificationPopover.classList.remove('active');
-//     notificationBtn.classList.remove('active-btn');
-//   }
-// }
-
-// // --- Event Listeners and Interaction ---
-
-// // Search and Notification Toggles
-// searchBtn.addEventListener('click', (e) => {
-//   e.stopPropagation();
-//   togglePopover(searchPopover, searchBtn);
-// });
-
-// notificationBtn.addEventListener('click', (e) => {
-//   e.stopPropagation();
-//   togglePopover(notificationPopover, notificationBtn);
-// });
-
-// // Close popovers when clicking anywhere on the document (unless inside a popover/button)
-// document.addEventListener('click', (e) => {
-//   closePopovers(e);
-//   // Also keep the existing day detail close logic
-//   if (document.getElementById('popupOverlay').classList.contains('active')) {
-//     // Do nothing if day detail is open, it has its own overlay/close logic
-//   } else if (
-//     !document.querySelector('.calendar-day').contains(e.target) &&
-//     !document.getElementById('dayDetailPopup').contains(e.target)
-//   ) {
-//     // If clicked outside day details, do nothing here. The existing logic handles the calendar popover.
-//   }
-// });
-
-// // Prevent clicking inside the popover from closing it immediately
-// searchPopover.addEventListener('click', (e) => e.stopPropagation());
-// notificationPopover.addEventListener('click', (e) => e.stopPropagation());
-
-// // Search Input Interaction (Simple logging)
-// document.getElementById('searchInput').addEventListener('input', function () {
-//   const query = this.value;
-//   const resultsDiv = document.querySelector('.search-results');
-//   if (query.length > 0) {
-//     resultsDiv.innerHTML = `Searching for: **${query}**...<br>_Simulated search found 3 items._`;
-//   } else {
-//     resultsDiv.innerHTML = 'Try searching for "reading" or "December".';
-//   }
-// });
-
 // Month Navigation
 document.getElementById('prevMonth').addEventListener('click', async () => {
   const today = new Date();
@@ -463,34 +359,6 @@ document.querySelectorAll('.view-btn').forEach((btn) => {
     console.log(`Switched to ${this.dataset.view} view.`);
   });
 });
-
-// Legend Item Interaction (Filter/Highlight) - handled in updateLegend function
-
-// // Keyboard Accessibility
-// document.addEventListener('keydown', (e) => {
-//   if (e.key === 'Escape') {
-//     closeDayDetail();
-//     // Also close the popovers on escape
-//     searchPopover.classList.remove('active');
-//     searchBtn.classList.remove('active-btn');
-//     notificationPopover.classList.remove('active');
-//     notificationBtn.classList.remove('active-btn');
-//   } else if (
-//     e.key === 'ArrowLeft' &&
-//     !document.getElementById('popupOverlay').classList.contains('active') &&
-//     !searchPopover.classList.contains('active') &&
-//     !notificationPopover.classList.contains('active')
-//   ) {
-//     document.getElementById('prevMonth').click();
-//   } else if (
-//     e.key === 'ArrowRight' &&
-//     !document.getElementById('popupOverlay').classList.contains('active') &&
-//     !searchPopover.classList.contains('active') &&
-//     !notificationPopover.classList.contains('active')
-//   ) {
-//     document.getElementById('nextMonth').click();
-//   }
-// });
 
 // Function to ensure calendar shows current month and scrolls to today
 function focusOnToday() {

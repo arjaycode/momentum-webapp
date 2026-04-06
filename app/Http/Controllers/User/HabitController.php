@@ -25,7 +25,7 @@ class HabitController extends Controller
 
         // Calculate streak and check completion status for each habit
         $today = now()->toDateString();
-        $habits = $habits->map(function($habit) use ($today) {
+        $habits = $habits->map(function ($habit) use ($today) {
             $habit->streak = $this->calculateHabitStreak($habit);
             // Check if habit is completed today
             $habit->isCompletedToday = \App\Models\HabitLog::where('habit_id', $habit->id)
@@ -57,7 +57,7 @@ class HabitController extends Controller
 
     public function store(Request $request)
     {
-        
+
         $request->merge([
             'category_id' => $request->input('category_id') ?: null
         ]);
@@ -119,7 +119,7 @@ class HabitController extends Controller
 
         // Redirect based on where user came from or default to habits list
         $redirectTo = $request->input('redirect_to', 'habits');
-        
+
         if ($redirectTo === 'calendar') {
             return redirect()->route('user.calendar')->with('success', 'Habit "' . $habit->name . '" created successfully! It will appear on your selected days in the calendar.');
         } elseif ($redirectTo === 'dashboard') {
@@ -160,7 +160,7 @@ class HabitController extends Controller
         $categories = HabitsCategory::where('status', 'active')->get();
         // target_days is already an array due to model cast
         $targetDays = $habit->target_days ?? [];
-        
+
         // Load notes for this habit
         $notes = Note::where('habit_id', $habit->id)
             ->where('user_id', Auth::id())
@@ -232,14 +232,12 @@ class HabitController extends Controller
     public function destroy($id)
     {
         $habit = Habit::where('user_id', Auth::id())->findOrFail($id);
-        
-        // Delete all related habit logs first (cascade should handle this, but being explicit)
+
+        // Explicit delete of logs
         HabitLog::where('habit_id', $habit->id)->delete();
-        
-        // Store habit name for response
+
         $habitName = $habit->name;
-        
-        // Create notification for habit deleted
+
         Notification::create([
             'user_id' => Auth::id(),
             'type' => 'habit_deleted',
@@ -250,20 +248,12 @@ class HabitController extends Controller
             'link' => route('user.habits'),
             'read' => false,
         ]);
-        
-        // Delete the habit
+
         $habit->delete();
 
-        // Return JSON response for AJAX requests
-        if (request()->wantsJson() || request()->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Habit "' . $habitName . '" deleted successfully! It has been removed from your habits, calendar, and dashboard.'
-            ]);
-        }
-
-        // Fallback to redirect for non-AJAX requests
-        return redirect()->route('user.habits')->with('success', 'Habit deleted successfully! It has been removed from your habits, calendar, and dashboard.');
+        // In Inertia, always redirect. 
+        // Flash messages are automatically available in the $page.props.flash
+        return redirect()->route('user.habits')->with('success', "Habit \"{$habitName}\" deleted successfully!");
     }
 
     public function markAsDone($id)
@@ -324,14 +314,14 @@ class HabitController extends Controller
         }
 
         $habits = Habit::where('user_id', $user->id)
-            ->where(function($q) use ($query) {
+            ->where(function ($q) use ($query) {
                 $q->where('habit_name', 'like', "%{$query}%")
-                  ->orWhere('description', 'like', "%{$query}%");
+                    ->orWhere('description', 'like', "%{$query}%");
             })
             ->with('category')
             ->limit(10)
             ->get()
-            ->map(function($habit) {
+            ->map(function ($habit) {
                 return [
                     'id' => $habit->id,
                     'name' => $habit->name,
@@ -353,36 +343,36 @@ class HabitController extends Controller
         $month = (int) $request->input('month', now()->month);
 
         $habits = Habit::where('user_id', $user->id)->get();
-        $logs = HabitLog::whereHas('habit', function($query) use ($user) {
+        $logs = HabitLog::whereHas('habit', function ($query) use ($user) {
             $query->where('user_id', $user->id);
         })
-        ->whereYear('completed_at', $year)
-        ->whereMonth('completed_at', $month)
-        ->get()
-        ->groupBy(function($log) {
-            return (int) date('j', strtotime($log->completed_at));
-        });
+            ->whereYear('completed_at', $year)
+            ->whereMonth('completed_at', $month)
+            ->get()
+            ->groupBy(function ($log) {
+                return (int) date('j', strtotime($log->completed_at));
+            });
 
         $calendarData = [];
         foreach ($habits as $habit) {
             // target_days is already an array due to model cast
             $targetDays = $habit->target_days ?? [];
             $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-            
+
             for ($day = 1; $day <= $daysInMonth; $day++) {
                 $date = \Carbon\Carbon::create($year, $month, $day);
                 $dayName = $date->format('D');
                 $dayShort = substr($dayName, 0, 3);
-                
+
                 if (in_array($dayShort, $targetDays)) {
                     if (!isset($calendarData[$day])) {
                         $calendarData[$day] = [];
                     }
-                    
-                    $isCompleted = $logs->has($day) && $logs[$day]->contains(function($log) use ($habit) {
+
+                    $isCompleted = $logs->has($day) && $logs[$day]->contains(function ($log) use ($habit) {
                         return $log->habit_id === $habit->id;
                     });
-                    
+
                     $calendarData[$day][] = [
                         'id' => $habit->id,
                         'name' => $habit->name,
@@ -415,7 +405,7 @@ class HabitController extends Controller
         $logs = HabitLog::where('habit_id', $habit->id)
             ->orderBy('completed_at', 'desc')
             ->pluck('completed_at')
-            ->map(function($date) {
+            ->map(function ($date) {
                 return \Carbon\Carbon::parse($date)->format('Y-m-d');
             })
             ->toArray();
@@ -477,7 +467,7 @@ class HabitController extends Controller
     public function deleteNote($habitId, $noteId)
     {
         $habit = Habit::where('user_id', Auth::id())->findOrFail($habitId);
-        
+
         $note = Note::where('id', $noteId)
             ->where('habit_id', $habit->id)
             ->where('user_id', Auth::id())

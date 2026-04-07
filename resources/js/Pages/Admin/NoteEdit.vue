@@ -45,7 +45,7 @@ function submit() {
 let scriptEl: HTMLScriptElement | null = null;
 onMounted(() => {
     scriptEl = document.createElement('script');
-    scriptEl.src = '/AdminSide/js/note_edit.js';
+    scriptEl.src = '/AdminSide/js/note_add.js';
     document.body.appendChild(scriptEl);
 });
 onUnmounted(() => scriptEl?.remove());
@@ -54,7 +54,7 @@ onUnmounted(() => scriptEl?.remove());
 <template>
     <AdminLayout
         title="Edit Note - Momentum"
-        page-css="note_edit.css"
+        page-css="note_add.css"
         active="notes"
         page-title="Edit Note"
         page-description="Update note"
@@ -71,27 +71,28 @@ onUnmounted(() => scriptEl?.remove());
                     <div class="form-row">
                         <div class="form-group">
                             <label>For User <span class="required">*</span></label>
-                            <select v-model="form.user_id" class="select-input" required>
+                            <select v-model="form.user_id" class="select-input" :class="{ 'is-error': form.errors.user_id }" required>
                                 <option value="">Select User</option>
                                 <option v-for="u in users" :key="u.id" :value="u.id">
                                     {{ u.firstname }} {{ u.lastname }} ({{ u.email }})
                                 </option>
                             </select>
+                            <span v-if="form.errors.user_id" class="error-message">{{ form.errors.user_id }}</span>
                         </div>
                         <div class="form-group">
                             <label>For Habit (Optional)</label>
                             <select v-model="form.habit_id" class="select-input">
                                 <option value="">Select Habit (Optional)</option>
                                 <option v-for="h in habits" :key="h.id" :value="h.id">
-                                    {{ h.name }} - {{ h.user.firstname }} {{ h.user.lastname }}
-                                    <template v-if="h.category"> ({{ h.category.title }})</template>
+                                    {{ h.name }} - {{ h.user?.firstname ?? 'Unknown' }} {{ h.user?.lastname ?? '' }}{{ h.category ? ` (${h.category.title})` : '' }}
                                 </option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Note <span class="required">*</span></label>
-                        <textarea v-model="form.message" class="textarea-input" required />
+                        <textarea v-model="form.message" class="textarea-input" :class="{ 'is-error': form.errors.message }" required></textarea>
+                        <span v-if="form.errors.message" class="error-message">{{ form.errors.message }}</span>
                     </div>
                     <div class="form-actions">
                         <Link :href="adminRoutes.noteManagement.url()" class="btn btn-cancel">Cancel</Link>
@@ -104,3 +105,22 @@ onUnmounted(() => scriptEl?.remove());
         </main>
     </AdminLayout>
 </template>
+
+<style scoped>
+.error-message {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.select-input.is-error,
+.textarea-input.is-error {
+    border-color: #dc2626 !important;
+    background-color: #fee2e2;
+}
+
+.required {
+    color: #dc2626;
+}
+</style>

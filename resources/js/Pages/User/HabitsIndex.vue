@@ -101,7 +101,7 @@ function markAsDone(id: number) {
             <table class="habit-table">
                 <thead>
                     <tr>
-                        <th>Habit</th>
+                        <th>Habit Title</th>
                         <th>Category</th>
                         <th>Streak</th>
                         <th class="flex-between">
@@ -114,7 +114,7 @@ function markAsDone(id: number) {
                     <tr v-for="habit in props.habits" :key="habit.id" :data-habit-id="habit.id">
                         <td>
                             <div class="habit-title-cell">
-                                <div class="habit-title">{{ habit.name }}</div>
+                                <div class="habit-title">{{ habit.habit_name }}</div>
                                 <div v-if="habit.description" class="habit-description">{{ habit.description }}</div>
                                 <div v-else class="habit-description no-description">No description</div>
                             </div>

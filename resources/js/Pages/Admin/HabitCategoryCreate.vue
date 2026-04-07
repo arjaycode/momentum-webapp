@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
-import { Link, useForm } from '@inertiajs/vue3';
+import { Link, router, useForm } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import adminRoutes from '@/routes/admin';
 import { store } from '@/actions/App/Http/Controllers/Habit/HabitCategoryController';
@@ -14,7 +14,11 @@ const form = useForm({
 });
 
 function submit() {
-    form.post(store.post());
+    form.post(store.post(), {
+        onSuccess: () => {
+            router.visit(adminRoutes.habitManagement.url());
+        },
+    });
 }
 
 let scriptEl: HTMLScriptElement | null = null;
@@ -45,14 +49,16 @@ onUnmounted(() => scriptEl?.remove());
             <div class="form-container">
                 <form class="category-form" @submit.prevent="submit">
                     <div class="form-group">
-                        <label for="title">Habit Title</label>
+                        <label for="title">Habit Title <span class="required">*</span></label>
                         <input
                             id="title"
                             v-model="form.title"
                             type="text"
                             class="form-input"
+                            :class="{ 'is-error': form.errors.title }"
                             required
                         />
+                        <span v-if="form.errors.title" class="error-message">{{ form.errors.title }}</span>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
@@ -64,12 +70,13 @@ onUnmounted(() => scriptEl?.remove());
                         />
                     </div>
                     <div class="form-group">
-                        <label for="status">Status</label>
-                        <select id="status" v-model="form.status" class="form-select" required>
+                        <label for="status">Status <span class="required">*</span></label>
+                        <select id="status" v-model="form.status" class="form-select" :class="{ 'is-error': form.errors.status }" required>
                             <option value="">Select status</option>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
                         </select>
+                        <span v-if="form.errors.status" class="error-message">{{ form.errors.status }}</span>
                     </div>
                     <div class="form-group">
                         <label>Color Theme</label>
@@ -119,3 +126,23 @@ onUnmounted(() => scriptEl?.remove());
         </main>
     </AdminLayout>
 </template>
+
+<style scoped>
+.error-message {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.form-input.is-error,
+.form-select.is-error,
+.form-textarea.is-error {
+    border-color: #dc2626 !important;
+    background-color: #fee2e2;
+}
+
+.required {
+    color: #dc2626;
+}
+</style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed, onMounted, onUnmounted, ref } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import adminRoutes from '@/routes/admin';
@@ -25,7 +25,20 @@ const props = defineProps<{
     notes: NoteRow[];
 }>();
 
+const searchTerm = ref('');
+
 const total = computed(() => props.notes.length);
+
+const filteredNotes = computed(() => {
+    if (!searchTerm.value) return props.notes;
+    const term = searchTerm.value.toLowerCase();
+    return props.notes.filter(note => 
+        note.user.firstname.toLowerCase().includes(term) ||
+        note.user.lastname.toLowerCase().includes(term) ||
+        note.user.email.toLowerCase().includes(term) ||
+        note.message.toLowerCase().includes(term)
+    );
+});
 
 function avatarUrl(u: NoteRow['user']) {
     if (u.avatar) return `/storage/${u.avatar}`;
@@ -71,7 +84,12 @@ onUnmounted(() => scriptEl?.remove());
             <div class="controls-section">
                 <div class="search-box-container">
                     <i class="fas fa-search"></i>
-                    <input id="notesSearch" type="text" placeholder="Search categories..." />
+                    <input 
+                        id="notesSearch" 
+                        v-model="searchTerm"
+                        type="text" 
+                        placeholder="Search notes..." 
+                    />
                 </div>
                 <Link :href="adminRoutes.noteManagement.create.url()" class="btn-primary">
                     <i class="fas fa-plus"></i> Add New Note
@@ -79,7 +97,7 @@ onUnmounted(() => scriptEl?.remove());
             </div>
 
             <div id="notesList" class="notes-list">
-                <div v-for="note in notes" :key="note.id" class="note-item">
+                <div v-for="note in filteredNotes" :key="note.id" class="note-item">
                     <div class="note-header">
                         <div class="user-info">
                             <img
@@ -121,3 +139,740 @@ onUnmounted(() => scriptEl?.remove());
         </main>
     </AdminLayout>
 </template>
+
+<style scoped>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+  background: #1a1a1a;
+  color: #333;
+  overflow-x: hidden;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  max-width: 1920px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Sidebar
+.sidebar {
+  width: 240px;
+  background: linear-gradient(180deg, #f5e6d3 0%, #f0dcc8 100%);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 32px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #8b3a62 0%, #6d2d4e 100%);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+}
+
+.logo-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333;
+  letter-spacing: 1px;
+}
+
+.nav-menu {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.nav-item.active {
+  background: rgba(139, 58, 98, 0.15);
+  color: #8b3a62;
+  font-weight: 500;
+}
+
+.nav-item i {
+  font-size: 16px;
+  width: 20px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  margin-top: 16px;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+}
+
+.profile-role {
+  font-size: 11px;
+  color: #666;
+} */
+
+/* Main Container */
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  background: #f8f9fa;
+  overflow-y: auto;
+  padding: 32px 40px;
+}
+
+/* Header
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: #666;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s;
+}
+
+.icon-btn:hover {
+  background: #f0f0f0;
+}
+
+.date-display {
+  font-size: 13px;
+  color: #666;
+} */
+
+/* Stats Section */
+.stats-section {
+  margin-bottom: 32px;
+}
+
+.stat-card-single {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 320px;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.stat-icon.blue {
+  background: #e3f2fd;
+  color: #2196f3;
+}
+
+/* Controls Section */
+.controls-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.search-box-container {
+  flex: 1;
+  max-width: 400px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-box-container i {
+  position: absolute;
+  left: 16px;
+  color: #999;
+  font-size: 14px;
+}
+
+.search-box-container input {
+  width: 100%;
+  padding: 10px 16px 10px 44px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s;
+  background: white;
+}
+
+.search-box-container input:focus {
+  border-color: #667eea;
+}
+
+.btn-primary {
+  background: #ef6144;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  text-decoration: none;
+  text-wrap: nowrap;
+}
+
+.btn-primary:hover {
+  background: #d94e32;
+  transform: translateY(-1px);
+}
+
+/* Notes List */
+.notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.note-item {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s;
+}
+
+.note-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.note-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.user-id {
+  font-size: 12px;
+  color: #999;
+}
+
+.user-email {
+  font-size: 14px;
+  color: #666;
+  flex: 1;
+  text-align: left;
+  margin-left: 20px;
+}
+
+.note-actions {
+  display: flex;
+  gap: 8px;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #999;
+  transition: all 0.2s;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.action-btn:hover {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.edit-btn:hover {
+  color: #2196f3;
+}
+
+.delete-btn:hover {
+  color: #ef4444;
+}
+
+/* Note Content */
+.note-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.note-category {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.category-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+.category-icon.blue {
+  background: #e3f2fd;
+  color: #2196f3;
+}
+
+.category-icon.purple {
+  background: #f3e5f5;
+  color: #9c27b0;
+}
+
+.category-icon.green {
+  background: #d1fae5;
+  color: #10b981;
+}
+
+.category-icon.orange {
+  background: #fff3e0;
+  color: #ff9800;
+}
+
+.category-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.note-text {
+  display: flex;
+  gap: 8px;
+  line-height: 1.6;
+}
+
+.note-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.note-description {
+  font-size: 14px;
+  color: #666;
+  flex: 1;
+}
+
+.note-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.note-meta {
+  font-size: 13px;
+  color: #999;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge.active {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.status-badge.inactive {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Scrollbar */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .note-header {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .user-email {
+    flex-basis: 100%;
+    margin-left: 52px;
+  }
+}
+
+@media (max-width: 768px) {
+  .controls-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-box {
+    max-width: 100%;
+  }
+
+  .btn-primary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Modal Overlay */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.modal.show {
+  display: flex;
+  opacity: 1;
+}
+
+/* Modal Box */
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(20px);
+  transition: transform 0.2s ease-in-out;
+}
+
+.modal.show .modal-content {
+  transform: translateY(0);
+}
+
+/* Icon at top */
+.modal-icon {
+  width: 64px;
+  height: 64px;
+  background: #fee2e2; /* Red tint background */
+  color: #ef4444; /* Red icon color */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 20px;
+}
+
+/* Title */
+.modal-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+
+/* Note preview box */
+.note-preview {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid #edf2f7;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* Reusing existing avatar class, but ensuring styles here */
+.modal .user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.preview-user {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a1a;
+}
+
+.preview-id {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Habit row */
+.preview-habit {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.habit-icon {
+  font-size: 14px;
+  color: #666;
+}
+
+.habit-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: #333;
+}
+
+/* Note text */
+.preview-note {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.preview-note .note-label {
+  font-weight: 600;
+  color: #333;
+  margin-right: 4px;
+}
+
+/* Modal Buttons */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-cancel {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+.btn-confirm {
+  background: #ef4444; /* Red for delete */
+  color: white;
+  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+}
+
+.btn-confirm:hover:not(:disabled) {
+  background: #dc2626;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3);
+}
+
+.btn-confirm:disabled {
+  background: #fca5a5;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+  box-shadow: none;
+}
+
+
+</style>

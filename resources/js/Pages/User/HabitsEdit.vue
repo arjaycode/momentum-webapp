@@ -14,7 +14,7 @@ const props = defineProps<{
 const page = usePage();
 
 const form = useForm({
-    name: props.habit.name,
+    name: props.habit.habit_name,
     category_id: props.habit.category_id ?? null,
     description: props.habit.description ?? '',
     enable_push_notifications: !!props.habit.enable_push_notifications,

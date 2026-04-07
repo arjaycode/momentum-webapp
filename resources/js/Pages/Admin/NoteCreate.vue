@@ -63,20 +63,20 @@ onUnmounted(() => scriptEl?.remove());
                     <div class="form-row">
                         <div class="form-group">
                             <label>For User <span class="required">*</span></label>
-                            <select id="userSelect" v-model="form.user_id" class="select-input" required>
+                            <select id="userSelect" v-model="form.user_id" class="select-input" :class="{ 'is-error': form.errors.user_id }" required>
                                 <option value="">Select User</option>
                                 <option v-for="u in users" :key="u.id" :value="u.id">
                                     {{ u.firstname }} {{ u.lastname }} ({{ u.email }})
                                 </option>
                             </select>
+                            <span v-if="form.errors.user_id" class="error-message">{{ form.errors.user_id }}</span>
                         </div>
                         <div class="form-group">
                             <label>For Habit (Optional)</label>
                             <select id="habitSelect" v-model="form.habit_id" class="select-input">
                                 <option value="">Select Habit (Optional)</option>
                                 <option v-for="h in habits" :key="h.id" :value="h.id">
-                                    {{ h.name }} - {{ h.user.firstname }} {{ h.user.lastname }}
-                                    <template v-if="h.category"> ({{ h.category.title }})</template>
+                                    {{ h.name }} - {{ h.user?.firstname ?? 'Unknown' }} {{ h.user?.lastname ?? '' }}{{ h.category ? ` (${h.category.title})` : '' }}
                                 </option>
                             </select>
                         </div>
@@ -87,9 +87,11 @@ onUnmounted(() => scriptEl?.remove());
                             id="noteText"
                             v-model="form.message"
                             class="textarea-input"
+                            :class="{ 'is-error': form.errors.message }"
                             placeholder="Put your note here..."
                             required
-                        />
+                        ></textarea>
+                        <span v-if="form.errors.message" class="error-message">{{ form.errors.message }}</span>
                     </div>
                     <div class="form-actions">
                         <Link :href="adminRoutes.noteManagement.url()" class="btn btn-cancel">Cancel</Link>
@@ -102,3 +104,22 @@ onUnmounted(() => scriptEl?.remove());
         </main>
     </AdminLayout>
 </template>
+
+<style scoped>
+.error-message {
+    color: #dc2626;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.select-input.is-error,
+.textarea-input.is-error {
+    border-color: #dc2626 !important;
+    background-color: #fee2e2;
+}
+
+.required {
+    color: #dc2626;
+}
+</style>

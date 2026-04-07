@@ -25,6 +25,6 @@ class SignupController extends Controller
 
         $user = User::create($credentials);
 
-        return redirect(route('user.signin'), 201)->with('success', 'Account Succesfully Created. You can now login');
+        return redirect()->route('user.signin')->with('success', 'Account Succesfully Created. You can now login');
     }
 }

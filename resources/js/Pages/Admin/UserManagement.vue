@@ -93,11 +93,9 @@ function deleteUser(id: number) {
                         <h3 class="table-title">All Users</h3>
                         <p class="table-subtitle">Manage user accounts and permissions</p>
                     </div>
-                    <button class="btn-primary" type="button">
-                        <Link class="adduser" :href="adminRoutes.userManagement.create.url()">
-                            <i class="fas fa-plus"></i> Add New User
-                        </Link>
-                    </button>
+                    <Link class="btn-primary adduser" :href="adminRoutes.userManagement.create.url()">
+                        <i class="fas fa-plus"></i> Add New User
+                    </Link>
                 </div>
 
                 <div class="table-controls">
@@ -133,13 +131,23 @@ function deleteUser(id: number) {
                         </thead>
                         <tbody>
                             <tr v-for="u in props.users" :key="u.id">
-                                <td>{{ u.firstname }} {{ u.lastname }}</td>
-                                <td>{{ u.email }}</td>
-                                <td>{{ u.role }}</td>
-                                <td>{{ u.status }}</td>
                                 <td>
-                                    <Link :href="userEdit.url(u.id)" class="btn-sm">Edit</Link>
-                                    <button type="button" class="btn-sm danger" @click="deleteUser(u.id)">Delete</button>
+                                    <div class="user-cell">
+                                        <div class="user-name">{{ u.firstname }} {{ u.lastname }}</div>
+                                    </div>
+                                </td>
+                                <td>{{ u.email }}</td>
+                                <td>
+                                    <span :class="['role-badge', u.role]">{{ u.role }}</span>
+                                </td>
+                                <td>
+                                    <span :class="['status-badge', u.status]">{{ u.status }}</span>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <Link :href="userEdit.url(u.id)" class="btn-action btn-edit">Edit</Link>
+                                        <button type="button" class="btn-action btn-delete" @click="deleteUser(u.id)">Delete</button>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

@@ -39,6 +39,9 @@ class Habit extends Model
         'target_days' => 'array',
     ];
 
+    // Ensure 'name' accessor is included when serializing to array/json
+    protected $appends = ['name'];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\HabitApiController;
-use App\Http\Controllers\Auth\LoginController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,24 +15,30 @@ use App\Http\Controllers\Auth\LoginController;
 |
 */
 
-// Public API routes
-Route::post('/login', [LoginController::class, 'apiLogin'])->name('api.login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
-// Protected API routes
-Route::middleware('auth')->group(function () {
-    // User info
-    Route::get('/user', function (Request $request) {
-        return $request->user();
-    });
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [AuthController::class, 'me']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::patch('/profile', [AuthController::class, 'updateProfile']);
+    Route::patch('/change-password', [AuthController::class, 'changePassword']);
 
-    // Habits API
-    Route::prefix('habits')->name('habits.')->group(function () {
-        Route::get('/', [HabitApiController::class, 'index'])->name('index');
-        Route::get('/{id}', [HabitApiController::class, 'show'])->name('show');
-        Route::post('/', [HabitApiController::class, 'store'])->name('store');
-        Route::put('/{id}', [HabitApiController::class, 'update'])->name('update');
-        Route::delete('/{id}', [HabitApiController::class, 'destroy'])->name('destroy');
-        Route::post('/{id}/mark-done', [HabitApiController::class, 'markAsDone'])->name('mark-done');
-    });
+    Route::get('/dashboard', [HabitApiController::class, 'dashboard']);
+    Route::get('/habits', [HabitApiController::class, 'index']);
+    Route::get('/habits/search', [HabitApiController::class, 'search']);
+    Route::post('/habits', [HabitApiController::class, 'store']);
+    Route::get('/habits/{id}', [HabitApiController::class, 'show']);
+    Route::put('/habits/{id}', [HabitApiController::class, 'update']);
+    Route::delete('/habits/{id}', [HabitApiController::class, 'destroy']);
+    Route::post('/habits/{id}/mark-as-done', [HabitApiController::class, 'markAsDone']);
+
+    Route::get('/calendar', [HabitApiController::class, 'calendar']);
+    Route::get('/calendar/habits', [HabitApiController::class, 'dayHabits']);
+
+    Route::get('/habits/{habitId}/notes', [HabitApiController::class, 'notes']);
+    Route::post('/habits/{habitId}/notes', [HabitApiController::class, 'addNote']);
+    Route::delete('/habits/{habitId}/notes/{noteId}', [HabitApiController::class, 'deleteNote']);
+    Route::get('/notes/{id}', [HabitApiController::class, 'getNote']);
+    Route::patch('/notes/{id}', [HabitApiController::class, 'updateNote']);
 });
-
